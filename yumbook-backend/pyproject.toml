@@ -8,11 +8,12 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 fastapi = { extras = ["standard"], version = "^0.115.0" }
+passlib = { extras = ["bcyrpt"], version = "^1.7.4" }
+psycopg = { extras = ["binary"], version = "^3.2.2" }
 sqlmodel = "^0.0.22"
 alembic = "^1.13.2"
 pyjwt = "^2.9.0"
-passlib = { extras = ["bcyrpt"], version = "^1.7.4" }
-
+pydantic-settings = "^2.5.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.6"
