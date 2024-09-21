@@ -10,19 +10,26 @@
     "preview": "rsbuild preview"
   },
   "dependencies": {
+    "@hey-api/client-fetch": "^0.3.1",
+    "@tanstack/react-router": "^1.58.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.2",
+    "@hey-api/openapi-ts": "^0.53.2",
     "@rsbuild/core": "^1.0.5",
     "@rsbuild/plugin-react": "^1.0.2",
+    "@tanstack/router-devtools": "^1.58.3",
+    "@tanstack/router-plugin": "^1.58.4",
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
+    "tailwindcss": "^3.4.12",
     "typescript": "^5.6.2"
   },
   "trustedDependencies": [
     "@biomejs/biome",
-    "core-js"
+    "core-js",
+    "esbuild"
   ]
 }
