@@ -7,7 +7,7 @@ from sqlmodel import Field, SQLModel
 class UserBase(SQLModel):
     username: str = Field(..., index=True, unique=True)
     email: str = Field(..., index=True, unique=True)
-    profile_picture: str | None = None
+    profile_picture: str | None = Field(default=None)
 
 
 class UserCreate(UserBase):
