@@ -13,6 +13,14 @@ import type {
   LoginUserData,
   LoginUserError,
   LoginUserResponse,
+  LogoutUserError,
+  LogoutUserResponse,
+  ForgotPasswordData,
+  ForgotPasswordError,
+  ForgotPasswordResponse,
+  ResetPasswordData,
+  ResetPasswordError,
+  ResetPasswordResponse,
 } from './types.gen';
 
 export const client = createClient(createConfig());
@@ -74,5 +82,56 @@ export const loginUser = <ThrowOnError extends boolean = false>(
       ...options?.headers,
     },
     url: '/api/v1/login/access-token',
+  });
+};
+
+/**
+ * Logout User
+ * Logout a user by clearing the access token cookie.
+ */
+export const logoutUser = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    LogoutUserResponse,
+    LogoutUserError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/api/v1/logout',
+  });
+};
+
+/**
+ * Forgot Password
+ * Handle a forgot password request by generating and returning a reset token.
+ */
+export const forgotPassword = <ThrowOnError extends boolean = false>(
+  options: Options<ForgotPasswordData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    ForgotPasswordResponse,
+    ForgotPasswordError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/api/v1/forgot-password',
+  });
+};
+
+/**
+ * Reset Password
+ * Reset the user's password using a valid reset token.
+ */
+export const resetPassword = <ThrowOnError extends boolean = false>(
+  options: Options<ResetPasswordData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    ResetPasswordResponse,
+    ResetPasswordError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/api/v1/reset-password',
   });
 };

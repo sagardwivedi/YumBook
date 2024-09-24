@@ -9,8 +9,23 @@ import type {
   LoginUserData,
   LoginUserError,
   LoginUserResponse,
+  LogoutUserError,
+  LogoutUserResponse,
+  ForgotPasswordData,
+  ForgotPasswordError,
+  ForgotPasswordResponse,
+  ResetPasswordData,
+  ResetPasswordError,
+  ResetPasswordResponse,
 } from '../types.gen';
-import { client, registerUser, loginUser } from '../services.gen';
+import {
+  client,
+  registerUser,
+  loginUser,
+  logoutUser,
+  forgotPassword,
+  resetPassword,
+} from '../services.gen';
 
 type QueryKey<TOptions extends Options> = [
   Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -107,6 +122,111 @@ export const loginUserMutation = () => {
   > = {
     mutationFn: async (options) => {
       const { data } = await loginUser({
+        ...options,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const logoutUserQueryKey = (options?: Options) => [
+  createQueryKey('logoutUser', options),
+];
+
+export const logoutUserOptions = (options?: Options) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await logoutUser({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: logoutUserQueryKey(options),
+  });
+};
+
+export const logoutUserMutation = () => {
+  const mutationOptions: UseMutationOptions<
+    LogoutUserResponse,
+    LogoutUserError,
+    Options
+  > = {
+    mutationFn: async (options) => {
+      const { data } = await logoutUser({
+        ...options,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const forgotPasswordQueryKey = (
+  options: Options<ForgotPasswordData>,
+) => [createQueryKey('forgotPassword', options)];
+
+export const forgotPasswordOptions = (options: Options<ForgotPasswordData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await forgotPassword({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: forgotPasswordQueryKey(options),
+  });
+};
+
+export const forgotPasswordMutation = () => {
+  const mutationOptions: UseMutationOptions<
+    ForgotPasswordResponse,
+    ForgotPasswordError,
+    Options<ForgotPasswordData>
+  > = {
+    mutationFn: async (options) => {
+      const { data } = await forgotPassword({
+        ...options,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const resetPasswordQueryKey = (options: Options<ResetPasswordData>) => [
+  createQueryKey('resetPassword', options),
+];
+
+export const resetPasswordOptions = (options: Options<ResetPasswordData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await resetPassword({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: resetPasswordQueryKey(options),
+  });
+};
+
+export const resetPasswordMutation = () => {
+  const mutationOptions: UseMutationOptions<
+    ResetPasswordResponse,
+    ResetPasswordError,
+    Options<ResetPasswordData>
+  > = {
+    mutationFn: async (options) => {
+      const { data } = await resetPassword({
         ...options,
         throwOnError: true,
       });

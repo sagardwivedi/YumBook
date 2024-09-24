@@ -21,6 +21,13 @@ export type SuccessResponse = {
   detail: string;
 };
 
+export type SuccessResponseWithData = {
+  detail: string;
+  data: {
+    [key: string]: unknown;
+  };
+};
+
 export type UserCreate = {
   username: string;
   email: string;
@@ -49,3 +56,28 @@ export type LoginUserData = {
 export type LoginUserResponse = SuccessResponse;
 
 export type LoginUserError = ErrorResponse | HTTPValidationError;
+
+export type LogoutUserResponse = SuccessResponse;
+
+export type LogoutUserError = ErrorResponse;
+
+export type ForgotPasswordData = {
+  query: {
+    email: string;
+  };
+};
+
+export type ForgotPasswordResponse = SuccessResponseWithData;
+
+export type ForgotPasswordError = ErrorResponse | HTTPValidationError;
+
+export type ResetPasswordData = {
+  query: {
+    new_password: string;
+    token: string;
+  };
+};
+
+export type ResetPasswordResponse = SuccessResponse;
+
+export type ResetPasswordError = ErrorResponse | HTTPValidationError;
