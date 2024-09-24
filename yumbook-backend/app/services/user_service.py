@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from sqlmodel import Session, select
 
 from app.models.user import User, UserCreate
-from app.utils.auth import hash_password
+from app.utils.auth import hash_password, verify_password
 
 
 class UserService:
@@ -35,3 +35,13 @@ class UserService:
         except Exception:
             self.session.rollback()
             return False
+
+    def authenticate(self, username: str, password: str) -> User | None:
+        db_user = self.session.exec(
+            select(User).where(User.username == username or User.email == username)
+        ).first()
+        if not db_user:
+            return None
+        if not verify_password(password, db_user.password_hash):
+            return None
+        return db_user

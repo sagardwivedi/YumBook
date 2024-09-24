@@ -3,7 +3,6 @@ from typing import Annotated, Any
 from uuid import UUID
 
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
 from jwt import InvalidTokenError, decode
 from pydantic import ValidationError
 from sqlmodel import Session
@@ -11,8 +10,9 @@ from sqlmodel import Session
 from app.config import settings
 from app.database.session import engine
 from app.models import TokenPayload, User
+from app.utils.util import OAuth2PasswordBearerWithCookie
 
-reusable_oauth2 = OAuth2PasswordBearer(
+reusable_oauth2 = OAuth2PasswordBearerWithCookie(
     tokenUrl=f"{settings.API_V1_STR}/login/access-token"
 )
 

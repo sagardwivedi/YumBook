@@ -11,12 +11,12 @@ fastapi = { extras = ["standard"], version = "^0.115.0" }
 passlib = { extras = ["bcrypt"], version = "^1.7.4" }
 psycopg = { extras = ["binary"], version = "^3.2.2" }
 sqlmodel = "^0.0.22"
-alembic = "^1.13.2"
+alembic = "^1.13.3"
 pyjwt = "^2.9.0"
 pydantic-settings = "^2.5.2"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.6.6"
+ruff = "^0.6.7"
 mypy = "^1.11.2"
 types-passlib = "^1.7.7.20240819"
 
