@@ -7,9 +7,7 @@
   "paths": {
     "/api/v1/register": {
       "post": {
-        "tags": [
-          "auth"
-        ],
+        "tags": ["auth"],
         "summary": "Register User",
         "description": "Register a new user in the system.\n\nArgs:\n    session: The database session dependency.\n    user_in: UserCreate model containing user details.\n\nReturns:\n    SuccessResponse indicating successful registration.\n\nRaises:\n    HTTPException: If user registration fails.",
         "operationId": "register_user",
@@ -69,9 +67,7 @@
     },
     "/api/v1/login/access-token": {
       "post": {
-        "tags": [
-          "auth"
-        ],
+        "tags": ["auth"],
         "summary": "Login User",
         "description": "Authenticate a user and issue an access token.\n\nArgs:\n    response: The response object to set cookies.\n    session: The database session dependency.\n    form: OAuth2PasswordRequestForm containing username and password.\n\nReturns:\n    SuccessResponse indicating successful login.\n\nRaises:\n    HTTPException: If authentication fails or if the user ID is missing.",
         "operationId": "login_user",
@@ -141,9 +137,7 @@
     },
     "/api/v1/logout": {
       "post": {
-        "tags": [
-          "auth"
-        ],
+        "tags": ["auth"],
         "summary": "Logout User",
         "description": "Logout a user by clearing the access token cookie.",
         "operationId": "logout_user",
@@ -173,9 +167,7 @@
     },
     "/api/v1/forgot-password": {
       "post": {
-        "tags": [
-          "auth"
-        ],
+        "tags": ["auth"],
         "summary": "Forgot Password",
         "description": "Handle a forgot password request by generating and returning a reset token.",
         "operationId": "forgot_password",
@@ -236,9 +228,7 @@
     },
     "/api/v1/reset-password": {
       "post": {
-        "tags": [
-          "auth"
-        ],
+        "tags": ["auth"],
         "summary": "Reset Password",
         "description": "Reset the user's password using a valid reset token.",
         "operationId": "reset_password",
@@ -305,6 +295,30 @@
           }
         }
       }
+    },
+    "/api/v1/users/me": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Read User",
+        "operationId": "read_user",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearerWithCookie": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -360,10 +374,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "username",
-          "password"
-        ],
+        "required": ["username", "password"],
         "title": "Body_auth-login_user"
       },
       "ErrorResponse": {
@@ -374,9 +385,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "detail"
-        ],
+        "required": ["detail"],
         "title": "ErrorResponse"
       },
       "HTTPValidationError": {
@@ -400,9 +409,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "detail"
-        ],
+        "required": ["detail"],
         "title": "SuccessResponse"
       },
       "SuccessResponseWithData": {
@@ -417,10 +424,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "detail",
-          "data"
-        ],
+        "required": ["detail", "data"],
         "title": "SuccessResponseWithData"
       },
       "UserCreate": {
@@ -450,12 +454,39 @@
           }
         },
         "type": "object",
-        "required": [
-          "username",
-          "email",
-          "password"
-        ],
+        "required": ["username", "email", "password"],
         "title": "UserCreate"
+      },
+      "UserRead": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "profile_picture": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profile Picture"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": ["username", "email", "id"],
+        "title": "UserRead"
       },
       "ValidationError": {
         "properties": {
@@ -483,12 +514,19 @@
           }
         },
         "type": "object",
-        "required": [
-          "loc",
-          "msg",
-          "type"
-        ],
+        "required": ["loc", "msg", "type"],
         "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearerWithCookie": {
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "scopes": {},
+            "tokenUrl": "/api/v1/login/access-token"
+          }
+        }
       }
     }
   }

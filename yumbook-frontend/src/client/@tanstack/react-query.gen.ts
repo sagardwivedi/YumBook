@@ -25,6 +25,7 @@ import {
   logoutUser,
   forgotPassword,
   resetPassword,
+  readUser,
 } from '../services.gen';
 
 type QueryKey<TOptions extends Options> = [
@@ -234,4 +235,22 @@ export const resetPasswordMutation = () => {
     },
   };
   return mutationOptions;
+};
+
+export const readUserQueryKey = (options?: Options) => [
+  createQueryKey('readUser', options),
+];
+
+export const readUserOptions = (options?: Options) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await readUser({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: readUserQueryKey(options),
+  });
 };

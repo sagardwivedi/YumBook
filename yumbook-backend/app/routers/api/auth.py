@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.config import settings
-from app.models.user import UserCreate
+from app.models import UserCreate
 from app.services import AuthService, UserService
 from app.utils import (
     ErrorResponse,

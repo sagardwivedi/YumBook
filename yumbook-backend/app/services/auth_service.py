@@ -6,8 +6,8 @@ from jwt import PyJWTError, decode, encode
 from passlib.context import CryptContext
 
 from app.config import settings
-from app.models.token import TokenPayload
-from app.utils.util import raise_http_exception
+from app.models import TokenPayload
+from app.utils import raise_http_exception
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

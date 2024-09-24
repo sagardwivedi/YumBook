@@ -4,9 +4,9 @@ from fastapi import HTTPException, status
 from pydantic import EmailStr
 from sqlmodel import Session, select
 
-from app.models.user import User, UserCreate
-from app.services.auth_service import AuthService
-from app.utils.util import raise_http_exception
+from app.models import User, UserCreate
+from app.services import AuthService
+from app.utils import raise_http_exception
 
 
 class UserService:

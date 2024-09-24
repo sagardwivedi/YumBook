@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
 
 from app.config import settings
-from app.routers.main import api_router
+from app.routers import api_router
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:

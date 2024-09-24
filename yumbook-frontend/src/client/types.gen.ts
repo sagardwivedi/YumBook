@@ -35,6 +35,13 @@ export type UserCreate = {
   password: string;
 };
 
+export type UserRead = {
+  username: string;
+  email: string;
+  profile_picture?: string | null;
+  id: string;
+};
+
 export type ValidationError = {
   loc: Array<string | number>;
   msg: string;
@@ -81,3 +88,7 @@ export type ResetPasswordData = {
 export type ResetPasswordResponse = SuccessResponse;
 
 export type ResetPasswordError = ErrorResponse | HTTPValidationError;
+
+export type ReadUserResponse = UserRead;
+
+export type ReadUserError = unknown;

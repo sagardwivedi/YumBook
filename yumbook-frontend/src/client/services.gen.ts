@@ -21,6 +21,8 @@ import type {
   ResetPasswordData,
   ResetPasswordError,
   ResetPasswordResponse,
+  ReadUserError,
+  ReadUserResponse,
 } from './types.gen';
 
 export const client = createClient(createConfig());
@@ -133,5 +135,21 @@ export const resetPassword = <ThrowOnError extends boolean = false>(
   >({
     ...options,
     url: '/api/v1/reset-password',
+  });
+};
+
+/**
+ * Read User
+ */
+export const readUser = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    ReadUserResponse,
+    ReadUserError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/api/v1/users/me',
   });
 };
