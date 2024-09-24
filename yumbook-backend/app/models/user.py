@@ -20,10 +20,6 @@ class UserUpdate(SQLModel):
     profile_picture: str | None = None
 
 
-class UserPasswordUpdate(SQLModel):
-    password: str  # Field for updating the password
-
-
 class UserRead(UserBase):
     id: UUID  # Include ID for read operations
 

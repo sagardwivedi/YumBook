@@ -1,3 +1,5 @@
+from typing import Any
+
 from fastapi import HTTPException, Request, status
 from fastapi.openapi.models import OAuthFlowPassword
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
@@ -43,6 +45,10 @@ class ErrorResponse(BaseModel):
 
 class SuccessResponse(BaseModel):
     detail: str
+
+
+class SuccessResponseWithData(SuccessResponse):
+    data: dict[str, Any]
 
 
 def raise_http_exception(status_code: int, detail: str) -> None:

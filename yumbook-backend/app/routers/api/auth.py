@@ -1,15 +1,20 @@
 from datetime import timedelta
 from typing import Annotated, Any
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.config import settings
 from app.models.user import UserCreate
-from app.services.user_service import UserService
-from app.utils.auth import create_access_token
-from app.utils.deps import SessionDep
-from app.utils.util import ErrorResponse, SuccessResponse, raise_http_exception
+from app.services import AuthService, UserService
+from app.utils import (
+    ErrorResponse,
+    SessionDep,
+    SuccessResponse,
+    SuccessResponseWithData,
+    raise_http_exception,
+)
 
 router = APIRouter()
 
@@ -38,9 +43,8 @@ def register_user(session: SessionDep, user_in: UserCreate) -> Any:
         HTTPException: If user registration fails.
     """
     service = UserService(session)
-    new_user = service.create_user(user_in)
 
-    if not new_user:
+    if not service.create_user(user_in):
         raise_http_exception(
             status.HTTP_500_INTERNAL_SERVER_ERROR,
             "User registration failed. Please try again later.",
@@ -55,6 +59,7 @@ def register_user(session: SessionDep, user_in: UserCreate) -> Any:
     responses={
         200: {"model": SuccessResponse},
         400: {"model": ErrorResponse},
+        401: {"model": ErrorResponse},
         500: {"model": ErrorResponse},
     },
 )
@@ -78,6 +83,8 @@ def login_user(
         HTTPException: If authentication fails or if the user ID is missing.
     """
     service = UserService(session)
+    auth_service = AuthService()
+
     user = service.authenticate(form.username, form.password)
 
     if not user:
@@ -86,13 +93,10 @@ def login_user(
             "Incorrect email or password",
         )
 
-    # Ensure user is authenticated and has a valid ID before issuing the token
-    if user and hasattr(user, "id"):
-        # Set the expiration time for the access token
+    if user:
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-        access_token = create_access_token(user.id, access_token_expires)
+        access_token = auth_service.create_access_token(user.id, access_token_expires)
 
-        # Set the access token as an HTTP-only, secure cookie
         response.set_cookie(
             key="access_token",
             value=f"Bearer {access_token}",
@@ -102,6 +106,100 @@ def login_user(
         )
 
         return SuccessResponse(detail="Login successful")
+
+    raise_http_exception(
+        status.HTTP_500_INTERNAL_SERVER_ERROR,
+        "Unexpected error",
+    )
+
+
+@router.post(
+    "/logout",
+    response_model=SuccessResponse,
+    responses={
+        200: {"model": SuccessResponse},
+        500: {"model": ErrorResponse},
+    },
+)
+def logout_user(response: Response) -> Any:
+    """
+    Logout a user by clearing the access token cookie.
+    """
+    response.delete_cookie("access_token")
+    return SuccessResponse(detail="Logout successful")
+
+
+@router.post(
+    "/forgot-password",
+    response_model=SuccessResponseWithData,
+    responses={
+        200: {"model": SuccessResponseWithData},
+        404: {"model": ErrorResponse},
+        500: {"model": ErrorResponse},
+    },
+)
+def forgot_password(email: str, session: SessionDep) -> Any:
+    """
+    Handle a forgot password request by generating and returning a reset token.
+    """
+    service = UserService(session)
+    auth_service = AuthService()
+
+    user = service.get_user_by_email(email)
+
+    if not user:
+        raise_http_exception(
+            status.HTTP_404_NOT_FOUND,
+            "User with this email does not exist",
+        )
+
+    if user:
+        reset_token = auth_service.create_access_token(user.id, timedelta(minutes=15))
+
+        return SuccessResponseWithData(
+            detail="Password reset token generated",
+            data={"reset_token": reset_token},
+        )
+
+    raise_http_exception(
+        status.HTTP_500_INTERNAL_SERVER_ERROR,
+        "Unexpected error",
+    )
+
+
+@router.post(
+    "/reset-password",
+    response_model=SuccessResponse,
+    responses={
+        200: {"model": SuccessResponse},
+        400: {"model": ErrorResponse},
+        500: {"model": ErrorResponse},
+    },
+)
+def reset_password(token: str, new_password: str, session: SessionDep) -> Any:
+    """
+    Reset the user's password using a valid reset token.
+    """
+    auth_service = AuthService()
+    user_service = UserService(session)
+
+    user_id = auth_service.verify_access_token(token)
+    if not user_id:
+        raise_http_exception(
+            status.HTTP_400_BAD_REQUEST,
+            "Invalid or expired reset token",
+        )
+
+    user = user_service.get_user_by_id(UUID(user_id))
+    if not user:
+        raise_http_exception(
+            status.HTTP_400_BAD_REQUEST,
+            "User not found or invalid token",
+        )
+
+    if user:
+        user_service.update_password(user, new_password)
+        return SuccessResponse(detail="Password has been successfully updated.")
 
     raise_http_exception(
         status.HTTP_500_INTERNAL_SERVER_ERROR,
