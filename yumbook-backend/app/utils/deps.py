@@ -7,7 +7,6 @@ from sqlmodel import Session
 from app.config import settings
 from app.database import get_db
 from app.models import User
-from app.services import AuthService
 from app.utils.util import OAuth2PasswordBearerWithCookie
 
 reusable_oauth2 = OAuth2PasswordBearerWithCookie(
@@ -20,6 +19,8 @@ TokenDep = Annotated[str, Depends(reusable_oauth2)]
 
 
 def get_current_user(session: SessionDep, token: TokenDep) -> User:
+    from app.services import AuthService
+
     auth_service = AuthService()
     id = UUID(auth_service.verify_access_token(token))
     user = session.get(User, id)

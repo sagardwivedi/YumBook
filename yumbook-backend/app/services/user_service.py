@@ -5,7 +5,7 @@ from pydantic import EmailStr
 from sqlmodel import Session, select
 
 from app.models import User, UserCreate
-from app.services import AuthService
+from app.services.auth_service import AuthService
 from app.utils import raise_http_exception
 
 
@@ -28,6 +28,9 @@ class UserService:
 
     def get_user_by_id(self, id: UUID) -> User | None:
         return self.session.get(User, id)
+
+    def get_user_by_username(self, username: str) -> User | None:
+        return self.session.exec(select(User).where(User.username == username)).first()
 
     def create_user(self, user: UserCreate) -> User | None:
         if self._user_exists(user.email, user.username):
