@@ -30,16 +30,26 @@ export type SuccessResponseWithData = {
 
 export type UserCreate = {
   username: string;
-  email: string;
   profile_picture?: string | null;
   password: string;
 };
 
-export type UserRead = {
+export type UserPublic = {
   username: string;
-  email: string;
   profile_picture?: string | null;
   id: string;
+};
+
+export type UserRead = {
+  username: string;
+  profile_picture?: string | null;
+  id: string;
+  email: string;
+};
+
+export type UserUpdate = {
+  username?: string | null;
+  profile_picture?: string | null;
 };
 
 export type ValidationError = {
@@ -89,6 +99,24 @@ export type ResetPasswordResponse = SuccessResponse;
 
 export type ResetPasswordError = ErrorResponse | HTTPValidationError;
 
-export type ReadUserResponse = UserRead;
+export type ReadMeResponse = UserRead;
 
-export type ReadUserError = unknown;
+export type ReadMeError = ErrorResponse;
+
+export type UpdateProfileData = {
+  body: UserUpdate;
+};
+
+export type UpdateProfileResponse = unknown;
+
+export type UpdateProfileError = HTTPValidationError;
+
+export type ReadOtherUserData = {
+  path: {
+    username: string;
+  };
+};
+
+export type ReadOtherUserResponse = UserPublic;
+
+export type ReadOtherUserError = ErrorResponse | HTTPValidationError;

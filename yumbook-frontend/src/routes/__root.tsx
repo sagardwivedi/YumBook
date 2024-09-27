@@ -1,16 +1,11 @@
 import {
   Outlet,
+  ScrollRestoration,
   createRootRoute,
-  createRootRouteWithContext,
 } from '@tanstack/react-router';
 import { Suspense, lazy } from 'react';
 
 import { Toaster } from '~/components/ui/toaster';
-import type useUser from '~/hooks/use-user';
-
-interface MyContext {
-  isAuthenticated: boolean;
-}
 
 const loadDevtools = () =>
   Promise.all([
@@ -20,7 +15,7 @@ const loadDevtools = () =>
     return {
       default: () => (
         <>
-          <routerDevtools.TanStackRouterDevtools />
+          <routerDevtools.TanStackRouterDevtools position='top-right' />
           <reactQueryDevtools.ReactQueryDevtools />
         </>
       ),
@@ -30,9 +25,10 @@ const loadDevtools = () =>
 const TanStackDevtools =
   process.env.NODE_ENV === 'production' ? () => null : lazy(loadDevtools);
 
-export const Route = createRootRouteWithContext<MyContext>()({
+export const Route = createRootRoute({
   component: () => (
     <>
+      <ScrollRestoration />
       <Outlet />
       <Toaster />
       <Suspense>

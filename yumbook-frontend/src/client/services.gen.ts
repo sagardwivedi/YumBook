@@ -21,8 +21,14 @@ import type {
   ResetPasswordData,
   ResetPasswordError,
   ResetPasswordResponse,
-  ReadUserError,
-  ReadUserResponse,
+  ReadMeError,
+  ReadMeResponse,
+  UpdateProfileData,
+  UpdateProfileError,
+  UpdateProfileResponse,
+  ReadOtherUserData,
+  ReadOtherUserError,
+  ReadOtherUserResponse,
 } from './types.gen';
 
 export const client = createClient(createConfig());
@@ -139,17 +145,49 @@ export const resetPassword = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Read User
+ * Read Me
  */
-export const readUser = <ThrowOnError extends boolean = false>(
+export const readMe = <ThrowOnError extends boolean = false>(
   options?: Options<unknown, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
-    ReadUserResponse,
-    ReadUserError,
+    ReadMeResponse,
+    ReadMeError,
     ThrowOnError
   >({
     ...options,
     url: '/api/v1/users/me',
+  });
+};
+
+/**
+ * Update Profile
+ */
+export const updateProfile = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateProfileData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    UpdateProfileResponse,
+    UpdateProfileError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/api/v1/users/me',
+  });
+};
+
+/**
+ * Read Other User
+ */
+export const readOtherUser = <ThrowOnError extends boolean = false>(
+  options: Options<ReadOtherUserData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    ReadOtherUserResponse,
+    ReadOtherUserError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/api/v1/users/{username}',
   });
 };

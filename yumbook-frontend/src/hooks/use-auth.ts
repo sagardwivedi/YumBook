@@ -1,12 +1,21 @@
-import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 
 import {
   loginUserMutation,
+  logoutUserMutation,
+  readMeOptions,
   registerUserMutation,
-} from '~/client/@tanstack/react-query.gen';
-import { getErrorMessage } from '~/lib/utils';
-import { useToast } from './use-toast';
+} from "~/client/@tanstack/react-query.gen";
+import { getErrorMessage } from "~/lib/utils";
+import { useToast } from "./use-toast";
+import { readMe } from "~/client";
+
+export const isAuthenticated = async () => {
+  const { data } = await readMe();
+
+  return !!data;
+};
 
 /**
  * Custom hook for authentication-related mutations.
@@ -23,13 +32,13 @@ const useAuth = () => {
     ...loginUserMutation(),
     onSuccess: ({ detail }) => {
       // Navigate to home page upon successful login
-      navigate({ to: '/home' });
-      toast({ title: 'Success', description: detail });
+      navigate({ to: "/home" });
+      toast({ title: "Success", description: detail });
     },
     onError: (error) => {
       // Get and display the error message
       const errorMessage = getErrorMessage(error);
-      toast({ title: 'Error', description: errorMessage });
+      toast({ title: "Error", description: errorMessage });
     },
   });
 
@@ -38,16 +47,26 @@ const useAuth = () => {
     ...registerUserMutation(),
     onSuccess: () => {
       // Navigate to login page upon successful registration
-      navigate({ to: '/auth/login' });
+      navigate({ to: "/auth/login" });
     },
     onError: (error) => {
       // Get and display the error message
       const errorMessage = getErrorMessage(error);
-      toast({ title: 'Error', description: errorMessage });
+      toast({ title: "Error", description: errorMessage });
+    },
+  });
+  const logoutMutation = useMutation({
+    ...logoutUserMutation(),
+    onSuccess: () => {
+      navigate({ to: "/auth/login" });
+    },
+    onError: (error) => {
+      const errorMessage = getErrorMessage(error);
+      toast({ title: "Error", description: errorMessage });
     },
   });
 
-  return { loginMutation, registerMutation };
+  return { loginMutation, registerMutation, logoutMutation };
 };
 
 export default useAuth;

@@ -7,7 +7,9 @@
   "paths": {
     "/api/v1/register": {
       "post": {
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "summary": "Register User",
         "description": "Register a new user in the system.\n\nArgs:\n    session: The database session dependency.\n    user_in: UserCreate model containing user details.\n\nReturns:\n    SuccessResponse indicating successful registration.\n\nRaises:\n    HTTPException: If user registration fails.",
         "operationId": "register_user",
@@ -67,7 +69,9 @@
     },
     "/api/v1/login/access-token": {
       "post": {
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "summary": "Login User",
         "description": "Authenticate a user and issue an access token.\n\nArgs:\n    response: The response object to set cookies.\n    session: The database session dependency.\n    form: OAuth2PasswordRequestForm containing username and password.\n\nReturns:\n    SuccessResponse indicating successful login.\n\nRaises:\n    HTTPException: If authentication fails or if the user ID is missing.",
         "operationId": "login_user",
@@ -137,7 +141,9 @@
     },
     "/api/v1/logout": {
       "post": {
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "summary": "Logout User",
         "description": "Logout a user by clearing the access token cookie.",
         "operationId": "logout_user",
@@ -167,7 +173,9 @@
     },
     "/api/v1/forgot-password": {
       "post": {
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "summary": "Forgot Password",
         "description": "Handle a forgot password request by generating and returning a reset token.",
         "operationId": "forgot_password",
@@ -228,7 +236,9 @@
     },
     "/api/v1/reset-password": {
       "post": {
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "summary": "Reset Password",
         "description": "Reset the user's password using a valid reset token.",
         "operationId": "reset_password",
@@ -298,9 +308,11 @@
     },
     "/api/v1/users/me": {
       "get": {
-        "tags": ["users"],
-        "summary": "Read User",
-        "operationId": "read_user",
+        "tags": [
+          "users"
+        ],
+        "summary": "Read Me",
+        "operationId": "read_me",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -311,6 +323,36 @@
                 }
               }
             }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -318,6 +360,95 @@
             "OAuth2PasswordBearerWithCookie": []
           }
         ]
+      },
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Update Profile",
+        "operationId": "update_profile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{username}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Read Other User",
+        "operationId": "read_other_user",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Username"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublic"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -374,7 +505,10 @@
           }
         },
         "type": "object",
-        "required": ["username", "password"],
+        "required": [
+          "username",
+          "password"
+        ],
         "title": "Body_auth-login_user"
       },
       "ErrorResponse": {
@@ -385,7 +519,9 @@
           }
         },
         "type": "object",
-        "required": ["detail"],
+        "required": [
+          "detail"
+        ],
         "title": "ErrorResponse"
       },
       "HTTPValidationError": {
@@ -409,7 +545,9 @@
           }
         },
         "type": "object",
-        "required": ["detail"],
+        "required": [
+          "detail"
+        ],
         "title": "SuccessResponse"
       },
       "SuccessResponseWithData": {
@@ -424,7 +562,10 @@
           }
         },
         "type": "object",
-        "required": ["detail", "data"],
+        "required": [
+          "detail",
+          "data"
+        ],
         "title": "SuccessResponseWithData"
       },
       "UserCreate": {
@@ -432,10 +573,6 @@
           "username": {
             "type": "string",
             "title": "Username"
-          },
-          "email": {
-            "type": "string",
-            "title": "Email"
           },
           "profile_picture": {
             "anyOf": [
@@ -454,18 +591,17 @@
           }
         },
         "type": "object",
-        "required": ["username", "email", "password"],
+        "required": [
+          "username",
+          "password"
+        ],
         "title": "UserCreate"
       },
-      "UserRead": {
+      "UserPublic": {
         "properties": {
           "username": {
             "type": "string",
             "title": "Username"
-          },
-          "email": {
-            "type": "string",
-            "title": "Email"
           },
           "profile_picture": {
             "anyOf": [
@@ -485,8 +621,74 @@
           }
         },
         "type": "object",
-        "required": ["username", "email", "id"],
+        "required": [
+          "username",
+          "id"
+        ],
+        "title": "UserPublic"
+      },
+      "UserRead": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "profile_picture": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profile Picture"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "id",
+          "email"
+        ],
         "title": "UserRead"
+      },
+      "UserUpdate": {
+        "properties": {
+          "username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Username"
+          },
+          "profile_picture": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profile Picture"
+          }
+        },
+        "type": "object",
+        "title": "UserUpdate"
       },
       "ValidationError": {
         "properties": {
@@ -514,7 +716,11 @@
           }
         },
         "type": "object",
-        "required": ["loc", "msg", "type"],
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
         "title": "ValidationError"
       }
     },

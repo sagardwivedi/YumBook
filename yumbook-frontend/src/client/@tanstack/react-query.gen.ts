@@ -17,6 +17,10 @@ import type {
   ResetPasswordData,
   ResetPasswordError,
   ResetPasswordResponse,
+  UpdateProfileData,
+  UpdateProfileError,
+  UpdateProfileResponse,
+  ReadOtherUserData,
 } from '../types.gen';
 import {
   client,
@@ -25,7 +29,9 @@ import {
   logoutUser,
   forgotPassword,
   resetPassword,
-  readUser,
+  readMe,
+  updateProfile,
+  readOtherUser,
 } from '../services.gen';
 
 type QueryKey<TOptions extends Options> = [
@@ -237,20 +243,73 @@ export const resetPasswordMutation = () => {
   return mutationOptions;
 };
 
-export const readUserQueryKey = (options?: Options) => [
-  createQueryKey('readUser', options),
+export const readMeQueryKey = (options?: Options) => [
+  createQueryKey('readMe', options),
 ];
 
-export const readUserOptions = (options?: Options) => {
+export const readMeOptions = (options?: Options) => {
   return queryOptions({
     queryFn: async ({ queryKey }) => {
-      const { data } = await readUser({
+      const { data } = await readMe({
         ...options,
         ...queryKey[0],
         throwOnError: true,
       });
       return data;
     },
-    queryKey: readUserQueryKey(options),
+    queryKey: readMeQueryKey(options),
+  });
+};
+
+export const updateProfileQueryKey = (options: Options<UpdateProfileData>) => [
+  createQueryKey('updateProfile', options),
+];
+
+export const updateProfileOptions = (options: Options<UpdateProfileData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await updateProfile({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: updateProfileQueryKey(options),
+  });
+};
+
+export const updateProfileMutation = () => {
+  const mutationOptions: UseMutationOptions<
+    UpdateProfileResponse,
+    UpdateProfileError,
+    Options<UpdateProfileData>
+  > = {
+    mutationFn: async (options) => {
+      const { data } = await updateProfile({
+        ...options,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const readOtherUserQueryKey = (options: Options<ReadOtherUserData>) => [
+  createQueryKey('readOtherUser', options),
+];
+
+export const readOtherUserOptions = (options: Options<ReadOtherUserData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await readOtherUser({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: readOtherUserQueryKey(options),
   });
 };

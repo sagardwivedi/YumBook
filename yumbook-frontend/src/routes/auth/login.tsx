@@ -19,12 +19,15 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import useAuth from '~/hooks/use-auth';
+import useAuth, { isAuthenticated } from '~/hooks/use-auth';
 
 export const Route = createFileRoute('/auth/login')({
-  beforeLoad: ({ context }) => {
-    if (context.isAuthenticated) {
-      throw redirect({ to: '/home' });
+  beforeLoad: async () => {
+    const success = await isAuthenticated();
+    if (success) {
+      throw redirect({
+        to: '/home',
+      });
     }
   },
   component: LoginPage,
