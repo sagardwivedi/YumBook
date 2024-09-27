@@ -1,15 +1,14 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useNavigate, useRouter } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 
+import { readMe } from "~/client";
 import {
   loginUserMutation,
   logoutUserMutation,
-  readMeOptions,
   registerUserMutation,
 } from "~/client/@tanstack/react-query.gen";
 import { getErrorMessage } from "~/lib/utils";
 import { useToast } from "./use-toast";
-import { readMe } from "~/client";
 
 export const isAuthenticated = async () => {
   const { data } = await readMe();

@@ -5,7 +5,7 @@ import {
   createConfig,
   type Options,
   urlSearchParamsBodySerializer,
-} from '@hey-api/client-fetch';
+} from "@hey-api/client-fetch";
 import type {
   RegisterUserData,
   RegisterUserError,
@@ -29,7 +29,7 @@ import type {
   ReadOtherUserData,
   ReadOtherUserError,
   ReadOtherUserResponse,
-} from './types.gen';
+} from "./types.gen";
 
 export const client = createClient(createConfig());
 
@@ -56,7 +56,7 @@ export const registerUser = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: '/api/v1/register',
+    url: "/api/v1/register",
   });
 };
 
@@ -86,10 +86,10 @@ export const loginUser = <ThrowOnError extends boolean = false>(
     ...options,
     ...urlSearchParamsBodySerializer,
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      "Content-Type": "application/x-www-form-urlencoded",
       ...options?.headers,
     },
-    url: '/api/v1/login/access-token',
+    url: "/api/v1/login/access-token",
   });
 };
 
@@ -106,7 +106,7 @@ export const logoutUser = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: '/api/v1/logout',
+    url: "/api/v1/logout",
   });
 };
 
@@ -123,7 +123,7 @@ export const forgotPassword = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: '/api/v1/forgot-password',
+    url: "/api/v1/forgot-password",
   });
 };
 
@@ -140,7 +140,7 @@ export const resetPassword = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: '/api/v1/reset-password',
+    url: "/api/v1/reset-password",
   });
 };
 
@@ -156,7 +156,7 @@ export const readMe = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: '/api/v1/users/me',
+    url: "/api/v1/users/me",
   });
 };
 
@@ -172,7 +172,7 @@ export const updateProfile = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: '/api/v1/users/me',
+    url: "/api/v1/users/me",
   });
 };
 
@@ -188,6 +188,6 @@ export const readOtherUser = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: '/api/v1/users/{username}',
+    url: "/api/v1/users/{username}",
   });
 };

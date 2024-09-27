@@ -1,10 +1,10 @@
-import { Link, createLazyFileRoute } from '@tanstack/react-router';
-import { BookOpen, ChevronDown, Share2, Users, Utensils } from 'lucide-react';
+import { Link, createLazyFileRoute } from "@tanstack/react-router";
+import { BookOpen, ChevronDown, Share2, Users, Utensils } from "lucide-react";
 
-import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 
-export const Route = createLazyFileRoute('/')({
+export const Route = createLazyFileRoute("/")({
   component: LandingPage,
 });
 
@@ -45,7 +45,7 @@ export default function LandingPage() {
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2 animate-fade-in-up">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                  Share Your Culinary Creations with{' '}
+                  Share Your Culinary Creations with{" "}
                   <span className="text-primary">YumBook</span>
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
@@ -59,7 +59,7 @@ export default function LandingPage() {
                   className="transition-transform duration-200 ease-in-out hover:scale-105 active:scale-95"
                   asChild
                 >
-                  <Link to={'/auth/login'}>Get Started</Link>
+                  <Link to={"/auth/login"}>Get Started</Link>
                 </Button>
                 <Button
                   size="lg"
@@ -198,7 +198,7 @@ export default function LandingPage() {
                   </Button>
                 </form>
                 <p className="text-xs text-primary-foreground/80">
-                  By signing up, you agree to our{' '}
+                  By signing up, you agree to our{" "}
                   <Link
                     className="underline underline-offset-2 hover:text-primary-foreground transition-colors duration-200 ease-in-out"
                     href="#"

@@ -1,15 +1,15 @@
-import { Link, createFileRoute, redirect } from '@tanstack/react-router';
-import { Lock, Mail, Utensils } from 'lucide-react';
-import { type SubmitHandler, useForm } from 'react-hook-form';
+import { Link, createFileRoute, redirect } from "@tanstack/react-router";
+import { Lock, Mail, Utensils } from "lucide-react";
+import { type SubmitHandler, useForm } from "react-hook-form";
 
-import type { Body_auth_login_user as LoginData } from '~/client';
-import { Button } from '~/components/ui/button';
+import type { Body_auth_login_user as LoginData } from "~/client";
+import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-} from '~/components/ui/card';
+} from "~/components/ui/card";
 import {
   Form,
   FormControl,
@@ -17,16 +17,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '~/components/ui/form';
-import { Input } from '~/components/ui/input';
-import useAuth, { isAuthenticated } from '~/hooks/use-auth';
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import useAuth, { isAuthenticated } from "~/hooks/use-auth";
 
-export const Route = createFileRoute('/auth/login')({
+export const Route = createFileRoute("/auth/login")({
   beforeLoad: async () => {
     const success = await isAuthenticated();
     if (success) {
       throw redirect({
-        to: '/home',
+        to: "/home",
       });
     }
   },
@@ -38,8 +38,8 @@ function LoginPage() {
 
   const form = useForm<LoginData>({
     defaultValues: {
-      username: '',
-      password: '',
+      username: "",
+      password: "",
     },
   });
 
@@ -71,7 +71,7 @@ function LoginPage() {
                 rules={{
                   required: {
                     value: true,
-                    message: 'Please enter your email',
+                    message: "Please enter your email",
                   },
                 }}
                 render={({ field }) => (
@@ -107,7 +107,7 @@ function LoginPage() {
                 rules={{
                   required: {
                     value: true,
-                    message: 'Please enter your password',
+                    message: "Please enter your password",
                   },
                 }}
                 render={({ field }) => (
@@ -147,15 +147,15 @@ function LoginPage() {
         </CardContent>
         <CardFooter className="flex flex-col space-y-4 pb-8">
           <Link
-            to={'/auth/forgot-password'}
+            to={"/auth/forgot-password"}
             className="text-sm text-primary hover:text-primary/80 transition-colors duration-200"
           >
             Forgot your password?
           </Link>
           <div className="text-sm text-muted-foreground">
-            New to YumBook?{' '}
+            New to YumBook?{" "}
             <Link
-              to={'/auth/signup'}
+              to={"/auth/signup"}
               className="font-medium text-primary hover:text-primary/80 transition-colors duration-200"
             >
               Create an account

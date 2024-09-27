@@ -1,10 +1,10 @@
-import { AvatarImage } from '@radix-ui/react-avatar';
+import { AvatarImage } from "@radix-ui/react-avatar";
 import {
   Link,
   Outlet,
   createFileRoute,
   redirect,
-} from '@tanstack/react-router';
+} from "@tanstack/react-router";
 import {
   HomeIcon,
   LogOutIcon,
@@ -15,36 +15,36 @@ import {
   SunIcon,
   UserIcon,
   Utensils,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { readMeOptions } from '~/client/@tanstack/react-query.gen';
-import { Avatar, AvatarFallback } from '~/components/ui/avatar';
-import { Button } from '~/components/ui/button';
+import { readMeOptions } from "~/client/@tanstack/react-query.gen";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/ui/dropdown-menu';
-import useAuth, { isAuthenticated } from '~/hooks/use-auth';
-import { useThemeStore } from '~/hooks/use-theme-store';
-import useUserStore from '~/hooks/use-user-store';
-import { queryClient } from '~/index';
+} from "~/components/ui/dropdown-menu";
+import useAuth, { isAuthenticated } from "~/hooks/use-auth";
+import { useThemeStore } from "~/hooks/use-theme-store";
+import useUserStore from "~/hooks/use-user-store";
+import { queryClient } from "~/index";
 
 // Memoized static data
 const staticLinks = [
-  { to: '/home', icon: HomeIcon, label: 'Home' },
-  { to: '/explorer', icon: SearchIcon, label: 'Explore' },
-  { to: '/create', icon: PlusIcon, label: 'Create' },
-  { to: '/$profile', icon: UserIcon, label: 'Profile', isProfile: true },
+  { to: "/home", icon: HomeIcon, label: "Home" },
+  { to: "/explorer", icon: SearchIcon, label: "Explore" },
+  { to: "/create", icon: PlusIcon, label: "Create" },
+  { to: "/$profile", icon: UserIcon, label: "Profile", isProfile: true },
 ];
 
-export const Route = createFileRoute('/_layout')({
+export const Route = createFileRoute("/_layout")({
   beforeLoad: async () => {
     const success = await isAuthenticated();
     if (!success) {
       throw redirect({
-        to: '/auth/login',
+        to: "/auth/login",
         search: {
           redirect: location.href,
         },
@@ -115,7 +115,7 @@ function DropdownMenuComponent({ onLogout }: { onLogout: () => void }) {
         <DropdownMenuContent>
           <DropdownMenuItem onClick={toggleTheme}>
             <Button variant="ghost" className="w-full h-6 justify-start">
-              {theme === 'light' ? (
+              {theme === "light" ? (
                 <SunIcon className="mr-2 h-4 w-4" />
               ) : (
                 <MoonIcon className="mr-2 h-4 w-4" />

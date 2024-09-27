@@ -1,5 +1,5 @@
-import axios from 'axios';
-import * as fs from 'node:fs';
+import axios from "axios";
+import * as fs from "node:fs";
 
 interface OpenAPIOperation {
   operationId?: string;
@@ -24,16 +24,16 @@ async function downloadOpenAPIFile(
       filePath,
       JSON.stringify(response.data, null, 2),
     );
-    console.log('File downloaded and saved as openapi.json');
+    console.log("File downloaded and saved as openapi.json");
   } catch (error) {
-    console.error('Error downloading the OpenAPI file:', error);
+    console.error("Error downloading the OpenAPI file:", error);
     throw error;
   }
 }
 
 async function modifyOpenAPIFile(filePath: string): Promise<void> {
   try {
-    const data = await fs.promises.readFile(filePath, 'utf-8');
+    const data = await fs.promises.readFile(filePath, "utf-8");
     const openapiContent: OpenAPIContent = JSON.parse(data);
 
     for (const pathKey in openapiContent.paths) {
@@ -63,14 +63,14 @@ async function modifyOpenAPIFile(filePath: string): Promise<void> {
       filePath,
       JSON.stringify(openapiContent, null, 2),
     );
-    console.log('File successfully modified');
+    console.log("File successfully modified");
   } catch (err) {
-    console.error('Error modifying the OpenAPI file:', err);
+    console.error("Error modifying the OpenAPI file:", err);
   }
 }
 
-const openApiUrl = 'http://localhost:8000/api/v1/openapi.json';
-const filePath = './openapi.json';
+const openApiUrl = "http://localhost:8000/api/v1/openapi.json";
+const filePath = "./openapi.json";
 
 async function main() {
   try {
@@ -80,7 +80,7 @@ async function main() {
     // Step 2: Modify the downloaded OpenAPI file
     await modifyOpenAPIFile(filePath);
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
   }
 }
 

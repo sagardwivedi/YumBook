@@ -1,13 +1,13 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { RouterProvider, createRouter } from '@tanstack/react-router';
-import { StrictMode, useEffect } from 'react';
-import ReactDOM from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { StrictMode, useEffect } from "react";
+import ReactDOM from "react-dom/client";
 
-import '~/index.css';
-import { client } from '~/client';
-import { useThemeStore } from '~/hooks/use-theme-store';
-import { routeTree } from '~/routeTree.gen';
-import useUserStore from './hooks/use-user-store';
+import "~/index.css";
+import { client } from "~/client";
+import { useThemeStore } from "~/hooks/use-theme-store";
+import { routeTree } from "~/routeTree.gen";
+import useUserStore from "./hooks/use-user-store";
 
 const router = createRouter({
   routeTree,
@@ -16,15 +16,15 @@ const router = createRouter({
 
 export const queryClient = new QueryClient();
 
-client.setConfig({ baseUrl: 'http://localhost:8000', credentials: 'include' });
+client.setConfig({ baseUrl: "http://localhost:8000", credentials: "include" });
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
   }
 }
 
-const rootEl = document.getElementById('root');
+const rootEl = document.getElementById("root");
 if (rootEl) {
   const root = ReactDOM.createRoot(rootEl);
   root.render(<App />);
@@ -42,7 +42,7 @@ function App() {
   return (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} defaultPreload={'intent'} />
+        <RouterProvider router={router} defaultPreload={"intent"} />
       </QueryClientProvider>
     </StrictMode>
   );

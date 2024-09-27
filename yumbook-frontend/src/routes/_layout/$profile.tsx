@@ -1,4 +1,4 @@
-import { createFileRoute, useLoaderData } from '@tanstack/react-router';
+import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import {
   CakeIcon,
   HeartIcon,
@@ -6,18 +6,18 @@ import {
   MessageCircleIcon,
   PenIcon,
   UserIcon,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { readOtherUserOptions } from '~/client/@tanstack/react-query.gen';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
-import { Button } from '~/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
-import { ScrollArea } from '~/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
-import useUserStore from '~/hooks/use-user-store';
-import { queryClient } from '~/index';
+import { readOtherUserOptions } from "~/client/@tanstack/react-query.gen";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import useUserStore from "~/hooks/use-user-store";
+import { queryClient } from "~/index";
 
-export const Route = createFileRoute('/_layout/$profile')({
+export const Route = createFileRoute("/_layout/$profile")({
   component: ProfilePage,
   loader: ({ params }) =>
     queryClient.ensureQueryData(
@@ -26,7 +26,7 @@ export const Route = createFileRoute('/_layout/$profile')({
 });
 
 function ProfilePage() {
-  const user = useLoaderData({ from: '/_layout/$profile' });
+  const user = useLoaderData({ from: "/_layout/$profile" });
   const { user: userMe } = useUserStore();
 
   const isMyProfile = userMe?.username === user.username;

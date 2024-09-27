@@ -1,22 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '~/components/ui/card';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '~/components/ui/dropdown-menu';
-import { ScrollArea } from '~/components/ui/scroll-area';
+import { Link, createFileRoute } from "@tanstack/react-router";
 import {
   BookmarkIcon,
   ChefHatIcon,
@@ -28,9 +10,27 @@ import {
   SearchIcon,
   SettingsIcon,
   UserIcon,
-} from 'lucide-react';
+} from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "~/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import { Input } from "~/components/ui/input";
+import { ScrollArea } from "~/components/ui/scroll-area";
 
-export const Route = createFileRoute('/_layout/home')({
+export const Route = createFileRoute("/_layout/home")({
   component: HomePage,
 });
 

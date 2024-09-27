@@ -1,17 +1,17 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
-('lucide-react');
-import { type SubmitHandler, useForm } from 'react-hook-form';
+import { createFileRoute, Link } from "@tanstack/react-router";
+("lucide-react");
+import { type SubmitHandler, useForm } from "react-hook-form";
 
-import useAuth from '~/hooks/use-auth';
-import type { UserCreate } from '~/client';
-import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
+import useAuth from "~/hooks/use-auth";
+import type { UserCreate } from "~/client";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-} from '~/components/ui/card';
+} from "~/components/ui/card";
 import {
   Form,
   FormControl,
@@ -19,10 +19,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '~/components/ui/form';
-import { Utensils, Mail, Lock, User } from 'lucide-react';
+} from "~/components/ui/form";
+import { Utensils, Mail, Lock, User } from "lucide-react";
 
-export const Route = createFileRoute('/auth/signup')({
+export const Route = createFileRoute("/auth/signup")({
   component: SignupPage,
 });
 
@@ -31,9 +31,9 @@ function SignupPage() {
 
   const form = useForm<UserCreate>({
     defaultValues: {
-      email: '',
-      password: '',
-      username: '',
+      email: "",
+      password: "",
+      username: "",
     },
   });
 
@@ -146,9 +146,9 @@ function SignupPage() {
         </CardContent>
         <CardFooter className="flex flex-col space-y-4 pb-8">
           <div className="text-sm text-muted-foreground">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <Link
-              to={'/auth/login'}
+              to={"/auth/login"}
               className="font-medium text-primary hover:text-primary/80 transition-colors duration-200"
             >
               Log in
