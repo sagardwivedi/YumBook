@@ -1,5 +1,5 @@
 import axios from "axios";
-import * as fs from "node:fs";
+import * as fs from "node:fs/promises";
 
 interface OpenAPIOperation {
   operationId?: string;
@@ -14,26 +14,20 @@ interface OpenAPIContent {
   paths: { [pathKey: string]: OpenAPIPath };
 }
 
-async function downloadOpenAPIFile(
-  url: string,
-  filePath: string,
-): Promise<void> {
+async function downloadOpenAPIFile(url: string, filePath: string): Promise<void> {
   try {
     const response = await axios.get(url);
-    await fs.promises.writeFile(
-      filePath,
-      JSON.stringify(response.data, null, 2),
-    );
-    console.log("File downloaded and saved as openapi.json");
-  } catch (error) {
-    console.error("Error downloading the OpenAPI file:", error);
-    throw error;
+    await fs.writeFile(filePath, JSON.stringify(response.data, null, 2));
+    console.log(`File downloaded and saved as ${filePath}`);
+  } catch (error: any) {
+    console.error("Error downloading the OpenAPI file:", error?.response?.data || error.message);
+    throw new Error("Download failed.");
   }
 }
 
 async function modifyOpenAPIFile(filePath: string): Promise<void> {
   try {
-    const data = await fs.promises.readFile(filePath, "utf-8");
+    const data = await fs.readFile(filePath, "utf-8");
     const openapiContent: OpenAPIContent = JSON.parse(data);
 
     for (const pathKey in openapiContent.paths) {
@@ -42,32 +36,25 @@ async function modifyOpenAPIFile(filePath: string): Promise<void> {
       for (const method in pathData) {
         const operation = pathData[method];
 
-        if (
-          operation?.tags &&
-          operation.tags.length > 0 &&
-          operation.operationId
-        ) {
+        if (operation?.tags?.length && operation.operationId) {
           const tag = operation.tags[0];
           const toRemove = `${tag}-`;
 
           if (operation.operationId.startsWith(toRemove)) {
-            operation.operationId = operation.operationId.substring(
-              toRemove.length,
-            );
+            operation.operationId = operation.operationId.substring(toRemove.length);
           }
         }
       }
     }
 
-    await fs.promises.writeFile(
-      filePath,
-      JSON.stringify(openapiContent, null, 2),
-    );
+    await fs.writeFile(filePath, JSON.stringify(openapiContent, null, 2));
     console.log("File successfully modified");
-  } catch (err) {
-    console.error("Error modifying the OpenAPI file:", err);
+  } catch (error: any) {
+    console.error("Error modifying the OpenAPI file:", error?.message);
+    throw new Error("Modification failed.");
   }
 }
+
 
 const openApiUrl = "http://localhost:8000/api/v1/openapi.json";
 const filePath = "./openapi.json";
