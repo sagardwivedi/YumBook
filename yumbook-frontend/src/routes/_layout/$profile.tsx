@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_layout/$profile")({
   component: ProfilePage,
   loader: ({ params }) =>
     queryClient.ensureQueryData(
-      readOtherUserOptions({ path: { username: params.profile } }),
+      readOtherUserOptions({ path: { username: params.profile } })
     ),
 });
 
@@ -55,28 +55,11 @@ function ProfilePage() {
                     Edit Profile
                   </Button>
                 </>
-              ) : (
-                <>
-                  <Button>
-                    <MessageCircleIcon className="h-4 w-4 mr-2" />
-                    Message
-                  </Button>
-                  <Button variant="outline">
-                    <UserIcon className="h-4 w-4 mr-2" />
-                    Follow
-                  </Button>
-                </>
-              )}
+              ) : undefined}
             </div>
             <div className="flex justify-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
               <span>
                 <strong>256</strong> Recipes
-              </span>
-              <span>
-                <strong>10.2k</strong> Followers
-              </span>
-              <span>
-                <strong>534</strong> Following
               </span>
             </div>
           </div>

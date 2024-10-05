@@ -1,4 +1,7 @@
+.vscode
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
 .env
-__pycache__
-.ruff_cache
-.mypy_cache
