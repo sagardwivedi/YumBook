@@ -1,11 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-("lucide-react");
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { Lock, Mail, User, Utensils } from "lucide-react";
 
-import useAuth from "~/hooks/use-auth";
 import type { UserCreate } from "~/client";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import {
   Card,
   CardContent,
@@ -20,7 +18,8 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { Utensils, Mail, Lock, User } from "lucide-react";
+import { Input } from "~/components/ui/input";
+import useAuth from "~/hooks/use-auth";
 
 export const Route = createFileRoute("/auth/signup")({
   component: SignupPage,
@@ -148,7 +147,7 @@ function SignupPage() {
           <div className="text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link
-              to={"/auth/login"}
+              to={"/"}
               className="font-medium text-primary hover:text-primary/80 transition-colors duration-200"
             >
               Log in
@@ -159,38 +158,6 @@ function SignupPage() {
           </p>
         </CardFooter>
       </Card>
-      <div className="mt-8 grid grid-cols-3 gap-4">
-        <div className="relative group">
-          <img
-            src="/placeholder.svg?height=120&width=120"
-            alt="Recipe 1"
-            className="w-28 h-28 rounded-lg object-cover shadow-md transition-transform duration-300 ease-in-out transform group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-primary/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out rounded-lg flex items-center justify-center">
-            <Utensils className="text-primary-foreground w-8 h-8" />
-          </div>
-        </div>
-        <div className="relative group">
-          <img
-            src="/placeholder.svg?height=120&width=120"
-            alt="Recipe 2"
-            className="w-28 h-28 rounded-lg object-cover shadow-md transition-transform duration-300 ease-in-out transform group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-primary/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out rounded-lg flex items-center justify-center">
-            <Utensils className="text-primary-foreground w-8 h-8" />
-          </div>
-        </div>
-        <div className="relative group">
-          <img
-            src="/placeholder.svg?height=120&width=120"
-            alt="Recipe 3"
-            className="w-28 h-28 rounded-lg object-cover shadow-md transition-transform duration-300 ease-in-out transform group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-primary/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out rounded-lg flex items-center justify-center">
-            <Utensils className="text-primary-foreground w-8 h-8" />
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

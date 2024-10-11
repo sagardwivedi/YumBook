@@ -30,19 +30,19 @@ export type SuccessResponseWithData = {
 
 export type UserCreate = {
   username: string;
-  profile_picture?: string | null;
+  email: string;
   password: string;
 };
 
 export type UserPublic = {
   username: string;
-  profile_picture?: string | null;
+  profile_picture?: string;
   id: string;
 };
 
 export type UserRead = {
   username: string;
-  profile_picture?: string | null;
+  profile_picture?: string;
   id: string;
   email: string;
 };

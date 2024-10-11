@@ -46,7 +46,7 @@ const useAuth = () => {
     ...registerUserMutation(),
     onSuccess: () => {
       // Navigate to login page upon successful registration
-      navigate({ to: "/auth/login" });
+      navigate({ to: "/" });
     },
     onError: (error) => {
       // Get and display the error message
@@ -57,7 +57,7 @@ const useAuth = () => {
   const logoutMutation = useMutation({
     ...logoutUserMutation(),
     onSuccess: () => {
-      navigate({ to: "/auth/login" });
+      navigate({ to: "/" });
     },
     onError: (error) => {
       const errorMessage = getErrorMessage(error);

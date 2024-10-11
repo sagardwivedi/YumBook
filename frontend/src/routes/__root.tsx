@@ -3,9 +3,8 @@ import {
   ScrollRestoration,
   createRootRoute,
 } from "@tanstack/react-router";
-import { Suspense, lazy } from "react";
-
-import { Toaster } from "~/components/ui/toaster";
+import { lazy, Suspense } from "react";
+import NotFound from "~/components/NotFound";
 
 const loadDevtools = () =>
   Promise.all([
@@ -15,7 +14,7 @@ const loadDevtools = () =>
     return {
       default: () => (
         <>
-          <routerDevtools.TanStackRouterDevtools position="top-right" />
+          <routerDevtools.TanStackRouterDevtools />
           <reactQueryDevtools.ReactQueryDevtools />
         </>
       ),
@@ -28,12 +27,12 @@ const TanStackDevtools =
 export const Route = createRootRoute({
   component: () => (
     <>
-      <ScrollRestoration />
       <Outlet />
-      <Toaster />
+      <ScrollRestoration />
       <Suspense>
         <TanStackDevtools />
       </Suspense>
     </>
   ),
+  notFoundComponent: NotFound,
 });

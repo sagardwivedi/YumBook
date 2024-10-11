@@ -86,15 +86,18 @@ export const registerUserOptions = (options: Options<RegisterUserData>) => {
   });
 };
 
-export const registerUserMutation = () => {
+export const registerUserMutation = (
+  options?: Partial<Options<RegisterUserData>>,
+) => {
   const mutationOptions: UseMutationOptions<
     RegisterUserResponse,
     RegisterUserError,
     Options<RegisterUserData>
   > = {
-    mutationFn: async (options) => {
+    mutationFn: async (localOptions) => {
       const { data } = await registerUser({
         ...options,
+        ...localOptions,
         throwOnError: true,
       });
       return data;
@@ -121,15 +124,18 @@ export const loginUserOptions = (options: Options<LoginUserData>) => {
   });
 };
 
-export const loginUserMutation = () => {
+export const loginUserMutation = (
+  options?: Partial<Options<LoginUserData>>,
+) => {
   const mutationOptions: UseMutationOptions<
     LoginUserResponse,
     LoginUserError,
     Options<LoginUserData>
   > = {
-    mutationFn: async (options) => {
+    mutationFn: async (localOptions) => {
       const { data } = await loginUser({
         ...options,
+        ...localOptions,
         throwOnError: true,
       });
       return data;
@@ -156,15 +162,16 @@ export const logoutUserOptions = (options?: Options) => {
   });
 };
 
-export const logoutUserMutation = () => {
+export const logoutUserMutation = (options?: Partial<Options>) => {
   const mutationOptions: UseMutationOptions<
     LogoutUserResponse,
     LogoutUserError,
     Options
   > = {
-    mutationFn: async (options) => {
+    mutationFn: async (localOptions) => {
       const { data } = await logoutUser({
         ...options,
+        ...localOptions,
         throwOnError: true,
       });
       return data;
@@ -191,15 +198,18 @@ export const forgotPasswordOptions = (options: Options<ForgotPasswordData>) => {
   });
 };
 
-export const forgotPasswordMutation = () => {
+export const forgotPasswordMutation = (
+  options?: Partial<Options<ForgotPasswordData>>,
+) => {
   const mutationOptions: UseMutationOptions<
     ForgotPasswordResponse,
     ForgotPasswordError,
     Options<ForgotPasswordData>
   > = {
-    mutationFn: async (options) => {
+    mutationFn: async (localOptions) => {
       const { data } = await forgotPassword({
         ...options,
+        ...localOptions,
         throwOnError: true,
       });
       return data;
@@ -226,15 +236,18 @@ export const resetPasswordOptions = (options: Options<ResetPasswordData>) => {
   });
 };
 
-export const resetPasswordMutation = () => {
+export const resetPasswordMutation = (
+  options?: Partial<Options<ResetPasswordData>>,
+) => {
   const mutationOptions: UseMutationOptions<
     ResetPasswordResponse,
     ResetPasswordError,
     Options<ResetPasswordData>
   > = {
-    mutationFn: async (options) => {
+    mutationFn: async (localOptions) => {
       const { data } = await resetPassword({
         ...options,
+        ...localOptions,
         throwOnError: true,
       });
       return data;
@@ -279,15 +292,18 @@ export const updateProfileOptions = (options: Options<UpdateProfileData>) => {
   });
 };
 
-export const updateProfileMutation = () => {
+export const updateProfileMutation = (
+  options?: Partial<Options<UpdateProfileData>>,
+) => {
   const mutationOptions: UseMutationOptions<
     UpdateProfileResponse,
     UpdateProfileError,
     Options<UpdateProfileData>
   > = {
-    mutationFn: async (options) => {
+    mutationFn: async (localOptions) => {
       const { data } = await updateProfile({
         ...options,
+        ...localOptions,
         throwOnError: true,
       });
       return data;

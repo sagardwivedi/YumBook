@@ -10,8 +10,4 @@ export default defineConfig({
   },
   schemas: false,
   plugins: ["@tanstack/react-query"],
-  types: {
-    dates: "types+transform",
-    enums: "typescript+namespace",
-  },
 });
