@@ -2,7 +2,7 @@ from datetime import timedelta
 from typing import Annotated, Any
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.config import settings
@@ -13,7 +13,6 @@ from app.utils import (
     SessionDep,
     SuccessResponse,
     SuccessResponseWithData,
-    raise_http_exception,
 )
 
 router = APIRouter()
@@ -45,7 +44,7 @@ def register_user(session: SessionDep, user_in: UserCreate) -> Any:
     service = UserService(session)
 
     if not service.create_user(user_in):
-        raise_http_exception(
+        raise HTTPException(
             status.HTTP_500_INTERNAL_SERVER_ERROR,
             "User registration failed. Please try again later.",
         )
@@ -88,29 +87,21 @@ def login_user(
     user = service.authenticate(form.username, form.password)
 
     if not user:
-        raise_http_exception(
+        raise HTTPException(
             status.HTTP_400_BAD_REQUEST,
             "Incorrect email or password",
         )
 
-    if user:
-        access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-        access_token = auth_service.create_access_token(user.id, access_token_expires)
-
-        response.set_cookie(
-            key="access_token",
-            value=f"Bearer {access_token}",
-            httponly=True,  # Prevent JavaScript access to the cookie
-            secure=True,  # Only send the cookie over HTTPS
-            samesite="lax",  # Prevent CSRF attacks
-        )
-
-        return SuccessResponse(detail="Login successful")
-
-    raise_http_exception(
-        status.HTTP_500_INTERNAL_SERVER_ERROR,
-        "Unexpected error",
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = auth_service.create_access_token(user.id, access_token_expires)
+    response.set_cookie(
+        key="access_token",
+        value=f"Bearer {access_token}",
+        httponly=True,  # Prevent JavaScript access to the cookie
+        secure=True,  # Only send the cookie over HTTPS
+        samesite="lax",  # Prevent CSRF attacks
     )
+    return SuccessResponse(detail="Login successful")
 
 
 @router.post(
@@ -148,22 +139,16 @@ def forgot_password(email: str, session: SessionDep) -> Any:
     user = service.get_user_by_email(email)
 
     if not user:
-        raise_http_exception(
+        raise HTTPException(
             status.HTTP_404_NOT_FOUND,
             "User with this email does not exist",
         )
 
-    if user:
-        reset_token = auth_service.create_access_token(user.id, timedelta(minutes=15))
+    reset_token = auth_service.create_access_token(user.id, timedelta(minutes=15))
 
-        return SuccessResponseWithData(
-            detail="Password reset token generated",
-            data={"reset_token": reset_token},
-        )
-
-    raise_http_exception(
-        status.HTTP_500_INTERNAL_SERVER_ERROR,
-        "Unexpected error",
+    return SuccessResponseWithData(
+        detail="Password reset token generated",
+        data={"reset_token": reset_token},
     )
 
 
@@ -185,23 +170,18 @@ def reset_password(token: str, new_password: str, session: SessionDep) -> Any:
 
     user_id = auth_service.verify_access_token(token)
     if not user_id:
-        raise_http_exception(
+        raise HTTPException(
             status.HTTP_400_BAD_REQUEST,
             "Invalid or expired reset token",
         )
 
     user = user_service.get_user_by_id(UUID(user_id))
+
     if not user:
-        raise_http_exception(
+        raise HTTPException(
             status.HTTP_400_BAD_REQUEST,
             "User not found or invalid token",
         )
 
-    if user:
-        user_service.update_password(user, new_password)
-        return SuccessResponse(detail="Password has been successfully updated.")
-
-    raise_http_exception(
-        status.HTTP_500_INTERNAL_SERVER_ERROR,
-        "Unexpected error",
-    )
+    user_service.update_password(user, new_password)
+    return SuccessResponse(detail="Password has been successfully updated.")

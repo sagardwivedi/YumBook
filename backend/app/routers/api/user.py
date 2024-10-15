@@ -1,12 +1,13 @@
 from typing import Any
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, HTTPException, UploadFile, status
+from fastapi.responses import FileResponse
 
 from app.models import UserPublic, UserRead
 from app.models.user import UserUpdate
 from app.services import UserService
 from app.utils import CurrentUser, ErrorResponse, SessionDep
-from app.utils.util import raise_http_exception
+from app.utils.util import SuccessResponse, SuccessResponseWithData
 
 router = APIRouter()
 
@@ -37,7 +38,7 @@ def read_other_user(username: str, session: SessionDep) -> Any:
     user = service.get_user_by_username(username)
 
     if user is None:
-        raise_http_exception(
+        raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="No Such User",
         )
@@ -46,5 +47,74 @@ def read_other_user(username: str, session: SessionDep) -> Any:
 
 
 @router.post("/me")
-def update_profile(data: UserUpdate, session: SessionDep):
-    pass
+def update_user(data: UserUpdate, session: SessionDep, current_user: CurrentUser):
+    service = UserService(session)
+    updated_user = service.update_user(current_user, data)
+
+    if not updated_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Failed to update profile",
+        )
+    return updated_user
+
+
+@router.get("/profile-image")
+async def read_profile_image(
+    current_user: CurrentUser,
+) -> SuccessResponse | FileResponse:
+    """Retrieve the user's profile image."""
+
+    if not current_user.profile_picture:
+        return SuccessResponse(detail="No profile picture found.")
+
+    return FileResponse(current_user.profile_picture)
+
+
+@router.post(
+    "/profile-image",
+    responses={
+        200: {"model": SuccessResponseWithData},
+        400: {"model": ErrorResponse},
+        500: {"model": ErrorResponse},
+    },
+)
+async def upload_profile_image(
+    file: UploadFile, current_user: CurrentUser, session: SessionDep
+) -> SuccessResponseWithData:
+    """Upload a new profile image for the user."""
+    service = UserService(session)
+    return service.upload_profile_image(file, current_user)
+
+
+@router.put(
+    "/profile-image",
+    responses={
+        200: {"model": SuccessResponseWithData},
+        400: {"model": ErrorResponse},
+        500: {"model": ErrorResponse},
+    },
+)
+async def update_profile_image(
+    file: UploadFile, current_user: CurrentUser, session: SessionDep
+) -> SuccessResponseWithData:
+    """Update an existing profile image for the user."""
+    service = UserService(session)
+    return service.update_profile_image(file, current_user)
+
+
+@router.delete(
+    "/profile-image",
+    responses={
+        200: {"model": SuccessResponse},
+        400: {"model": ErrorResponse},
+        500: {"model": ErrorResponse},
+    },
+)
+async def delete_profile_image(
+    current_user: CurrentUser, session: SessionDep
+) -> SuccessResponse:
+    """Delete the user's profile image."""
+    service = UserService(session)
+    service.delete_profile_image(current_user)
+    return SuccessResponse(detail="Profile image deleted successfully.")

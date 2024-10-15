@@ -18,7 +18,6 @@ class UserCreate(SQLModel):
 
 class UserUpdate(SQLModel):
     username: str | None = None
-    profile_picture: str | None = None
 
 
 class UserRead(UserBase):
