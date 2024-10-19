@@ -1,7 +1,6 @@
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, UploadFile, status
-from fastapi.responses import FileResponse
 
 from app.models import UserPublic, UserRead
 from app.models.user import UserUpdate
@@ -57,18 +56,6 @@ def update_user(data: UserUpdate, session: SessionDep, current_user: CurrentUser
             detail="Failed to update profile",
         )
     return updated_user
-
-
-@router.get("/profile-image")
-async def read_profile_image(
-    current_user: CurrentUser,
-) -> SuccessResponse | FileResponse:
-    """Retrieve the user's profile image."""
-
-    if not current_user.profile_picture:
-        return SuccessResponse(detail="No profile picture found.")
-
-    return FileResponse(current_user.profile_picture)
 
 
 @router.post(

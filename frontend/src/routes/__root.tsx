@@ -29,9 +29,9 @@ export const Route = createRootRoute({
     <>
       <Outlet />
       <ScrollRestoration />
-      <Suspense>
+      {/* <Suspense>
         <TanStackDevtools />
-      </Suspense>
+      </Suspense> */}
     </>
   ),
   notFoundComponent: NotFound,

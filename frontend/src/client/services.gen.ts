@@ -5,6 +5,7 @@ import {
   createConfig,
   type Options,
   urlSearchParamsBodySerializer,
+  formDataBodySerializer,
 } from "@hey-api/client-fetch";
 import type {
   RegisterUserData,
@@ -23,12 +24,49 @@ import type {
   ResetPasswordResponse,
   ReadMeError,
   ReadMeResponse,
-  UpdateProfileData,
-  UpdateProfileError,
-  UpdateProfileResponse,
+  UpdateUserData,
+  UpdateUserError,
+  UpdateUserResponse,
   ReadOtherUserData,
   ReadOtherUserError,
   ReadOtherUserResponse,
+  UpdateProfileImageData,
+  UpdateProfileImageError,
+  UpdateProfileImageResponse,
+  UploadProfileImageData,
+  UploadProfileImageError,
+  UploadProfileImageResponse,
+  DeleteProfileImageError,
+  DeleteProfileImageResponse,
+  GetRecipesData,
+  GetRecipesError,
+  GetRecipesResponse,
+  CreateRecipeData,
+  CreateRecipeError,
+  CreateRecipeResponse,
+  GetRecipeData,
+  GetRecipeError,
+  GetRecipeResponse,
+  UpdateRecipeData,
+  UpdateRecipeError,
+  UpdateRecipeResponse,
+  DeleteRecipeData,
+  DeleteRecipeError,
+  DeleteRecipeResponse,
+  SearchRecipesData,
+  SearchRecipesError,
+  SearchRecipesResponse,
+  GetTrendingRecipesData,
+  GetTrendingRecipesError,
+  GetTrendingRecipesResponse,
+  GetSimilarRecipesData,
+  GetSimilarRecipesError,
+  GetSimilarRecipesResponse,
+  GetAllIngredientsError,
+  GetAllIngredientsResponse,
+  GetUserRecipesData,
+  GetUserRecipesError,
+  GetUserRecipesResponse,
 } from "./types.gen";
 
 export const client = createClient(createConfig());
@@ -161,14 +199,14 @@ export const readMe = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Update Profile
+ * Update User
  */
-export const updateProfile = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateProfileData, ThrowOnError>,
+export const updateUser = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateUserData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).post<
-    UpdateProfileResponse,
-    UpdateProfileError,
+    UpdateUserResponse,
+    UpdateUserError,
     ThrowOnError
   >({
     ...options,
@@ -189,5 +227,226 @@ export const readOtherUser = <ThrowOnError extends boolean = false>(
   >({
     ...options,
     url: "/api/v1/users/{username}",
+  });
+};
+
+/**
+ * Update Profile Image
+ * Update an existing profile image for the user.
+ */
+export const updateProfileImage = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateProfileImageData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).put<
+    UpdateProfileImageResponse,
+    UpdateProfileImageError,
+    ThrowOnError
+  >({
+    ...options,
+    ...formDataBodySerializer,
+    headers: {
+      "Content-Type": null,
+      ...options?.headers,
+    },
+    url: "/api/v1/users/profile-image",
+  });
+};
+
+/**
+ * Upload Profile Image
+ * Upload a new profile image for the user.
+ */
+export const uploadProfileImage = <ThrowOnError extends boolean = false>(
+  options: Options<UploadProfileImageData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    UploadProfileImageResponse,
+    UploadProfileImageError,
+    ThrowOnError
+  >({
+    ...options,
+    ...formDataBodySerializer,
+    headers: {
+      "Content-Type": null,
+      ...options?.headers,
+    },
+    url: "/api/v1/users/profile-image",
+  });
+};
+
+/**
+ * Delete Profile Image
+ * Delete the user's profile image.
+ */
+export const deleteProfileImage = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>,
+) => {
+  return (options?.client ?? client).delete<
+    DeleteProfileImageResponse,
+    DeleteProfileImageError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/users/profile-image",
+  });
+};
+
+/**
+ * Get Recipes
+ */
+export const getRecipes = <ThrowOnError extends boolean = false>(
+  options?: Options<GetRecipesData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetRecipesResponse,
+    GetRecipesError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/recipe/",
+  });
+};
+
+/**
+ * Create Recipe
+ */
+export const createRecipe = <ThrowOnError extends boolean = false>(
+  options: Options<CreateRecipeData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    CreateRecipeResponse,
+    CreateRecipeError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/recipe/",
+  });
+};
+
+/**
+ * Get Recipe
+ */
+export const getRecipe = <ThrowOnError extends boolean = false>(
+  options: Options<GetRecipeData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetRecipeResponse,
+    GetRecipeError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/recipe/{recipe_id}",
+  });
+};
+
+/**
+ * Update Recipe
+ */
+export const updateRecipe = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateRecipeData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).put<
+    UpdateRecipeResponse,
+    UpdateRecipeError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/recipe/{recipe_id}",
+  });
+};
+
+/**
+ * Delete Recipe
+ */
+export const deleteRecipe = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteRecipeData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).delete<
+    DeleteRecipeResponse,
+    DeleteRecipeError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/recipe/{recipe_id}",
+  });
+};
+
+/**
+ * Search Recipes
+ */
+export const searchRecipes = <ThrowOnError extends boolean = false>(
+  options: Options<SearchRecipesData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    SearchRecipesResponse,
+    SearchRecipesError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/recipe/search",
+  });
+};
+
+/**
+ * Get Trending Recipes
+ */
+export const getTrendingRecipes = <ThrowOnError extends boolean = false>(
+  options?: Options<GetTrendingRecipesData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetTrendingRecipesResponse,
+    GetTrendingRecipesError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/recipe/trending",
+  });
+};
+
+/**
+ * Get Similar Recipes
+ */
+export const getSimilarRecipes = <ThrowOnError extends boolean = false>(
+  options: Options<GetSimilarRecipesData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetSimilarRecipesResponse,
+    GetSimilarRecipesError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/recipe/{recipe_id}/similar",
+  });
+};
+
+/**
+ * Get All Ingredients
+ */
+export const getAllIngredients = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetAllIngredientsResponse,
+    GetAllIngredientsError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/recipe/ingredients",
+  });
+};
+
+/**
+ * Get User Recipes
+ */
+export const getUserRecipes = <ThrowOnError extends boolean = false>(
+  options: Options<GetUserRecipesData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetUserRecipesResponse,
+    GetUserRecipesError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/recipe/user/{user_id}/recipes",
   });
 };

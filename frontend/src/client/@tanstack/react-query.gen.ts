@@ -17,10 +17,33 @@ import type {
   ResetPasswordData,
   ResetPasswordError,
   ResetPasswordResponse,
-  UpdateProfileData,
-  UpdateProfileError,
-  UpdateProfileResponse,
+  UpdateUserData,
+  UpdateUserError,
+  UpdateUserResponse,
   ReadOtherUserData,
+  UpdateProfileImageData,
+  UpdateProfileImageError,
+  UpdateProfileImageResponse,
+  UploadProfileImageData,
+  UploadProfileImageError,
+  UploadProfileImageResponse,
+  DeleteProfileImageError,
+  DeleteProfileImageResponse,
+  GetRecipesData,
+  CreateRecipeData,
+  CreateRecipeError,
+  CreateRecipeResponse,
+  GetRecipeData,
+  UpdateRecipeData,
+  UpdateRecipeError,
+  UpdateRecipeResponse,
+  DeleteRecipeData,
+  DeleteRecipeError,
+  DeleteRecipeResponse,
+  SearchRecipesData,
+  GetTrendingRecipesData,
+  GetSimilarRecipesData,
+  GetUserRecipesData,
 } from "../types.gen";
 import {
   client,
@@ -30,8 +53,21 @@ import {
   forgotPassword,
   resetPassword,
   readMe,
-  updateProfile,
+  updateUser,
   readOtherUser,
+  updateProfileImage,
+  uploadProfileImage,
+  deleteProfileImage,
+  getRecipes,
+  createRecipe,
+  getRecipe,
+  updateRecipe,
+  deleteRecipe,
+  searchRecipes,
+  getTrendingRecipes,
+  getSimilarRecipes,
+  getAllIngredients,
+  getUserRecipes,
 } from "../services.gen";
 
 type QueryKey<TOptions extends Options> = [
@@ -274,34 +310,34 @@ export const readMeOptions = (options?: Options) => {
   });
 };
 
-export const updateProfileQueryKey = (options: Options<UpdateProfileData>) => [
-  createQueryKey("updateProfile", options),
+export const updateUserQueryKey = (options: Options<UpdateUserData>) => [
+  createQueryKey("updateUser", options),
 ];
 
-export const updateProfileOptions = (options: Options<UpdateProfileData>) => {
+export const updateUserOptions = (options: Options<UpdateUserData>) => {
   return queryOptions({
     queryFn: async ({ queryKey }) => {
-      const { data } = await updateProfile({
+      const { data } = await updateUser({
         ...options,
         ...queryKey[0],
         throwOnError: true,
       });
       return data;
     },
-    queryKey: updateProfileQueryKey(options),
+    queryKey: updateUserQueryKey(options),
   });
 };
 
-export const updateProfileMutation = (
-  options?: Partial<Options<UpdateProfileData>>,
+export const updateUserMutation = (
+  options?: Partial<Options<UpdateUserData>>,
 ) => {
   const mutationOptions: UseMutationOptions<
-    UpdateProfileResponse,
-    UpdateProfileError,
-    Options<UpdateProfileData>
+    UpdateUserResponse,
+    UpdateUserError,
+    Options<UpdateUserData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await updateProfile({
+      const { data } = await updateUser({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -327,5 +363,291 @@ export const readOtherUserOptions = (options: Options<ReadOtherUserData>) => {
       return data;
     },
     queryKey: readOtherUserQueryKey(options),
+  });
+};
+
+export const updateProfileImageMutation = (
+  options?: Partial<Options<UpdateProfileImageData>>,
+) => {
+  const mutationOptions: UseMutationOptions<
+    UpdateProfileImageResponse,
+    UpdateProfileImageError,
+    Options<UpdateProfileImageData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await updateProfileImage({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const uploadProfileImageQueryKey = (
+  options: Options<UploadProfileImageData>,
+) => [createQueryKey("uploadProfileImage", options)];
+
+export const uploadProfileImageOptions = (
+  options: Options<UploadProfileImageData>,
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await uploadProfileImage({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: uploadProfileImageQueryKey(options),
+  });
+};
+
+export const uploadProfileImageMutation = (
+  options?: Partial<Options<UploadProfileImageData>>,
+) => {
+  const mutationOptions: UseMutationOptions<
+    UploadProfileImageResponse,
+    UploadProfileImageError,
+    Options<UploadProfileImageData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await uploadProfileImage({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const deleteProfileImageMutation = (options?: Partial<Options>) => {
+  const mutationOptions: UseMutationOptions<
+    DeleteProfileImageResponse,
+    DeleteProfileImageError,
+    Options
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await deleteProfileImage({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getRecipesQueryKey = (options?: Options<GetRecipesData>) => [
+  createQueryKey("getRecipes", options),
+];
+
+export const getRecipesOptions = (options?: Options<GetRecipesData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await getRecipes({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getRecipesQueryKey(options),
+  });
+};
+
+export const createRecipeQueryKey = (options: Options<CreateRecipeData>) => [
+  createQueryKey("createRecipe", options),
+];
+
+export const createRecipeOptions = (options: Options<CreateRecipeData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await createRecipe({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: createRecipeQueryKey(options),
+  });
+};
+
+export const createRecipeMutation = (
+  options?: Partial<Options<CreateRecipeData>>,
+) => {
+  const mutationOptions: UseMutationOptions<
+    CreateRecipeResponse,
+    CreateRecipeError,
+    Options<CreateRecipeData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await createRecipe({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getRecipeQueryKey = (options: Options<GetRecipeData>) => [
+  createQueryKey("getRecipe", options),
+];
+
+export const getRecipeOptions = (options: Options<GetRecipeData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await getRecipe({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getRecipeQueryKey(options),
+  });
+};
+
+export const updateRecipeMutation = (
+  options?: Partial<Options<UpdateRecipeData>>,
+) => {
+  const mutationOptions: UseMutationOptions<
+    UpdateRecipeResponse,
+    UpdateRecipeError,
+    Options<UpdateRecipeData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await updateRecipe({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const deleteRecipeMutation = (
+  options?: Partial<Options<DeleteRecipeData>>,
+) => {
+  const mutationOptions: UseMutationOptions<
+    DeleteRecipeResponse,
+    DeleteRecipeError,
+    Options<DeleteRecipeData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await deleteRecipe({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const searchRecipesQueryKey = (options: Options<SearchRecipesData>) => [
+  createQueryKey("searchRecipes", options),
+];
+
+export const searchRecipesOptions = (options: Options<SearchRecipesData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await searchRecipes({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: searchRecipesQueryKey(options),
+  });
+};
+
+export const getTrendingRecipesQueryKey = (
+  options?: Options<GetTrendingRecipesData>,
+) => [createQueryKey("getTrendingRecipes", options)];
+
+export const getTrendingRecipesOptions = (
+  options?: Options<GetTrendingRecipesData>,
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await getTrendingRecipes({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getTrendingRecipesQueryKey(options),
+  });
+};
+
+export const getSimilarRecipesQueryKey = (
+  options: Options<GetSimilarRecipesData>,
+) => [createQueryKey("getSimilarRecipes", options)];
+
+export const getSimilarRecipesOptions = (
+  options: Options<GetSimilarRecipesData>,
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await getSimilarRecipes({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getSimilarRecipesQueryKey(options),
+  });
+};
+
+export const getAllIngredientsQueryKey = (options?: Options) => [
+  createQueryKey("getAllIngredients", options),
+];
+
+export const getAllIngredientsOptions = (options?: Options) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await getAllIngredients({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getAllIngredientsQueryKey(options),
+  });
+};
+
+export const getUserRecipesQueryKey = (
+  options: Options<GetUserRecipesData>,
+) => [createQueryKey("getUserRecipes", options)];
+
+export const getUserRecipesOptions = (options: Options<GetUserRecipesData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await getUserRecipes({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getUserRecipesQueryKey(options),
   });
 };

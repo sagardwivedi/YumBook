@@ -9,12 +9,78 @@ export type Body_auth_login_user = {
   client_secret?: string | null;
 };
 
+export type Body_users_update_profile_image = {
+  file: Blob | File;
+};
+
+export type Body_users_upload_profile_image = {
+  file: Blob | File;
+};
+
 export type ErrorResponse = {
   detail: string;
 };
 
 export type HTTPValidationError = {
   detail?: Array<ValidationError>;
+};
+
+export type RecipeCreate = {
+  name: string;
+  description: string;
+  instructions: string;
+  cooking_time: number;
+  preparation_time: number;
+  servings: number;
+  cuisine: string;
+  dietary_restrictions?: string | null;
+  image_url?: string | null;
+  tags?: Array<string>;
+  ingredients: Array<RecipeIngredientCreate>;
+};
+
+export type RecipeIngredient = {
+  quantity: string;
+  unit: string;
+  id?: string;
+  recipe_id: string;
+  ingredient_id: string;
+};
+
+export type RecipeIngredientCreate = {
+  quantity: string;
+  unit: string;
+  ingredient_id: string;
+};
+
+export type RecipePublic = {
+  name: string;
+  description: string;
+  instructions: string;
+  cooking_time: number;
+  preparation_time: number;
+  servings: number;
+  cuisine: string;
+  dietary_restrictions?: string | null;
+  image_url?: string | null;
+  tags?: Array<string>;
+  id: string;
+  created_at: string;
+  updated_at: string;
+  ingredients: Array<RecipeIngredient>;
+};
+
+export type RecipeUpdate = {
+  name?: string | null;
+  description?: string | null;
+  instructions?: string | null;
+  cooking_time?: number | null;
+  preparation_time?: number | null;
+  servings?: number | null;
+  cuisine?: string | null;
+  dietary_restrictions?: string | null;
+  image_url?: string | null;
+  tags?: Array<string>;
 };
 
 export type SuccessResponse = {
@@ -36,20 +102,19 @@ export type UserCreate = {
 
 export type UserPublic = {
   username: string;
-  profile_picture?: string;
+  profile_picture?: string | null;
   id: string;
 };
 
 export type UserRead = {
   username: string;
-  profile_picture?: string;
+  profile_picture?: string | null;
   id: string;
   email: string;
 };
 
 export type UserUpdate = {
   username?: string | null;
-  profile_picture?: string | null;
 };
 
 export type ValidationError = {
@@ -103,13 +168,13 @@ export type ReadMeResponse = UserRead;
 
 export type ReadMeError = ErrorResponse;
 
-export type UpdateProfileData = {
+export type UpdateUserData = {
   body: UserUpdate;
 };
 
-export type UpdateProfileResponse = unknown;
+export type UpdateUserResponse = unknown;
 
-export type UpdateProfileError = HTTPValidationError;
+export type UpdateUserError = HTTPValidationError;
 
 export type ReadOtherUserData = {
   path: {
@@ -120,3 +185,125 @@ export type ReadOtherUserData = {
 export type ReadOtherUserResponse = UserPublic;
 
 export type ReadOtherUserError = ErrorResponse | HTTPValidationError;
+
+export type UpdateProfileImageData = {
+  body: Body_users_update_profile_image;
+};
+
+export type UpdateProfileImageResponse = SuccessResponseWithData;
+
+export type UpdateProfileImageError = ErrorResponse | HTTPValidationError;
+
+export type UploadProfileImageData = {
+  body: Body_users_upload_profile_image;
+};
+
+export type UploadProfileImageResponse = SuccessResponseWithData;
+
+export type UploadProfileImageError = ErrorResponse | HTTPValidationError;
+
+export type DeleteProfileImageResponse = SuccessResponse;
+
+export type DeleteProfileImageError = ErrorResponse;
+
+export type GetRecipesData = {
+  query?: {
+    limit?: number;
+    skip?: number;
+  };
+};
+
+export type GetRecipesResponse = Array<RecipePublic>;
+
+export type GetRecipesError = HTTPValidationError;
+
+export type CreateRecipeData = {
+  body: RecipeCreate;
+};
+
+export type CreateRecipeResponse = RecipePublic;
+
+export type CreateRecipeError = HTTPValidationError;
+
+export type GetRecipeData = {
+  path: {
+    recipe_id: string;
+  };
+};
+
+export type GetRecipeResponse = RecipePublic;
+
+export type GetRecipeError = HTTPValidationError;
+
+export type UpdateRecipeData = {
+  body: RecipeUpdate;
+  path: {
+    recipe_id: string;
+  };
+};
+
+export type UpdateRecipeResponse = RecipePublic;
+
+export type UpdateRecipeError = HTTPValidationError;
+
+export type DeleteRecipeData = {
+  path: {
+    recipe_id: string;
+  };
+};
+
+export type DeleteRecipeResponse = {
+  [key: string]: unknown;
+};
+
+export type DeleteRecipeError = HTTPValidationError;
+
+export type SearchRecipesData = {
+  query: {
+    cuisine?: string | null;
+    max_cooking_time?: number | null;
+    query: string;
+    tags?: Array<string>;
+  };
+};
+
+export type SearchRecipesResponse = Array<RecipePublic>;
+
+export type SearchRecipesError = HTTPValidationError;
+
+export type GetTrendingRecipesData = {
+  query?: {
+    limit?: number;
+  };
+};
+
+export type GetTrendingRecipesResponse = Array<RecipePublic>;
+
+export type GetTrendingRecipesError = HTTPValidationError;
+
+export type GetSimilarRecipesData = {
+  path: {
+    recipe_id: string;
+  };
+  query?: {
+    limit?: number;
+  };
+};
+
+export type GetSimilarRecipesResponse = Array<RecipePublic>;
+
+export type GetSimilarRecipesError = HTTPValidationError;
+
+export type GetAllIngredientsResponse = Array<RecipeIngredient>;
+
+export type GetAllIngredientsError = unknown;
+
+export type GetUserRecipesData = {
+  path: {
+    user_id: string;
+  };
+};
+
+export type GetUserRecipesResponse = Array<RecipePublic>;
+
+export type GetUserRecipesError = HTTPValidationError;

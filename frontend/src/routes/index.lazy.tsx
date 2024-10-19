@@ -1,4 +1,4 @@
-import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import { Link, createLazyFileRoute } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import LoginComponent from "~/components/auth/Login";
@@ -8,6 +8,21 @@ import { Separator } from "~/components/ui/separator";
 export const Route = createLazyFileRoute("/")({
   component: Home,
 });
+
+const IMAGE_CAROSOUL = [
+  {
+    id: 1,
+    src: "https://images.pexels.com/photos/1860208/pexels-photo-1860208.jpeg?cs=srgb&dl=cooked-food-1860208.jpg&fm=jpg",
+  },
+  {
+    id: 2,
+    src: "http://images6.fanpop.com/image/photos/36100000/Food-image-food-36147866-6668-4992.jpg",
+  },
+  {
+    id: 3,
+    src: "http://topreviewtracking.com/wp-content/uploads/2015/04/Dollarphotoclub_61600915.jpg",
+  },
+];
 
 function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -53,12 +68,11 @@ function Home() {
               className="flex transition-transform duration-300 ease-in-out"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
-              {[...Array(3)].map((_, index) => (
+              {IMAGE_CAROSOUL.map((img) => (
                 <img
-                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                  key={index}
-                  src={`/placeholder.svg?height=400&width=400&text=Recipe+${index + 1}`}
-                  alt={`Recipe ${index + 1}`}
+                  key={img.id}
+                  src={img.src}
+                  alt={`Recipe ${img.id + 1}`}
                   className="w-full h-[400px] object-cover flex-shrink-0"
                 />
               ))}
