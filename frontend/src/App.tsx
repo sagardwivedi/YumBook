@@ -3,9 +3,8 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode, useEffect } from "react";
 
 import { client } from "./client";
-import "./index.css";
 import { useThemeStore } from "./hooks/use-theme";
-import { useUserStore } from "./hooks/use-user";
+import "./index.css";
 import { routeTree } from "./routeTree.gen";
 
 const router = createRouter({ routeTree, defaultViewTransition: true });
@@ -20,13 +19,11 @@ declare module "@tanstack/react-router" {
 
 export default function App() {
   const { initializeTheme } = useThemeStore();
-  const { initializeUser } = useUserStore();
 
-  // Initialize theme and user when the component mounts
+  // Initialize theme and  when the component mounts
   useEffect(() => {
     initializeTheme();
-    initializeUser();
-  }, [initializeTheme, initializeUser]);
+  }, [initializeTheme]);
 
   return (
     <StrictMode>

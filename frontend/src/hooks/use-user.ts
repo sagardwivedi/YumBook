@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { queryClient } from "~/App";
 import { type UserPublic, logoutUser } from "~/client";
-import { readMeOptions } from "~/client/@tanstack/react-query.gen";
+import { getCurrentUserOptions } from "~/client/@tanstack/react-query.gen";
 
 interface UserState {
   isAuthenticated: boolean;
@@ -10,19 +10,16 @@ interface UserState {
   logout: () => void;
 }
 
-// Create Zustand store for user state management
 export const useUserStore = create<UserState>()((set) => ({
   isAuthenticated: false,
   user: null,
 
-  // Initialize user asynchronously by checking the server for JWT validity
   initializeUser: async () => {
     try {
-      // Fetch the user from the server by validating the JWT
-      const user = await queryClient.ensureQueryData(readMeOptions());
+      const user = await queryClient.ensureQueryData(getCurrentUserOptions());
 
       if (user) {
-        set({ user, isAuthenticated: true }); // User is authenticated
+        set({ user, isAuthenticated: true });
       } else {
         set({ isAuthenticated: false, user: null });
       }
@@ -32,11 +29,10 @@ export const useUserStore = create<UserState>()((set) => ({
     }
   },
 
-  // Logout user and reset state
   logout: () => {
     try {
       set({ user: null, isAuthenticated: false });
-      logoutUser(); // This will also clear the JWT stored in the HTTP-only cookie
+      logoutUser();
     } catch (error) {
       console.error("Error during logout:", error);
     }

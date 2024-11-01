@@ -1,16 +1,28 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { MessageCircle } from "lucide-react";
+import { queryClient } from "~/App";
+import { getRecipesOptions } from "~/client/@tanstack/react-query.gen";
+import { Post } from "~/components/RecipeCard";
 import { Button } from "~/components/ui/button";
 
 export const Route = createFileRoute("/_layout/home")({
   component: Home,
+  loader: () => queryClient.ensureQueryData(getRecipesOptions()),
 });
 
 function Home() {
+  const { data } = useSuspenseQuery(getRecipesOptions());
+
+  const onLikeToggle = () => {}
+  const onSaveToggle = () => {}
+
   return (
     <div>
       <MobileHeader />
-      <PostCard />
+      {data.map((r) => (
+        <Post key={r.recipe.id} {...r}  />
+      ))}
     </div>
   );
 }
@@ -32,8 +44,4 @@ function MobileHeader() {
       </div>
     </header>
   );
-}
-
-function PostCard() {
-  return <div>Hello</div>;
 }

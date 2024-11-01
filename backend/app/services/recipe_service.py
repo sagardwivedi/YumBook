@@ -1,10 +1,14 @@
+import os
 from collections.abc import Sequence
-from uuid import UUID
+from uuid import UUID, uuid4
 
-from fastapi import HTTPException
+from fastapi import HTTPException, UploadFile, status
 from sqlmodel import Session, desc, select
 
-from app.models.recipe import Ingredient, Recipe, RecipeCreate, RecipeUpdate
+from app.config import settings
+from app.models.recipe import Recipe, RecipeCreate, RecipeUpdate
+from app.models.user import User
+from app.utils.util import save_image, validate_image_file
 
 
 class RecipeService:
@@ -18,8 +22,12 @@ class RecipeService:
                 status_code=403, detail="Not authorized to modify this recipe"
             )
 
-    def get_recipes(self, skip: int = 0, limit: int = 100) -> Sequence[Recipe]:
-        return self.db.exec(select(Recipe).offset(skip).limit(limit)).all()
+    def get_recipes_with_users(self, skip: int = 0, limit: int = 100):
+        results = self.db.exec(
+            select(Recipe, User).join(User).offset(skip).limit(limit)
+        ).all()
+
+        return [{"recipe": recipe, "user": user} for recipe, user in results]
 
     def get_recipe(self, recipe_id: UUID) -> Recipe:
         recipe = self.db.get(Recipe, recipe_id)
@@ -27,12 +35,47 @@ class RecipeService:
             raise HTTPException(status_code=404, detail="Recipe not found")
         return recipe
 
-    def create_recipe(self, recipe: RecipeCreate, user_id: UUID) -> Recipe:
-        db_recipe = Recipe.model_validate(recipe)
-        db_recipe.user_id = user_id
+    def upload_recipe_image(self, file: UploadFile):
+        validate_image_file(file)
+
+        # Check if file.filename is not None or empty
+        if not file.filename:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No filename provided for the upload.",
+            )
+
+        unique_filename = f"{uuid4()}.{file.filename.split('.')[-1]}"
+        file_path = save_image(file, settings.POST_DIR, unique_filename)
+
+        try:
+            return file_path
+        except Exception as e:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to update profile image: {str(e)}",
+            )
+
+    def create_recipe(
+        self, recipe: RecipeCreate, image: UploadFile, user_id: UUID
+    ) -> Recipe:
+        db_recipe = Recipe(
+            cooking_time=recipe.cooking_time,
+            cuisine=recipe.cuisine,
+            name=recipe.name,
+            description=recipe.description,
+            preparation_time=recipe.preparation_time,
+            servings=recipe.servings,
+            user_id=user_id,
+            dietary_restrictions=recipe.dietary_restrictions,
+            instructions=recipe.instructions,
+            tags=recipe.tags,
+        )
+        db_recipe.image_url = self.upload_recipe_image(image)
         self.db.add(db_recipe)
         self.db.commit()
-        # No need to refresh unless you need to return generated fields
         return db_recipe
 
     def update_recipe(
@@ -42,7 +85,7 @@ class RecipeService:
         self._check_authorization(db_recipe, user_id)  # Reuse authorization check
 
         # Only update the fields that are present in the `recipe_update`
-        update_data = recipe_update.dict(exclude_unset=True)
+        update_data = recipe_update.model_dump(exclude_unset=True)
         for key, value in update_data.items():
             setattr(db_recipe, key, value)
 
@@ -76,7 +119,7 @@ class RecipeService:
         if max_cooking_time is not None:
             statement = statement.where(Recipe.cooking_time <= max_cooking_time)
         if tags:
-            statement = statement.where(Recipe.tags.contains[tags])
+            statement = statement.where(Recipe.tags.__contains__(tags))
         return self.db.exec(statement).all()
 
     def get_trending_recipes(self, limit: int = 10) -> Sequence[Recipe]:
@@ -95,9 +138,6 @@ class RecipeService:
             .order_by(desc(Recipe.created_at))
             .limit(limit)
         ).all()
-
-    def get_all_ingredients(self) -> Sequence[Ingredient]:
-        return self.db.exec(select(Ingredient)).all()
 
     def get_user_recipes(self, user_id: UUID) -> Sequence[Recipe]:
         return self.db.exec(select(Recipe).where(Recipe.user_id == user_id)).all()

@@ -9,6 +9,11 @@ export type Body_auth_login_user = {
   client_secret?: string | null;
 };
 
+export type Body_recipe_create_recipe = {
+  recipe: string;
+  image: Blob | File;
+};
+
 export type Body_users_update_profile_image = {
   file: Blob | File;
 };
@@ -26,48 +31,30 @@ export type HTTPValidationError = {
 };
 
 export type RecipeCreate = {
-  name: string;
-  description: string;
-  instructions: string;
-  cooking_time: number;
-  preparation_time: number;
-  servings: number;
   cuisine: string;
+  instructions: Array<string>;
+  servings: number;
+  name: string;
+  cooking_time: number;
   dietary_restrictions?: string | null;
-  image_url?: string | null;
-  tags?: Array<string>;
-  ingredients: Array<RecipeIngredientCreate>;
-};
-
-export type RecipeIngredient = {
-  quantity: string;
-  unit: string;
-  id?: string;
-  recipe_id: string;
-  ingredient_id: string;
-};
-
-export type RecipeIngredientCreate = {
-  quantity: string;
-  unit: string;
-  ingredient_id: string;
+  preparation_time: number;
+  tags: Array<string>;
+  description: string;
 };
 
 export type RecipePublic = {
   name: string;
   description: string;
-  instructions: string;
+  instructions?: Array<string>;
   cooking_time: number;
   preparation_time: number;
   servings: number;
   cuisine: string;
   dietary_restrictions?: string | null;
-  image_url?: string | null;
   tags?: Array<string>;
   id: string;
   created_at: string;
-  updated_at: string;
-  ingredients: Array<RecipeIngredient>;
+  image_url?: string | null;
 };
 
 export type RecipeUpdate = {
@@ -83,6 +70,11 @@ export type RecipeUpdate = {
   tags?: Array<string>;
 };
 
+export type RecipeWithUser = {
+  recipe: RecipePublic;
+  user: UserForRecipe;
+};
+
 export type SuccessResponse = {
   detail: string;
 };
@@ -95,26 +87,64 @@ export type SuccessResponseWithData = {
 };
 
 export type UserCreate = {
+  /**
+   * Unique username
+   */
   username: string;
+  /**
+   * User's email address
+   */
   email: string;
+  /**
+   * Path to user's avatar image
+   */
+  avatar_path?: string | null;
+  /**
+   * User's full name
+   */
+  full_name?: string | null;
+  /**
+   * User's password
+   */
   password: string;
 };
 
-export type UserPublic = {
+export type UserForRecipe = {
+  avatar_path?: string;
   username: string;
-  profile_picture?: string | null;
-  id: string;
 };
 
-export type UserRead = {
+export type UserPublic = {
+  /**
+   * Unique username
+   */
   username: string;
-  profile_picture?: string | null;
-  id: string;
+  /**
+   * User's email address
+   */
   email: string;
+  /**
+   * Path to user's avatar image
+   */
+  avatar_path?: string;
+  /**
+   * User's full name
+   */
+  full_name?: string | null;
+  id: string;
 };
 
 export type UserUpdate = {
   username?: string | null;
+  email?: string | null;
+  /**
+   * Path to user's avatar image
+   */
+  avatar_path?: string | null;
+  /**
+   * User's full name
+   */
+  full_name?: string | null;
 };
 
 export type ValidationError = {
@@ -164,27 +194,27 @@ export type ResetPasswordResponse = SuccessResponse;
 
 export type ResetPasswordError = ErrorResponse | HTTPValidationError;
 
-export type ReadMeResponse = UserRead;
+export type GetCurrentUserResponse = UserPublic;
 
-export type ReadMeError = ErrorResponse;
+export type GetCurrentUserError = ErrorResponse;
 
-export type UpdateUserData = {
+export type UpdateCurrentUserData = {
   body: UserUpdate;
 };
 
-export type UpdateUserResponse = unknown;
+export type UpdateCurrentUserResponse = UserPublic;
 
-export type UpdateUserError = HTTPValidationError;
+export type UpdateCurrentUserError = ErrorResponse | HTTPValidationError;
 
-export type ReadOtherUserData = {
+export type GetUserByUsernameData = {
   path: {
     username: string;
   };
 };
 
-export type ReadOtherUserResponse = UserPublic;
+export type GetUserByUsernameResponse = UserPublic;
 
-export type ReadOtherUserError = ErrorResponse | HTTPValidationError;
+export type GetUserByUsernameError = ErrorResponse | HTTPValidationError;
 
 export type UpdateProfileImageData = {
   body: Body_users_update_profile_image;
@@ -213,12 +243,12 @@ export type GetRecipesData = {
   };
 };
 
-export type GetRecipesResponse = Array<RecipePublic>;
+export type GetRecipesResponse = Array<RecipeWithUser>;
 
 export type GetRecipesError = HTTPValidationError;
 
 export type CreateRecipeData = {
-  body: RecipeCreate;
+  body: Body_recipe_create_recipe;
 };
 
 export type CreateRecipeResponse = RecipePublic;
@@ -293,10 +323,6 @@ export type GetSimilarRecipesData = {
 export type GetSimilarRecipesResponse = Array<RecipePublic>;
 
 export type GetSimilarRecipesError = HTTPValidationError;
-
-export type GetAllIngredientsResponse = Array<RecipeIngredient>;
-
-export type GetAllIngredientsError = unknown;
 
 export type GetUserRecipesData = {
   path: {

@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
 
     # Frontend and environment settings
-    FRONTEND_HOST: str = "http://localhost:3000"
+    FRONTEND_HOST: str = "http://localhost:5500"
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
 
     PROFILE_DIR: str = "static/profile"

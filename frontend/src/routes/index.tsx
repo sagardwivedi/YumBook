@@ -1,11 +1,18 @@
-import { Link, createLazyFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import LoginComponent from "~/components/auth/Login";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
+import { isAuthenticated } from "~/hooks/use-auth";
 
-export const Route = createLazyFileRoute("/")({
+export const Route = createFileRoute("/")({
+  beforeLoad: async () => {
+    const is = await isAuthenticated();
+    if (is) {
+      throw redirect({ to: "/home" });
+    }
+  },
   component: Home,
 });
 

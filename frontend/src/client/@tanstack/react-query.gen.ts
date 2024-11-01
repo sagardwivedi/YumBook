@@ -17,10 +17,10 @@ import type {
   ResetPasswordData,
   ResetPasswordError,
   ResetPasswordResponse,
-  UpdateUserData,
-  UpdateUserError,
-  UpdateUserResponse,
-  ReadOtherUserData,
+  UpdateCurrentUserData,
+  UpdateCurrentUserError,
+  UpdateCurrentUserResponse,
+  GetUserByUsernameData,
   UpdateProfileImageData,
   UpdateProfileImageError,
   UpdateProfileImageResponse,
@@ -52,9 +52,9 @@ import {
   logoutUser,
   forgotPassword,
   resetPassword,
-  readMe,
-  updateUser,
-  readOtherUser,
+  getCurrentUser,
+  updateCurrentUser,
+  getUserByUsername,
   updateProfileImage,
   uploadProfileImage,
   deleteProfileImage,
@@ -66,7 +66,6 @@ import {
   searchRecipes,
   getTrendingRecipes,
   getSimilarRecipes,
-  getAllIngredients,
   getUserRecipes,
 } from "../services.gen";
 
@@ -110,10 +109,11 @@ export const registerUserQueryKey = (options: Options<RegisterUserData>) => [
 
 export const registerUserOptions = (options: Options<RegisterUserData>) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
+    queryFn: async ({ queryKey, signal }) => {
       const { data } = await registerUser({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;
@@ -148,10 +148,11 @@ export const loginUserQueryKey = (options: Options<LoginUserData>) => [
 
 export const loginUserOptions = (options: Options<LoginUserData>) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
+    queryFn: async ({ queryKey, signal }) => {
       const { data } = await loginUser({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;
@@ -186,10 +187,11 @@ export const logoutUserQueryKey = (options?: Options) => [
 
 export const logoutUserOptions = (options?: Options) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
+    queryFn: async ({ queryKey, signal }) => {
       const { data } = await logoutUser({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;
@@ -222,10 +224,11 @@ export const forgotPasswordQueryKey = (
 
 export const forgotPasswordOptions = (options: Options<ForgotPasswordData>) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
+    queryFn: async ({ queryKey, signal }) => {
       const { data } = await forgotPassword({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;
@@ -260,10 +263,11 @@ export const resetPasswordQueryKey = (options: Options<ResetPasswordData>) => [
 
 export const resetPasswordOptions = (options: Options<ResetPasswordData>) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
+    queryFn: async ({ queryKey, signal }) => {
       const { data } = await resetPassword({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;
@@ -292,52 +296,35 @@ export const resetPasswordMutation = (
   return mutationOptions;
 };
 
-export const readMeQueryKey = (options?: Options) => [
-  createQueryKey("readMe", options),
+export const getCurrentUserQueryKey = (options?: Options) => [
+  createQueryKey("getCurrentUser", options),
 ];
 
-export const readMeOptions = (options?: Options) => {
+export const getCurrentUserOptions = (options?: Options) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
-      const { data } = await readMe({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getCurrentUser({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;
     },
-    queryKey: readMeQueryKey(options),
+    queryKey: getCurrentUserQueryKey(options),
   });
 };
 
-export const updateUserQueryKey = (options: Options<UpdateUserData>) => [
-  createQueryKey("updateUser", options),
-];
-
-export const updateUserOptions = (options: Options<UpdateUserData>) => {
-  return queryOptions({
-    queryFn: async ({ queryKey }) => {
-      const { data } = await updateUser({
-        ...options,
-        ...queryKey[0],
-        throwOnError: true,
-      });
-      return data;
-    },
-    queryKey: updateUserQueryKey(options),
-  });
-};
-
-export const updateUserMutation = (
-  options?: Partial<Options<UpdateUserData>>,
+export const updateCurrentUserMutation = (
+  options?: Partial<Options<UpdateCurrentUserData>>,
 ) => {
   const mutationOptions: UseMutationOptions<
-    UpdateUserResponse,
-    UpdateUserError,
-    Options<UpdateUserData>
+    UpdateCurrentUserResponse,
+    UpdateCurrentUserError,
+    Options<UpdateCurrentUserData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await updateUser({
+      const { data } = await updateCurrentUser({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -348,21 +335,24 @@ export const updateUserMutation = (
   return mutationOptions;
 };
 
-export const readOtherUserQueryKey = (options: Options<ReadOtherUserData>) => [
-  createQueryKey("readOtherUser", options),
-];
+export const getUserByUsernameQueryKey = (
+  options: Options<GetUserByUsernameData>,
+) => [createQueryKey("getUserByUsername", options)];
 
-export const readOtherUserOptions = (options: Options<ReadOtherUserData>) => {
+export const getUserByUsernameOptions = (
+  options: Options<GetUserByUsernameData>,
+) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
-      const { data } = await readOtherUser({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getUserByUsername({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;
     },
-    queryKey: readOtherUserQueryKey(options),
+    queryKey: getUserByUsernameQueryKey(options),
   });
 };
 
@@ -394,10 +384,11 @@ export const uploadProfileImageOptions = (
   options: Options<UploadProfileImageData>,
 ) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
+    queryFn: async ({ queryKey, signal }) => {
       const { data } = await uploadProfileImage({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;
@@ -450,10 +441,11 @@ export const getRecipesQueryKey = (options?: Options<GetRecipesData>) => [
 
 export const getRecipesOptions = (options?: Options<GetRecipesData>) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
+    queryFn: async ({ queryKey, signal }) => {
       const { data } = await getRecipes({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;
@@ -468,10 +460,11 @@ export const createRecipeQueryKey = (options: Options<CreateRecipeData>) => [
 
 export const createRecipeOptions = (options: Options<CreateRecipeData>) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
+    queryFn: async ({ queryKey, signal }) => {
       const { data } = await createRecipe({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;
@@ -506,10 +499,11 @@ export const getRecipeQueryKey = (options: Options<GetRecipeData>) => [
 
 export const getRecipeOptions = (options: Options<GetRecipeData>) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
+    queryFn: async ({ queryKey, signal }) => {
       const { data } = await getRecipe({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;
@@ -564,10 +558,11 @@ export const searchRecipesQueryKey = (options: Options<SearchRecipesData>) => [
 
 export const searchRecipesOptions = (options: Options<SearchRecipesData>) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
+    queryFn: async ({ queryKey, signal }) => {
       const { data } = await searchRecipes({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;
@@ -584,10 +579,11 @@ export const getTrendingRecipesOptions = (
   options?: Options<GetTrendingRecipesData>,
 ) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
+    queryFn: async ({ queryKey, signal }) => {
       const { data } = await getTrendingRecipes({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;
@@ -604,33 +600,16 @@ export const getSimilarRecipesOptions = (
   options: Options<GetSimilarRecipesData>,
 ) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
+    queryFn: async ({ queryKey, signal }) => {
       const { data } = await getSimilarRecipes({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;
     },
     queryKey: getSimilarRecipesQueryKey(options),
-  });
-};
-
-export const getAllIngredientsQueryKey = (options?: Options) => [
-  createQueryKey("getAllIngredients", options),
-];
-
-export const getAllIngredientsOptions = (options?: Options) => {
-  return queryOptions({
-    queryFn: async ({ queryKey }) => {
-      const { data } = await getAllIngredients({
-        ...options,
-        ...queryKey[0],
-        throwOnError: true,
-      });
-      return data;
-    },
-    queryKey: getAllIngredientsQueryKey(options),
   });
 };
 
@@ -640,10 +619,11 @@ export const getUserRecipesQueryKey = (
 
 export const getUserRecipesOptions = (options: Options<GetUserRecipesData>) => {
   return queryOptions({
-    queryFn: async ({ queryKey }) => {
+    queryFn: async ({ queryKey, signal }) => {
       const { data } = await getUserRecipes({
         ...options,
         ...queryKey[0],
+        signal,
         throwOnError: true,
       });
       return data;

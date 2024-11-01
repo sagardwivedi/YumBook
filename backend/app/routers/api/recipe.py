@@ -1,8 +1,15 @@
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, File, Form, Query, UploadFile
+from pydantic import Json
 
-from app.models.recipe import RecipeCreate, RecipeIngredient, RecipePublic, RecipeUpdate
+from app.models.recipe import (
+    RecipeCreate,
+    RecipePublic,
+    RecipeUpdate,
+)
+from app.models.user import RecipeWithUser
 from app.services.recipe_service import RecipeService
 from app.utils import CurrentUser, SessionDep
 
@@ -13,13 +20,13 @@ def get_recipe_service(db: SessionDep) -> RecipeService:
     return RecipeService(db)
 
 
-@router.get("/", response_model=list[RecipePublic])
+@router.get("/", response_model=list[RecipeWithUser])
 def get_recipes(
     skip: int = 0,
     limit: int = 100,
     recipe_service: RecipeService = Depends(get_recipe_service),
 ):
-    return recipe_service.get_recipes(skip, limit)
+    return recipe_service.get_recipes_with_users(skip, limit)
 
 
 @router.get("/{recipe_id}", response_model=RecipePublic)
@@ -31,11 +38,12 @@ def get_recipe(
 
 @router.post("/", response_model=RecipePublic)
 def create_recipe(
-    recipe: RecipeCreate,
+    recipe: Annotated[Json[RecipeCreate], Form()],
+    image: Annotated[UploadFile, File()],
     current_user: CurrentUser,
     recipe_service: RecipeService = Depends(get_recipe_service),
 ):
-    return recipe_service.create_recipe(recipe, current_user.id)
+    return recipe_service.create_recipe(recipe, image, current_user.id)
 
 
 @router.put("/{recipe_id}", response_model=RecipePublic)
@@ -82,11 +90,6 @@ def get_similar_recipes(
     recipe_service: RecipeService = Depends(get_recipe_service),
 ):
     return recipe_service.get_similar_recipes(recipe_id, limit)
-
-
-@router.get("/ingredients", response_model=list[RecipeIngredient])
-def get_all_ingredients(recipe_service: RecipeService = Depends(get_recipe_service)):
-    return recipe_service.get_all_ingredients()
 
 
 @router.get("/user/{user_id}/recipes", response_model=list[RecipePublic])

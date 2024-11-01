@@ -22,14 +22,14 @@ import type {
   ResetPasswordData,
   ResetPasswordError,
   ResetPasswordResponse,
-  ReadMeError,
-  ReadMeResponse,
-  UpdateUserData,
-  UpdateUserError,
-  UpdateUserResponse,
-  ReadOtherUserData,
-  ReadOtherUserError,
-  ReadOtherUserResponse,
+  GetCurrentUserError,
+  GetCurrentUserResponse,
+  UpdateCurrentUserData,
+  UpdateCurrentUserError,
+  UpdateCurrentUserResponse,
+  GetUserByUsernameData,
+  GetUserByUsernameError,
+  GetUserByUsernameResponse,
   UpdateProfileImageData,
   UpdateProfileImageError,
   UpdateProfileImageResponse,
@@ -62,8 +62,6 @@ import type {
   GetSimilarRecipesData,
   GetSimilarRecipesError,
   GetSimilarRecipesResponse,
-  GetAllIngredientsError,
-  GetAllIngredientsResponse,
   GetUserRecipesData,
   GetUserRecipesError,
   GetUserRecipesResponse,
@@ -183,14 +181,21 @@ export const resetPassword = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Read Me
+ * Get Current User
+ * Get the currently authenticated user's profile.
+ *
+ * Args:
+ * current_user: The currently authenticated user
+ *
+ * Returns:
+ * UserPublic: The user's public profile
  */
-export const readMe = <ThrowOnError extends boolean = false>(
+export const getCurrentUser = <ThrowOnError extends boolean = false>(
   options?: Options<unknown, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
-    ReadMeResponse,
-    ReadMeError,
+    GetCurrentUserResponse,
+    GetCurrentUserError,
     ThrowOnError
   >({
     ...options,
@@ -199,14 +204,26 @@ export const readMe = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Update User
+ * Update Current User
+ * Update the current user's profile information.
+ *
+ * Args:
+ * data: The user data to update
+ * current_user: The currently authenticated user
+ * session: Database session dependency
+ *
+ * Returns:
+ * UserPublic: The updated user profile
+ *
+ * Raises:
+ * HTTPException: If update fails
  */
-export const updateUser = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateUserData, ThrowOnError>,
+export const updateCurrentUser = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateCurrentUserData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).post<
-    UpdateUserResponse,
-    UpdateUserError,
+  return (options?.client ?? client).patch<
+    UpdateCurrentUserResponse,
+    UpdateCurrentUserError,
     ThrowOnError
   >({
     ...options,
@@ -215,14 +232,25 @@ export const updateUser = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Read Other User
+ * Get User By Username
+ * Get a user's public profile by their username.
+ *
+ * Args:
+ * username: The username to look up
+ * session: Database session dependency
+ *
+ * Returns:
+ * UserPublic: The user's public profile
+ *
+ * Raises:
+ * HTTPException: If user is not found
  */
-export const readOtherUser = <ThrowOnError extends boolean = false>(
-  options: Options<ReadOtherUserData, ThrowOnError>,
+export const getUserByUsername = <ThrowOnError extends boolean = false>(
+  options: Options<GetUserByUsernameData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
-    ReadOtherUserResponse,
-    ReadOtherUserError,
+    GetUserByUsernameResponse,
+    GetUserByUsernameError,
     ThrowOnError
   >({
     ...options,
@@ -232,7 +260,18 @@ export const readOtherUser = <ThrowOnError extends boolean = false>(
 
 /**
  * Update Profile Image
- * Update an existing profile image for the user.
+ * Update the current user's existing profile image.
+ *
+ * Args:
+ * file: The new image file
+ * current_user: The currently authenticated user
+ * session: Database session dependency
+ *
+ * Returns:
+ * SuccessResponseWithData: Response with the path to the updated image
+ *
+ * Raises:
+ * HTTPException: If update fails
  */
 export const updateProfileImage = <ThrowOnError extends boolean = false>(
   options: Options<UpdateProfileImageData, ThrowOnError>,
@@ -254,7 +293,18 @@ export const updateProfileImage = <ThrowOnError extends boolean = false>(
 
 /**
  * Upload Profile Image
- * Upload a new profile image for the user.
+ * Upload a new profile image for the current user.
+ *
+ * Args:
+ * file: The image file to upload
+ * current_user: The currently authenticated user
+ * session: Database session dependency
+ *
+ * Returns:
+ * SuccessResponseWithData: Response with the path to the uploaded image
+ *
+ * Raises:
+ * HTTPException: If upload fails
  */
 export const uploadProfileImage = <ThrowOnError extends boolean = false>(
   options: Options<UploadProfileImageData, ThrowOnError>,
@@ -276,7 +326,17 @@ export const uploadProfileImage = <ThrowOnError extends boolean = false>(
 
 /**
  * Delete Profile Image
- * Delete the user's profile image.
+ * Delete the current user's profile image.
+ *
+ * Args:
+ * current_user: The currently authenticated user
+ * session: Database session dependency
+ *
+ * Returns:
+ * SuccessResponse: Success message
+ *
+ * Raises:
+ * HTTPException: If deletion fails
  */
 export const deleteProfileImage = <ThrowOnError extends boolean = false>(
   options?: Options<unknown, ThrowOnError>,
@@ -319,6 +379,11 @@ export const createRecipe = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
+    ...formDataBodySerializer,
+    headers: {
+      "Content-Type": null,
+      ...options?.headers,
+    },
     url: "/api/v1/recipe/",
   });
 };
@@ -416,22 +481,6 @@ export const getSimilarRecipes = <ThrowOnError extends boolean = false>(
   >({
     ...options,
     url: "/api/v1/recipe/{recipe_id}/similar",
-  });
-};
-
-/**
- * Get All Ingredients
- */
-export const getAllIngredients = <ThrowOnError extends boolean = false>(
-  options?: Options<unknown, ThrowOnError>,
-) => {
-  return (options?.client ?? client).get<
-    GetAllIngredientsResponse,
-    GetAllIngredientsError,
-    ThrowOnError
-  >({
-    ...options,
-    url: "/api/v1/recipe/ingredients",
   });
 };
 
