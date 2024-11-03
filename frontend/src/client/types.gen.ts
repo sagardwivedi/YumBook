@@ -36,10 +36,11 @@ export type RecipeCreate = {
   servings: number;
   name: string;
   cooking_time: number;
-  dietary_restrictions?: string | null;
+  dietary_restrictions: Array<string>;
   preparation_time: number;
   tags: Array<string>;
   description: string;
+  difficulty: string;
 };
 
 export type RecipePublic = {
@@ -48,13 +49,14 @@ export type RecipePublic = {
   instructions?: Array<string>;
   cooking_time: number;
   preparation_time: number;
+  difficulty: string;
   servings: number;
   cuisine: string;
-  dietary_restrictions?: string | null;
+  dietary_restrictions?: Array<string>;
   tags?: Array<string>;
   id: string;
   created_at: string;
-  image_url?: string | null;
+  image_url: string;
 };
 
 export type RecipeUpdate = {
@@ -110,7 +112,7 @@ export type UserCreate = {
 };
 
 export type UserForRecipe = {
-  avatar_path?: string;
+  avatar_path: string | null;
   username: string;
 };
 
@@ -126,7 +128,7 @@ export type UserPublic = {
   /**
    * Path to user's avatar image
    */
-  avatar_path?: string;
+  avatar_path?: string | null;
   /**
    * User's full name
    */
@@ -324,12 +326,6 @@ export type GetSimilarRecipesResponse = Array<RecipePublic>;
 
 export type GetSimilarRecipesError = HTTPValidationError;
 
-export type GetUserRecipesData = {
-  path: {
-    user_id: string;
-  };
-};
-
 export type GetUserRecipesResponse = Array<RecipePublic>;
 
-export type GetUserRecipesError = HTTPValidationError;
+export type GetUserRecipesError = unknown;

@@ -1,28 +1,41 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { MessageCircle } from "lucide-react";
+
 import { queryClient } from "~/App";
-import { getRecipesOptions } from "~/client/@tanstack/react-query.gen";
+import type { RecipePublic } from "~/client";
+import {
+  getRecipesOptions,
+  getTrendingRecipesOptions,
+} from "~/client/@tanstack/react-query.gen";
 import { Post } from "~/components/RecipeCard";
 import { Button } from "~/components/ui/button";
 
 export const Route = createFileRoute("/_layout/home")({
   component: Home,
-  loader: () => queryClient.ensureQueryData(getRecipesOptions()),
+  loader: () => [
+    queryClient.ensureQueryData(getRecipesOptions()),
+    queryClient.ensureQueryData(getTrendingRecipesOptions()),
+  ],
 });
 
 function Home() {
   const { data } = useSuspenseQuery(getRecipesOptions());
-
-  const onLikeToggle = () => {}
-  const onSaveToggle = () => {}
+  const { data: trendings } = useSuspenseQuery(getTrendingRecipesOptions());
 
   return (
     <div>
       <MobileHeader />
-      {data.map((r) => (
-        <Post key={r.recipe.id} {...r}  />
-      ))}
+      <div className="flex flex-row bg-red-800">
+        <div className=" flex-1">
+          {data.map((r) => (
+            <Post key={r.recipe.id} {...r} />
+          ))}
+        </div>
+        {trendings.map((trending) => (
+          <DesktopRightSidebar key={trending.id} {...trending} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -44,4 +57,8 @@ function MobileHeader() {
       </div>
     </header>
   );
+}
+
+function DesktopRightSidebar(recipeT: RecipePublic) {
+  return <div className="max-lg:hidden">{JSON.stringify(recipeT)}</div>;
 }

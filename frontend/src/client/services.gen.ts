@@ -62,7 +62,6 @@ import type {
   GetSimilarRecipesData,
   GetSimilarRecipesError,
   GetSimilarRecipesResponse,
-  GetUserRecipesData,
   GetUserRecipesError,
   GetUserRecipesResponse,
 } from "./types.gen";
@@ -488,7 +487,7 @@ export const getSimilarRecipes = <ThrowOnError extends boolean = false>(
  * Get User Recipes
  */
 export const getUserRecipes = <ThrowOnError extends boolean = false>(
-  options: Options<GetUserRecipesData, ThrowOnError>,
+  options?: Options<unknown, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
     GetUserRecipesResponse,
@@ -496,6 +495,6 @@ export const getUserRecipes = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: "/api/v1/recipe/user/{user_id}/recipes",
+    url: "/api/v1/recipe/user/recipes",
   });
 };

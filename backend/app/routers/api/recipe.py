@@ -92,8 +92,9 @@ def get_similar_recipes(
     return recipe_service.get_similar_recipes(recipe_id, limit)
 
 
-@router.get("/user/{user_id}/recipes", response_model=list[RecipePublic])
+@router.get("/user/recipes", response_model=list[RecipePublic])
 def get_user_recipes(
-    user_id: UUID, recipe_service: RecipeService = Depends(get_recipe_service)
+    currentUser: CurrentUser,
+    recipe_service: RecipeService = Depends(get_recipe_service),
 ):
-    return recipe_service.get_user_recipes(user_id)
+    return recipe_service.get_user_recipes(currentUser.id)

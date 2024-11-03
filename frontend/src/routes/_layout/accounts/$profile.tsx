@@ -2,20 +2,28 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { Bookmark, Grid } from "lucide-react";
 import { queryClient } from "~/App";
-import { getCurrentUserOptions } from "~/client/@tanstack/react-query.gen";
+import {
+  getCurrentUserOptions,
+  getUserRecipesOptions,
+} from "~/client/@tanstack/react-query.gen";
 
 import { MoreComponent } from "~/components/More";
+import { AspectRatio } from "~/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
 export const Route = createFileRoute("/_layout/accounts/$profile")({
   component: ProfilePage,
-  loader: () => queryClient.ensureQueryData(getCurrentUserOptions()),
+  loader: () => [
+    queryClient.ensureQueryData(getCurrentUserOptions()),
+    queryClient.ensureQueryData(getUserRecipesOptions()),
+  ],
 });
 
 export default function ProfilePage() {
   const { data: user } = useSuspenseQuery(getCurrentUserOptions());
+  const { data: userPosts } = useSuspenseQuery(getUserRecipesOptions());
 
   return (
     <div className="space-y-4 lg:max-w-4xl lg:mx-auto">
@@ -29,10 +37,11 @@ export default function ProfilePage() {
             <AvatarImage
               src={`http://localhost:8000/${user.avatar_path}`}
               alt={user.username}
+              className="object-cover"
             />
-            <AvatarFallback>CJ</AvatarFallback>
+            <AvatarFallback>{user.username[0].toUpperCase()}</AvatarFallback>
           </Avatar>
-          <h1 className="text-xl">{user.username}</h1>
+          <h1 className="text-xl">{user.full_name}</h1>
         </div>
         <div className="flex gap-4 mb-4">
           <div className="flex flex-col items-center">
@@ -65,7 +74,16 @@ export default function ProfilePage() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="recipes">
-          <div className="grid grid-cols-3 gap-0">2</div>
+          <div className="grid grid-cols-3 gap-0">
+            {userPosts.map((post) => (
+              <AspectRatio key={post.id} ratio={5 / 5}>
+                <img
+                  src={`http://localhost:8000/${post.image_url}`}
+                  alt={post.name}
+                />
+              </AspectRatio>
+            ))}
+          </div>
         </TabsContent>
         <TabsContent value="saved">
           <div className="grid grid-cols-3 gap-0">1</div>

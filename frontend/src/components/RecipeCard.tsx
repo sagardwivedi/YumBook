@@ -1,21 +1,23 @@
 import {
-  AlertCircle,
   Bookmark,
   ChefHat,
   Clock,
   Flame,
   Heart,
+  type LucideIcon,
   MessageCircle,
   MoreHorizontal,
   SendIcon,
   Tag,
   Users,
   UtensilsCrossed,
-  type LucideIcon,
 } from "lucide-react";
-import type { FC, ElementType } from "react";
+import type { FC } from "react";
+import type { RecipeWithUser } from "~/client";
 import { useMediaQuery } from "~/hooks/use-media-query";
+import { AspectRatio } from "./ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import {
@@ -34,9 +36,9 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "./ui/drawer";
-import { Badge } from "./ui/badge";
 import { ScrollArea } from "./ui/scroll-area";
-import type { RecipeWithUser } from "~/client";
+import { Link } from "@tanstack/react-router";
+import { calculateTimeForPosting } from "~/lib/utils";
 
 // Types
 
@@ -122,22 +124,33 @@ const IconButton: FC<IconButtonProps> = ({
   color,
   onClick,
 }) => (
-  <Button
-    onClick={onClick}
-    aria-label={label}
-    className="focus:outline-none focus:ring-2 focus:ring-primary/50 rounded-full p-1"
-  >
+  <Button onClick={onClick} aria-label={label} size={"icon"} variant={"ghost"}>
     <Icon className={`${color} h-6 w-6 transition-colors duration-200`} />
   </Button>
 );
 
-const UserInfo: FC<{ user: RecipeWithUser["user"] }> = ({ user }) => (
+const UserInfo: FC<{
+  user: RecipeWithUser["user"];
+  time: string;
+  id: string;
+}> = ({ user, time, id }) => (
   <div className="flex items-center gap-3">
     <Avatar>
-      <AvatarImage src={user.avatar_path} alt={`${user.username}'s avatar`} />
+      <AvatarImage
+        src={`http://localhost:8000/${user.avatar_path}`}
+        alt={`${user.username}'s avatar`}
+        className="object-cover"
+      />
       <AvatarFallback>{user.username[0].toUpperCase()}</AvatarFallback>
     </Avatar>
-    <span className="font-medium text-gray-800">{user.username}</span>
+    <Link to="/accounts/$profile" params={{ profile: user.username }}>
+      <span className="font-medium hover:underline dark:text-white cursor-pointer text-gray-800">
+        {user.username}
+      </span>
+    </Link>
+    <Link to="/p/$post" params={{ post: id }}>
+      <span className="text-gray-400">• {time}</span>
+    </Link>
   </div>
 );
 
@@ -145,18 +158,13 @@ const ContentItem: FC<{ text: string; onClick?: () => void }> = ({
   text,
   onClick,
 }) => (
-  <Button variant="ghost" className="w-full justify-start" onClick={onClick}>
+  <Button variant="ghost" className="w-full border-b" onClick={onClick}>
     {text}
   </Button>
 );
 
 const Recipe: FC<{ recipe: RecipeWithUser["recipe"] }> = ({ recipe }) => {
   const UIComponent = useResponsiveUI();
-
-  const formatDietaryRestrictions = (restrictions?: string) => {
-    if (!restrictions) return [];
-    return restrictions.split(",").map((diet) => diet.trim());
-  };
 
   return (
     <UIComponent.Container>
@@ -169,8 +177,8 @@ const Recipe: FC<{ recipe: RecipeWithUser["recipe"] }> = ({ recipe }) => {
         </Button>
       </UIComponent.Trigger>
 
-      <ScrollArea>
-        <UIComponent.Content className="p-6">
+      <UIComponent.Content className="max-h-[90vh] p-6">
+        <ScrollArea className="h-[95vh]">
           <div className="space-y-6">
             {/* Header Section */}
             <div className="space-y-4">
@@ -199,17 +207,11 @@ const Recipe: FC<{ recipe: RecipeWithUser["recipe"] }> = ({ recipe }) => {
 
               {recipe.dietary_restrictions && (
                 <div className="flex flex-wrap gap-2">
-                  {formatDietaryRestrictions(recipe.dietary_restrictions).map(
-                    (diet) => (
-                      <Badge
-                        key={diet}
-                        variant="outline"
-                        className="bg-green-50"
-                      >
-                        {diet}
-                      </Badge>
-                    )
-                  )}
+                  {recipe.dietary_restrictions.map((diet) => (
+                    <Badge key={diet} variant="outline" className="bg-green-50">
+                      {diet}
+                    </Badge>
+                  ))}
                 </div>
               )}
             </div>
@@ -279,8 +281,8 @@ const Recipe: FC<{ recipe: RecipeWithUser["recipe"] }> = ({ recipe }) => {
               </Button>
             </UIComponent.Close>
           </div>
-        </UIComponent.Content>
-      </ScrollArea>
+        </ScrollArea>
+      </UIComponent.Content>
     </UIComponent.Container>
   );
 };
@@ -295,10 +297,12 @@ export const Post: FC<RecipeWithUser> = ({ user, recipe }) => {
     "About this account",
   ];
 
+  const postTiming = calculateTimeForPosting(recipe.created_at);
+
   return (
     <Card className="max-w-lg mx-auto border-0 shadow-none">
       <CardHeader className="flex flex-row items-center justify-between border-b">
-        <UserInfo user={user} />
+        <UserInfo user={user} time={postTiming} id={recipe.id} />
         <UIComponent.Container>
           <UIComponent.Trigger asChild>
             <Button size="icon" variant="ghost" aria-label="More options">
@@ -312,7 +316,7 @@ export const Post: FC<RecipeWithUser> = ({ user, recipe }) => {
             <UIComponent.Description className="text-gray-600">
               Choose an action for this post:
             </UIComponent.Description>
-            <div className="mt-4 space-y-2">
+            <div className="mt-4">
               {POST_OPTIONS.map((option) => (
                 <ContentItem key={option} text={option} />
               ))}
@@ -325,11 +329,13 @@ export const Post: FC<RecipeWithUser> = ({ user, recipe }) => {
       </CardHeader>
 
       <CardContent className="relative w-full h-auto">
-        <img
-          src={`http://localhost:8000/${recipe.image_url}`}
-          alt={`Recipe: ${recipe.name}`}
-          className="w-full h-auto object-cover rounded-lg"
-        />
+        <AspectRatio ratio={9 / 6}>
+          <img
+            src={`http://localhost:8000/${recipe.image_url}`}
+            alt={`Recipe: ${recipe.name}`}
+            className="w-full h-auto object-cover rounded-lg"
+          />
+        </AspectRatio>
         <Recipe recipe={recipe} />
       </CardContent>
 

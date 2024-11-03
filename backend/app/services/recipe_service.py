@@ -72,8 +72,9 @@ class RecipeService:
             dietary_restrictions=recipe.dietary_restrictions,
             instructions=recipe.instructions,
             tags=recipe.tags,
+            image_url=self.upload_recipe_image(image),
+            difficulty=recipe.difficulty,
         )
-        db_recipe.image_url = self.upload_recipe_image(image)
         self.db.add(db_recipe)
         self.db.commit()
         return db_recipe
@@ -122,7 +123,7 @@ class RecipeService:
             statement = statement.where(Recipe.tags.__contains__(tags))
         return self.db.exec(statement).all()
 
-    def get_trending_recipes(self, limit: int = 10) -> Sequence[Recipe]:
+    def get_trending_recipes(self, limit: int = 10):
         # Ordering by created_at to get trending recipes (you can improve this by adding metrics)
         return self.db.exec(
             select(Recipe).order_by(desc(Recipe.created_at)).limit(limit)

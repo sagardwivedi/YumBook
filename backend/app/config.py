@@ -39,12 +39,11 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
 
     # Frontend and environment settings
-    FRONTEND_HOST: str = "http://localhost:5500"
+    FRONTEND_HOST: str = "http://localhost:3000"
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
 
     PROFILE_DIR: str = "static/profile"
     POST_DIR: str = "static/post"
-    VIDEO_DIR: str = "static/videos"
 
     # CORS settings
     BACKEND_CORS_ORIGINS: Annotated[

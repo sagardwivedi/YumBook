@@ -18,7 +18,7 @@ const useRecipe = () => {
         title: "Recipe created",
         description: "Your recipe has been created successfully",
       });
-      navigate({to:"/home"})
+      navigate({ to: "/home" });
     },
     onError: (error) => {
       const errorMessage = getErrorMessage(error);

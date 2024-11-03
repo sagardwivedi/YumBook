@@ -84,7 +84,7 @@ function DesktopNavItem({ icon: Icon, text, to }: NavItemProps) {
             className="w-full justify-start px-4 py-2"
             size={buttonSize}
           >
-            <Icon className="h-5 w-5 mr-4" />
+            <Icon className="size-8 mr-4" />
             <span className="hidden lg:inline">{text}</span>
           </NavigationLink>
         </TooltipTrigger>
@@ -103,17 +103,21 @@ function MobileNavItem({ icon: Icon, text, to }: NavItemProps) {
   );
 }
 
-function UserAvatar({ src, username, size = "default" }: {
+function UserAvatar({
+  src,
+  username,
+  size = "default",
+}: {
   src: string;
   username: string;
   size?: "default" | "small";
 }) {
-  const sizeClasses = size === "small" ? "h-6 w-6" : "h-5 w-5 mr-4";
+  const sizeClasses = size === "small" ? "h-6 w-6" : "size-8 mr-4";
   const fallbackText = username[0].toUpperCase();
 
   return (
     <Avatar className={sizeClasses}>
-      <AvatarImage src={src} alt={username} />
+      <AvatarImage src={src} alt={username} className="object-cover" />
       <AvatarFallback>{fallbackText}</AvatarFallback>
     </Avatar>
   );
@@ -141,7 +145,11 @@ function Layout() {
             <nav className="space-y-1 px-2">
               <DesktopNavItem icon={Home} text="Home" to="/home" />
               <DesktopNavItem icon={Search} text="Explore" to="/explorer" />
-              <DesktopNavItem icon={MessageCircle} text="Messages" to="/messages" />
+              <DesktopNavItem
+                icon={MessageCircle}
+                text="Messages"
+                to="/messages"
+              />
               <DesktopNavItem icon={Bell} text="Notifications" to="/activity" />
               <DesktopNavItem icon={PlusSquare} text="Create" to="/create" />
 
@@ -181,10 +189,7 @@ function Layout() {
             <MobileNavItem icon={Search} text="Explore" to="/explorer" />
             <MobileNavItem icon={PlusSquare} text="Create" to="/create" />
             <MobileNavItem icon={Heart} text="Activity" to="/activity" />
-            <NavigationLink
-              href={`/accounts/${user.username}`}
-              size="icon"
-            >
+            <NavigationLink href={`/accounts/${user.username}`} size="icon">
               <UserAvatar
                 src={avatarPath}
                 username={user.username}

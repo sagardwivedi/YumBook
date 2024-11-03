@@ -1,4 +1,3 @@
-import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
@@ -10,10 +9,6 @@ from app.routers import api_router
 
 def custom_generate_unique_id(route: APIRoute) -> str:
     return f"{route.tags[0]}-{route.name}"
-
-
-if settings.SENTRY_DSN and settings.ENVIRONMENT != "local":
-    sentry_sdk.init(dsn=str(settings.SENTRY_DSN), enable_tracing=True)
 
 
 app = FastAPI(
@@ -35,10 +30,6 @@ app.mount(
     f"/{settings.POST_DIR}", StaticFiles(directory=settings.POST_DIR), name="post"
 )
 
-# Mounting the "videos" route to serve videos
-app.mount(
-    f"/{settings.VIDEO_DIR}", StaticFiles(directory=settings.VIDEO_DIR), name="videos"
-)
 
 # Set all CORS enabled origins
 if settings.all_cors_origins:

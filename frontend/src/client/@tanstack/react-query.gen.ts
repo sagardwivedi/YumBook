@@ -43,7 +43,6 @@ import type {
   SearchRecipesData,
   GetTrendingRecipesData,
   GetSimilarRecipesData,
-  GetUserRecipesData,
 } from "../types.gen";
 import {
   client,
@@ -613,11 +612,11 @@ export const getSimilarRecipesOptions = (
   });
 };
 
-export const getUserRecipesQueryKey = (
-  options: Options<GetUserRecipesData>,
-) => [createQueryKey("getUserRecipes", options)];
+export const getUserRecipesQueryKey = (options?: Options) => [
+  createQueryKey("getUserRecipes", options),
+];
 
-export const getUserRecipesOptions = (options: Options<GetUserRecipesData>) => {
+export const getUserRecipesOptions = (options?: Options) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await getUserRecipes({

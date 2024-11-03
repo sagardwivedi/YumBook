@@ -14,9 +14,12 @@ class RecipeBase(SQLModel):
     instructions: list[str] = Field(default_factory=list, sa_column=Column(JSON))
     cooking_time: int = Field(ge=0)
     preparation_time: int = Field(ge=0)
+    difficulty: str
     servings: int = Field(gt=0)
     cuisine: str = Field(index=True, min_length=1, max_length=100)
-    dietary_restrictions: str | None = Field(default=None, max_length=255)
+    dietary_restrictions: list[str] = Field(
+        default_factory=list, sa_column=Column(JSON)
+    )
     tags: list[str] = Field(default_factory=list, sa_column=Column(JSON))
 
 
@@ -26,7 +29,7 @@ class Recipe(RecipeBase, table=True):
     updated_at: datetime = Field(
         default_factory=datetime.now, sa_column_kwargs={"onupdate": datetime.now}
     )
-    image_url: str | None = None
+    image_url: str
 
     user_id: UUID = Field(foreign_key="user.id")
     user: "User" = Relationship(back_populates="recipe")
@@ -38,10 +41,11 @@ class RecipeCreate(SQLModel):
     servings: int
     name: str
     cooking_time: int
-    dietary_restrictions: str | None = None
+    dietary_restrictions: list[str]
     preparation_time: int
     tags: list[str]
     description: str
+    difficulty: str
 
 
 class RecipeUpdate(SQLModel):
@@ -60,4 +64,4 @@ class RecipeUpdate(SQLModel):
 class RecipePublic(RecipeBase):
     id: UUID
     created_at: datetime
-    image_url: str | None = None
+    image_url: str
