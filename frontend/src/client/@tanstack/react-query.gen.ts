@@ -21,27 +21,26 @@ import type {
   UpdateCurrentUserError,
   UpdateCurrentUserResponse,
   GetUserByUsernameData,
-  UpdateProfileImageData,
-  UpdateProfileImageError,
-  UpdateProfileImageResponse,
+  DeleteProfileImageError,
+  DeleteProfileImageResponse,
   UploadProfileImageData,
   UploadProfileImageError,
   UploadProfileImageResponse,
-  DeleteProfileImageError,
-  DeleteProfileImageResponse,
+  UpdateProfileImageData,
+  UpdateProfileImageError,
+  UpdateProfileImageResponse,
   GetRecipesData,
   CreateRecipeData,
   CreateRecipeError,
   CreateRecipeResponse,
   GetRecipeData,
-  UpdateRecipeData,
-  UpdateRecipeError,
-  UpdateRecipeResponse,
   DeleteRecipeData,
   DeleteRecipeError,
   DeleteRecipeResponse,
+  UpdateRecipeData,
+  UpdateRecipeError,
+  UpdateRecipeResponse,
   SearchRecipesData,
-  GetTrendingRecipesData,
   GetSimilarRecipesData,
 } from "../types.gen";
 import {
@@ -54,14 +53,14 @@ import {
   getCurrentUser,
   updateCurrentUser,
   getUserByUsername,
-  updateProfileImage,
-  uploadProfileImage,
   deleteProfileImage,
+  uploadProfileImage,
+  updateProfileImage,
   getRecipes,
   createRecipe,
   getRecipe,
-  updateRecipe,
   deleteRecipe,
+  updateRecipe,
   searchRecipes,
   getTrendingRecipes,
   getSimilarRecipes,
@@ -355,16 +354,14 @@ export const getUserByUsernameOptions = (
   });
 };
 
-export const updateProfileImageMutation = (
-  options?: Partial<Options<UpdateProfileImageData>>,
-) => {
+export const deleteProfileImageMutation = (options?: Partial<Options>) => {
   const mutationOptions: UseMutationOptions<
-    UpdateProfileImageResponse,
-    UpdateProfileImageError,
-    Options<UpdateProfileImageData>
+    DeleteProfileImageResponse,
+    DeleteProfileImageError,
+    Options
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await updateProfileImage({
+      const { data } = await deleteProfileImage({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -416,14 +413,16 @@ export const uploadProfileImageMutation = (
   return mutationOptions;
 };
 
-export const deleteProfileImageMutation = (options?: Partial<Options>) => {
+export const updateProfileImageMutation = (
+  options?: Partial<Options<UpdateProfileImageData>>,
+) => {
   const mutationOptions: UseMutationOptions<
-    DeleteProfileImageResponse,
-    DeleteProfileImageError,
-    Options
+    UpdateProfileImageResponse,
+    UpdateProfileImageError,
+    Options<UpdateProfileImageData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await deleteProfileImage({
+      const { data } = await updateProfileImage({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -511,26 +510,6 @@ export const getRecipeOptions = (options: Options<GetRecipeData>) => {
   });
 };
 
-export const updateRecipeMutation = (
-  options?: Partial<Options<UpdateRecipeData>>,
-) => {
-  const mutationOptions: UseMutationOptions<
-    UpdateRecipeResponse,
-    UpdateRecipeError,
-    Options<UpdateRecipeData>
-  > = {
-    mutationFn: async (localOptions) => {
-      const { data } = await updateRecipe({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      });
-      return data;
-    },
-  };
-  return mutationOptions;
-};
-
 export const deleteRecipeMutation = (
   options?: Partial<Options<DeleteRecipeData>>,
 ) => {
@@ -541,6 +520,26 @@ export const deleteRecipeMutation = (
   > = {
     mutationFn: async (localOptions) => {
       const { data } = await deleteRecipe({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const updateRecipeMutation = (
+  options?: Partial<Options<UpdateRecipeData>>,
+) => {
+  const mutationOptions: UseMutationOptions<
+    UpdateRecipeResponse,
+    UpdateRecipeError,
+    Options<UpdateRecipeData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await updateRecipe({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -570,13 +569,11 @@ export const searchRecipesOptions = (options: Options<SearchRecipesData>) => {
   });
 };
 
-export const getTrendingRecipesQueryKey = (
-  options?: Options<GetTrendingRecipesData>,
-) => [createQueryKey("getTrendingRecipes", options)];
+export const getTrendingRecipesQueryKey = (options?: Options) => [
+  createQueryKey("getTrendingRecipes", options),
+];
 
-export const getTrendingRecipesOptions = (
-  options?: Options<GetTrendingRecipesData>,
-) => {
+export const getTrendingRecipesOptions = (options?: Options) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await getTrendingRecipes({

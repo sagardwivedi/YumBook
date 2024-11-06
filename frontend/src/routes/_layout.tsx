@@ -1,3 +1,5 @@
+"use client";
+
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   Link,
@@ -123,7 +125,7 @@ function UserAvatar({
   );
 }
 
-function Layout() {
+export default function Layout() {
   const { data: user } = useSuspenseQuery(getCurrentUserOptions());
   const avatarPath = `http://localhost:8000/${user.avatar_path}`;
 
@@ -203,5 +205,3 @@ function Layout() {
     </div>
   );
 }
-
-export default Layout;

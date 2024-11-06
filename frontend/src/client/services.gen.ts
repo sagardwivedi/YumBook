@@ -30,14 +30,14 @@ import type {
   GetUserByUsernameData,
   GetUserByUsernameError,
   GetUserByUsernameResponse,
-  UpdateProfileImageData,
-  UpdateProfileImageError,
-  UpdateProfileImageResponse,
+  DeleteProfileImageError,
+  DeleteProfileImageResponse,
   UploadProfileImageData,
   UploadProfileImageError,
   UploadProfileImageResponse,
-  DeleteProfileImageError,
-  DeleteProfileImageResponse,
+  UpdateProfileImageData,
+  UpdateProfileImageError,
+  UpdateProfileImageResponse,
   GetRecipesData,
   GetRecipesError,
   GetRecipesResponse,
@@ -47,22 +47,19 @@ import type {
   GetRecipeData,
   GetRecipeError,
   GetRecipeResponse,
-  UpdateRecipeData,
-  UpdateRecipeError,
-  UpdateRecipeResponse,
   DeleteRecipeData,
   DeleteRecipeError,
   DeleteRecipeResponse,
+  UpdateRecipeData,
+  UpdateRecipeError,
+  UpdateRecipeResponse,
   SearchRecipesData,
   SearchRecipesError,
   SearchRecipesResponse,
-  GetTrendingRecipesData,
-  GetTrendingRecipesError,
   GetTrendingRecipesResponse,
   GetSimilarRecipesData,
   GetSimilarRecipesError,
   GetSimilarRecipesResponse,
-  GetUserRecipesError,
   GetUserRecipesResponse,
 } from "./types.gen";
 
@@ -91,6 +88,10 @@ export const registerUser = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
     url: "/api/v1/register",
   });
 };
@@ -226,6 +227,10 @@ export const updateCurrentUser = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
     url: "/api/v1/users/me",
   });
 };
@@ -258,34 +263,28 @@ export const getUserByUsername = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Update Profile Image
- * Update the current user's existing profile image.
+ * Delete Profile Image
+ * Delete the current user's profile image.
  *
  * Args:
- * file: The new image file
  * current_user: The currently authenticated user
  * session: Database session dependency
  *
  * Returns:
- * SuccessResponseWithData: Response with the path to the updated image
+ * SuccessResponse: Success message
  *
  * Raises:
- * HTTPException: If update fails
+ * HTTPException: If deletion fails
  */
-export const updateProfileImage = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateProfileImageData, ThrowOnError>,
+export const deleteProfileImage = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).put<
-    UpdateProfileImageResponse,
-    UpdateProfileImageError,
+  return (options?.client ?? client).delete<
+    DeleteProfileImageResponse,
+    DeleteProfileImageError,
     ThrowOnError
   >({
     ...options,
-    ...formDataBodySerializer,
-    headers: {
-      "Content-Type": null,
-      ...options?.headers,
-    },
     url: "/api/v1/users/profile-image",
   });
 };
@@ -324,28 +323,34 @@ export const uploadProfileImage = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Delete Profile Image
- * Delete the current user's profile image.
+ * Update Profile Image
+ * Update the current user's existing profile image.
  *
  * Args:
+ * file: The new image file
  * current_user: The currently authenticated user
  * session: Database session dependency
  *
  * Returns:
- * SuccessResponse: Success message
+ * SuccessResponseWithData: Response with the path to the updated image
  *
  * Raises:
- * HTTPException: If deletion fails
+ * HTTPException: If update fails
  */
-export const deleteProfileImage = <ThrowOnError extends boolean = false>(
-  options?: Options<unknown, ThrowOnError>,
+export const updateProfileImage = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateProfileImageData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).delete<
-    DeleteProfileImageResponse,
-    DeleteProfileImageError,
+  return (options?.client ?? client).put<
+    UpdateProfileImageResponse,
+    UpdateProfileImageError,
     ThrowOnError
   >({
     ...options,
+    ...formDataBodySerializer,
+    headers: {
+      "Content-Type": null,
+      ...options?.headers,
+    },
     url: "/api/v1/users/profile-image",
   });
 };
@@ -399,6 +404,22 @@ export const getRecipe = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
+    url: "/api/v1/recipe/p/{recipe_id}",
+  });
+};
+
+/**
+ * Delete Recipe
+ */
+export const deleteRecipe = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteRecipeData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).delete<
+    DeleteRecipeResponse,
+    DeleteRecipeError,
+    ThrowOnError
+  >({
+    ...options,
     url: "/api/v1/recipe/{recipe_id}",
   });
 };
@@ -415,22 +436,10 @@ export const updateRecipe = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: "/api/v1/recipe/{recipe_id}",
-  });
-};
-
-/**
- * Delete Recipe
- */
-export const deleteRecipe = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteRecipeData, ThrowOnError>,
-) => {
-  return (options?.client ?? client).delete<
-    DeleteRecipeResponse,
-    DeleteRecipeError,
-    ThrowOnError
-  >({
-    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
     url: "/api/v1/recipe/{recipe_id}",
   });
 };
@@ -455,15 +464,15 @@ export const searchRecipes = <ThrowOnError extends boolean = false>(
  * Get Trending Recipes
  */
 export const getTrendingRecipes = <ThrowOnError extends boolean = false>(
-  options?: Options<GetTrendingRecipesData, ThrowOnError>,
+  options?: Options<unknown, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
     GetTrendingRecipesResponse,
-    GetTrendingRecipesError,
+    unknown,
     ThrowOnError
   >({
     ...options,
-    url: "/api/v1/recipe/trending",
+    url: "/api/v1/recipe/recipe_trends",
   });
 };
 
@@ -491,7 +500,7 @@ export const getUserRecipes = <ThrowOnError extends boolean = false>(
 ) => {
   return (options?.client ?? client).get<
     GetUserRecipesResponse,
-    GetUserRecipesError,
+    unknown,
     ThrowOnError
   >({
     ...options,

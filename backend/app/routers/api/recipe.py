@@ -7,6 +7,7 @@ from pydantic import Json
 from app.models.recipe import (
     RecipeCreate,
     RecipePublic,
+    RecipeTrending,
     RecipeUpdate,
 )
 from app.models.user import RecipeWithUser
@@ -29,7 +30,7 @@ def get_recipes(
     return recipe_service.get_recipes_with_users(skip, limit)
 
 
-@router.get("/{recipe_id}", response_model=RecipePublic)
+@router.get("/p/{recipe_id}", response_model=RecipePublic)
 def get_recipe(
     recipe_id: UUID, recipe_service: RecipeService = Depends(get_recipe_service)
 ):
@@ -76,11 +77,9 @@ def search_recipes(
     return recipe_service.search_recipes(query, cuisine, max_cooking_time, tags)
 
 
-@router.get("/trending", response_model=list[RecipePublic])
-def get_trending_recipes(
-    limit: int = 10, recipe_service: RecipeService = Depends(get_recipe_service)
-):
-    return recipe_service.get_trending_recipes(limit)
+@router.get("/recipe_trends", response_model=list[RecipeTrending])
+def get_trending_recipes(recipe_service: RecipeService = Depends(get_recipe_service)):
+    return recipe_service.get_trending_recipes()
 
 
 @router.get("/{recipe_id}/similar", response_model=list[RecipePublic])

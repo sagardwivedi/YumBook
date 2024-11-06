@@ -21,7 +21,7 @@ import {
 } from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
 import { CreateSchema } from "~/lib/definitions";
-import { LoaderCircleIcon, Plus, Trash2, X } from "lucide-react";
+import { LoaderCircle, LoaderCircleIcon, Plus, Trash2, X } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
 import { Card } from "~/components/ui/card";
 import useRecipe from "~/hooks/use-recipe";
@@ -94,23 +94,25 @@ function RouteComponent() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="max-w-3xl mx-auto space-y-8 p-8 bg-white rounded-lg shadow-lg"
+        className="max-w-3xl mx-auto space-y-8 p-8"
       >
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold">Create New Recipe</h1>
-          <p className="text-gray-500">
+          <h1 className="text-2xl font-bold dark:text-white">
+            Create New Recipe
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400">
             Fill in the details to create your recipe
           </p>
         </div>
 
         {/* Image Upload */}
-        <Card className="p-6">
+        <Card className="p-6 dark:bg-gray-700">
           <FormField
             control={form.control}
             name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Recipe Image</FormLabel>
+                <FormLabel className="dark:text-white">Recipe Image</FormLabel>
                 <FormControl>
                   <div className="flex flex-col items-center justify-center w-full">
                     {field.value ? (
@@ -140,9 +142,9 @@ function RouteComponent() {
                               field.onChange(e.target.files[0]);
                             }
                           }}
-                          className="cursor-pointer"
+                          className="cursor-pointer dark:text-white dark:bg-gray-600 dark:border-gray-500"
                         />
-                        <p className="mt-2 text-sm text-gray-500">
+                        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                           Recommended: 16:9 ratio, max 5MB
                         </p>
                       </div>
@@ -156,19 +158,22 @@ function RouteComponent() {
         </Card>
 
         {/* Basic Information */}
-        <Card className="p-6 space-y-6">
-          <h2 className="text-lg font-semibold">Basic Information</h2>
+        <Card className="p-6 space-y-6 dark:bg-gray-700">
+          <h2 className="text-lg font-semibold dark:text-white">
+            Basic Information
+          </h2>
 
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Recipe Name</FormLabel>
+                <FormLabel className="dark:text-white">Recipe Name</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
                     placeholder="E.g., Classic Margherita Pizza"
+                    className="dark:bg-gray-600 dark:text-white dark:border-gray-500"
                   />
                 </FormControl>
                 <FormMessage />
@@ -182,9 +187,13 @@ function RouteComponent() {
               name="cuisine"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Cuisine</FormLabel>
+                  <FormLabel className="dark:text-white">Cuisine</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="E.g., Italian" />
+                    <Input
+                      {...field}
+                      placeholder="E.g., Italian"
+                      className="dark:bg-gray-600 dark:text-white dark:border-gray-500"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -196,20 +205,28 @@ function RouteComponent() {
               name="difficulty"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Difficulty Level</FormLabel>
+                  <FormLabel className="dark:text-white">
+                    Difficulty Level
+                  </FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="dark:bg-gray-600 dark:text-white dark:border-gray-500">
                         <SelectValue placeholder="Select difficulty" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="easy">Easy</SelectItem>
-                      <SelectItem value="medium">Medium</SelectItem>
-                      <SelectItem value="hard">Hard</SelectItem>
+                    <SelectContent className="dark:bg-gray-700">
+                      <SelectItem value="easy" className="dark:text-white">
+                        Easy
+                      </SelectItem>
+                      <SelectItem value="medium" className="dark:text-white">
+                        Medium
+                      </SelectItem>
+                      <SelectItem value="hard" className="dark:text-white">
+                        Hard
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -223,12 +240,12 @@ function RouteComponent() {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel className="dark:text-white">Description</FormLabel>
                 <FormControl>
                   <Textarea
                     {...field}
                     placeholder="Write a brief description of your recipe..."
-                    className="h-24"
+                    className="h-24 dark:bg-gray-600 dark:text-white dark:border-gray-500"
                   />
                 </FormControl>
                 <FormMessage />
@@ -238,8 +255,10 @@ function RouteComponent() {
         </Card>
 
         {/* Time and Servings */}
-        <Card className="p-6 space-y-6">
-          <h2 className="text-lg font-semibold">Time and Servings</h2>
+        <Card className="p-6 space-y-6 dark:bg-gray-700">
+          <h2 className="text-lg font-semibold dark:text-white">
+            Time and Servings
+          </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <FormField
@@ -247,13 +266,16 @@ function RouteComponent() {
               name="preparation_time"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Prep Time (mins)</FormLabel>
+                  <FormLabel className="dark:text-white">
+                    Prep Time (mins)
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       min="0"
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))}
+                      className="dark:bg-gray-600 dark:text-white dark:border-gray-500"
                     />
                   </FormControl>
                   <FormMessage />
@@ -266,13 +288,16 @@ function RouteComponent() {
               name="cooking_time"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Cook Time (mins)</FormLabel>
+                  <FormLabel className="dark:text-white">
+                    Cook Time (mins)
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       min="0"
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))}
+                      className="dark:bg-gray-600 dark:text-white dark:border-gray-500"
                     />
                   </FormControl>
                   <FormMessage />
@@ -285,13 +310,14 @@ function RouteComponent() {
               name="servings"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Servings</FormLabel>
+                  <FormLabel className="dark:text-white">Servings</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       min="1"
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))}
+                      className="dark:bg-gray-600 dark:text-white dark:border-gray-500"
                     />
                   </FormControl>
                   <FormMessage />
@@ -302,9 +328,11 @@ function RouteComponent() {
         </Card>
 
         {/* Instructions */}
-        <Card className="p-6 space-y-4">
+        <Card className="p-6 space-y-4 dark:bg-gray-700">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold">Instructions</h2>
+            <h2 className="text-lg font-semibold dark:text-white">
+              Instructions
+            </h2>
             <Button
               type="button"
               onClick={() => appendInstructions("")}
@@ -326,13 +354,13 @@ function RouteComponent() {
                       <FormItem>
                         <FormControl>
                           <div className="flex gap-2">
-                            <span className="flex items-center justify-center bg-gray-100 rounded-full w-8 h-8 shrink-0">
+                            <span className="flex items-center justify-center bg-gray-100 dark:bg-gray-600 rounded-full w-8 h-8 shrink-0 dark:text-white">
                               {index + 1}
                             </span>
                             <Textarea
                               {...field}
                               placeholder={`Step ${index + 1}`}
-                              className="flex-grow"
+                              className="flex-grow dark:bg-gray-600 dark:text-white dark:border-gray-500"
                             />
                           </div>
                         </FormControl>
@@ -355,13 +383,15 @@ function RouteComponent() {
         </Card>
 
         {/* Tags and Dietary Restrictions */}
-        <Card className="p-6 space-y-6">
-          <h2 className="text-lg font-semibold">Tags and Dietary Info</h2>
+        <Card className="p-6 space-y-6 dark:bg-gray-700">
+          <h2 className="text-lg font-semibold dark:text-white">
+            Tags and Dietary Info
+          </h2>
 
           <div className="space-y-6">
             <div>
               <div className="flex flex-col max-md:gap-5 md:flex-row justify-between items-center mb-4">
-                <FormLabel>Tags</FormLabel>
+                <FormLabel className="dark:text-white">Tags</FormLabel>
                 <Button
                   type="button"
                   onClick={() => appendTags("")}
@@ -376,7 +406,7 @@ function RouteComponent() {
                   <Badge
                     key={field.id}
                     variant="secondary"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 dark:bg-gray-600 dark:text-white"
                   >
                     <FormField
                       control={form.control}
@@ -384,7 +414,7 @@ function RouteComponent() {
                       render={({ field }) => (
                         <Input
                           {...field}
-                          className="w-24 border-none p-0 h-auto bg-transparent"
+                          className="w-24 border-none p-0 h-auto bg-transparent dark:text-white"
                           placeholder="New tag"
                         />
                       )}
@@ -405,7 +435,9 @@ function RouteComponent() {
 
             <div>
               <div className="flex flex-col md:flex-row max-md:gap-5 justify-between items-center mb-4">
-                <FormLabel>Dietary Restrictions</FormLabel>
+                <FormLabel className="dark:text-white">
+                  Dietary Restrictions
+                </FormLabel>
                 <Button
                   type="button"
                   onClick={() => appendDietaryRestrictions("")}
@@ -420,7 +452,7 @@ function RouteComponent() {
                   <Badge
                     key={field.id}
                     variant="secondary"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 dark:bg-gray-600 dark:text-white"
                   >
                     <FormField
                       control={form.control}
@@ -428,7 +460,7 @@ function RouteComponent() {
                       render={({ field }) => (
                         <Input
                           {...field}
-                          className="w-24 border-none p-0 h-auto bg-transparent"
+                          className="w-24 border-none p-0 h-auto bg-transparent dark:text-white"
                           placeholder="New restriction"
                         />
                       )}
@@ -452,7 +484,7 @@ function RouteComponent() {
         <div className="flex justify-end gap-4">
           <Button disabled={form.formState.isSubmitting} type="submit">
             {form.formState.isSubmitting ? (
-              <LoaderCircleIcon className="size-5 animate-spin" />
+              <LoaderCircle className="size-5 animate-spin" />
             ) : (
               "Publish Recipe"
             )}

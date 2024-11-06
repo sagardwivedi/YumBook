@@ -123,11 +123,20 @@ class RecipeService:
             statement = statement.where(Recipe.tags.__contains__(tags))
         return self.db.exec(statement).all()
 
-    def get_trending_recipes(self, limit: int = 10):
+    def get_trending_recipes(self):
         # Ordering by created_at to get trending recipes (you can improve this by adding metrics)
-        return self.db.exec(
-            select(Recipe).order_by(desc(Recipe.created_at)).limit(limit)
+        data = self.db.exec(
+            select(Recipe, User).join(User).order_by(desc(Recipe.created_at))
         ).all()
+        return [
+            {
+                "id": recipe.id,
+                "image_url": recipe.image_url,
+                "name": recipe.name,
+                "username": user.username,
+            }
+            for recipe, user in data
+        ]
 
     def get_similar_recipes(self, recipe_id: UUID, limit: int = 5) -> Sequence[Recipe]:
         original_recipe = self.get_recipe(recipe_id)

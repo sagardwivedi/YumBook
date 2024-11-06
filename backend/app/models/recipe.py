@@ -65,3 +65,10 @@ class RecipePublic(RecipeBase):
     id: UUID
     created_at: datetime
     image_url: str
+
+
+class RecipeTrending(SQLModel):
+    id: UUID
+    image_url: str
+    name: str
+    username: str
