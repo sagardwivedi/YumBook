@@ -7,7 +7,11 @@ import { useThemeStore } from "./hooks/use-theme";
 import "./index.css";
 import { routeTree } from "./routeTree.gen";
 
-const router = createRouter({ routeTree, defaultViewTransition: true });
+const router = createRouter({
+  routeTree,
+  defaultViewTransition: true,
+  defaultPreload: "intent",
+});
 export const queryClient = new QueryClient();
 client.setConfig({ baseUrl: "http://localhost:8000", credentials: "include" });
 
@@ -28,7 +32,7 @@ export default function App() {
   return (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} defaultPreload={"intent"} />
+        <RouterProvider router={router} />
       </QueryClientProvider>
     </StrictMode>
   );

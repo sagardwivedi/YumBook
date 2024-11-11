@@ -1,4 +1,4 @@
-import * as React from "react";
+import { forwardRef } from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 
 import { cn } from "~/lib/utils";
@@ -12,6 +12,7 @@ const Drawer = ({
     {...props}
   />
 );
+
 Drawer.displayName = "Drawer";
 
 const DrawerTrigger = DrawerPrimitive.Trigger;
@@ -20,7 +21,7 @@ const DrawerPortal = DrawerPrimitive.Portal;
 
 const DrawerClose = DrawerPrimitive.Close;
 
-const DrawerOverlay = React.forwardRef<
+const DrawerOverlay = forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
@@ -30,9 +31,10 @@ const DrawerOverlay = React.forwardRef<
     {...props}
   />
 ));
+
 DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName;
 
-const DrawerContent = React.forwardRef<
+const DrawerContent = forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
@@ -51,6 +53,7 @@ const DrawerContent = React.forwardRef<
     </DrawerPrimitive.Content>
   </DrawerPortal>
 ));
+
 DrawerContent.displayName = "DrawerContent";
 
 const DrawerHeader = ({
@@ -62,6 +65,7 @@ const DrawerHeader = ({
     {...props}
   />
 );
+
 DrawerHeader.displayName = "DrawerHeader";
 
 const DrawerFooter = ({
@@ -73,9 +77,10 @@ const DrawerFooter = ({
     {...props}
   />
 );
+
 DrawerFooter.displayName = "DrawerFooter";
 
-const DrawerTitle = React.forwardRef<
+const DrawerTitle = forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Title>
 >(({ className, ...props }, ref) => (
@@ -88,9 +93,10 @@ const DrawerTitle = React.forwardRef<
     {...props}
   />
 ));
+
 DrawerTitle.displayName = DrawerPrimitive.Title.displayName;
 
-const DrawerDescription = React.forwardRef<
+const DrawerDescription = forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Description>
 >(({ className, ...props }, ref) => (
@@ -100,17 +106,18 @@ const DrawerDescription = React.forwardRef<
     {...props}
   />
 ));
+
 DrawerDescription.displayName = DrawerPrimitive.Description.displayName;
 
 export {
   Drawer,
-  DrawerPortal,
-  DrawerOverlay,
-  DrawerTrigger,
   DrawerClose,
   DrawerContent,
-  DrawerHeader,
-  DrawerFooter,
-  DrawerTitle,
   DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerPortal,
+  DrawerTitle,
+  DrawerTrigger,
 };

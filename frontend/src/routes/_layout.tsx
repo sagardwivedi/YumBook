@@ -1,5 +1,3 @@
-"use client";
-
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   Link,
@@ -24,7 +22,6 @@ import { getCurrentUserOptions } from "~/client/@tanstack/react-query.gen";
 import { MoreComponent } from "~/components/More";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button, type ButtonProps } from "~/components/ui/button";
-import { ScrollArea } from "~/components/ui/scroll-area";
 import {
   Tooltip,
   TooltipContent,
@@ -75,19 +72,22 @@ function NavigationLink({ href, children, ...props }: NavigationLinkProps) {
 
 function DesktopNavItem({ icon: Icon, text, to }: NavItemProps) {
   const isDesktop = useMediaQuery(MOBILE_BREAKPOINT);
-  const buttonSize = isDesktop ? "default" : "icon";
+
+  if (isDesktop) {
+    return (
+      <NavigationLink href={to} className="justify-start">
+        <Icon className="size-8 mr-4" />
+        <span>{text}</span>
+      </NavigationLink>
+    );
+  }
 
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <NavigationLink
-            href={to}
-            className="w-full justify-start px-4 py-2"
-            size={buttonSize}
-          >
+          <NavigationLink href={to} className="w-full justify-start">
             <Icon className="size-8 mr-4" />
-            <span className="hidden lg:inline">{text}</span>
           </NavigationLink>
         </TooltipTrigger>
         <TooltipContent side="right">{text}</TooltipContent>
@@ -114,7 +114,7 @@ function UserAvatar({
   username: string;
   size?: "default" | "small";
 }) {
-  const sizeClasses = size === "small" ? "h-6 w-6" : "size-8 mr-4";
+  const sizeClasses = size === "small" ? "size-6" : "size-8 mr-4";
   const fallbackText = username[0].toUpperCase();
 
   return (
@@ -143,35 +143,33 @@ export default function Layout() {
           </div>
 
           {/* Navigation Menu */}
-          <ScrollArea className="flex-1 py-4">
-            <nav className="space-y-1 px-2">
-              <DesktopNavItem icon={Home} text="Home" to="/home" />
-              <DesktopNavItem icon={Search} text="Explore" to="/explorer" />
-              <DesktopNavItem
-                icon={MessageCircle}
-                text="Messages"
-                to="/messages"
-              />
-              <DesktopNavItem icon={Bell} text="Notifications" to="/activity" />
-              <DesktopNavItem icon={PlusSquare} text="Create" to="/create" />
+          <nav className="space-y-1 flex-1 flex flex-col px-2">
+            <DesktopNavItem icon={Home} text="Home" to="/home" />
+            <DesktopNavItem icon={Search} text="Explore" to="/explorer" />
+            <DesktopNavItem
+              icon={MessageCircle}
+              text="Messages"
+              to="/messages"
+            />
+            <DesktopNavItem icon={Bell} text="Notifications" to="/activity" />
+            <DesktopNavItem icon={PlusSquare} text="Create" to="/create" />
 
-              {/* Profile Link */}
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <NavigationLink
-                      href={`/accounts/${user.username}`}
-                      className="w-full justify-start px-4 py-2"
-                    >
-                      <UserAvatar src={avatarPath} username={user.username} />
-                      <span className="hidden lg:inline">Profile</span>
-                    </NavigationLink>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">Profile</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </nav>
-          </ScrollArea>
+            {/* Profile Link */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <NavigationLink
+                    href={`/accounts/${user.username}`}
+                    className="w-full justify-start px-4 py-2"
+                  >
+                    <UserAvatar src={avatarPath} username={user.username} />
+                    <span className="hidden lg:inline">Profile</span>
+                  </NavigationLink>
+                </TooltipTrigger>
+                <TooltipContent side="right">Profile</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </nav>
 
           {/* More Options */}
           <div className="p-4">

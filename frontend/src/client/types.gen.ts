@@ -105,7 +105,7 @@ export type UserCreate = {
   /**
    * Path to user's avatar image
    */
-  avatar_path?: string;
+  avatar_path?: string | null;
   /**
    * User's full name
    */
@@ -133,7 +133,7 @@ export type UserPublic = {
   /**
    * Path to user's avatar image
    */
-  avatar_path?: string;
+  avatar_path?: string | null;
   /**
    * User's full name
    */
@@ -147,7 +147,7 @@ export type UserUpdate = {
   /**
    * Path to user's avatar image
    */
-  avatar_path?: string;
+  avatar_path?: string | null;
   /**
    * User's full name
    */
@@ -181,6 +181,8 @@ export type LogoutUserError = ErrorResponse;
 export type LogoutUserResponse = SuccessResponse;
 
 export type ForgotPasswordData = {
+  body?: never;
+  path?: never;
   query: {
     email: string;
   };
@@ -191,6 +193,8 @@ export type ForgotPasswordError = ErrorResponse | HTTPValidationError;
 export type ForgotPasswordResponse = SuccessResponseWithData;
 
 export type ResetPasswordData = {
+  body?: never;
+  path?: never;
   query: {
     token: string;
     new_password: string;
@@ -214,9 +218,11 @@ export type UpdateCurrentUserError = ErrorResponse | HTTPValidationError;
 export type UpdateCurrentUserResponse = UserPublic;
 
 export type GetUserByUsernameData = {
+  body?: never;
   path: {
     username: string;
   };
+  query?: never;
 };
 
 export type GetUserByUsernameError = ErrorResponse | HTTPValidationError;
@@ -244,6 +250,8 @@ export type UpdateProfileImageError = ErrorResponse | HTTPValidationError;
 export type UpdateProfileImageResponse = SuccessResponseWithData;
 
 export type GetRecipesData = {
+  body?: never;
+  path?: never;
   query?: {
     skip?: number;
     limit?: number;
@@ -263,9 +271,11 @@ export type CreateRecipeError = HTTPValidationError;
 export type CreateRecipeResponse = RecipePublic;
 
 export type GetRecipeData = {
+  body?: never;
   path: {
     recipe_id: string;
   };
+  query?: never;
 };
 
 export type GetRecipeError = HTTPValidationError;
@@ -273,9 +283,11 @@ export type GetRecipeError = HTTPValidationError;
 export type GetRecipeResponse = RecipePublic;
 
 export type DeleteRecipeData = {
+  body?: never;
   path: {
     recipe_id: string;
   };
+  query?: never;
 };
 
 export type DeleteRecipeError = HTTPValidationError;
@@ -287,6 +299,7 @@ export type UpdateRecipeData = {
   path: {
     recipe_id: string;
   };
+  query?: never;
 };
 
 export type UpdateRecipeError = HTTPValidationError;
@@ -294,6 +307,8 @@ export type UpdateRecipeError = HTTPValidationError;
 export type UpdateRecipeResponse = RecipePublic;
 
 export type SearchRecipesData = {
+  body?: never;
+  path?: never;
   query: {
     query: string;
     cuisine?: string | null;
@@ -309,6 +324,7 @@ export type SearchRecipesResponse = Array<RecipePublic>;
 export type GetTrendingRecipesResponse = Array<RecipeTrending>;
 
 export type GetSimilarRecipesData = {
+  body?: never;
   path: {
     recipe_id: string;
   };

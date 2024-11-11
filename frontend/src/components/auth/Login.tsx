@@ -1,7 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { Lock, Mail } from "lucide-react";
+import { Loader, Lock, Mail } from "lucide-react";
 import { type SubmitHandler, useForm } from "react-hook-form";
-
 import type { Body_auth_login_user as LoginData } from "~/client";
 import { Button } from "~/components/ui/button";
 import {
@@ -14,7 +12,6 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import useAuth from "~/hooks/use-auth";
-
 const LoginComponent = () => {
   const { loginMutation } = useAuth();
 
@@ -104,8 +101,13 @@ const LoginComponent = () => {
             <Button
               type="submit"
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+              disabled={form.formState.isSubmitting}
             >
-              Log in
+              {form.formState.isSubmitting ? (
+                <Loader className="size-5 animate-spin" />
+              ) : (
+                "Log in"
+              )}
             </Button>
           </form>
         </Form>

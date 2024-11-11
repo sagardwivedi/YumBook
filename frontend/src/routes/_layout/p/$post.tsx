@@ -1,15 +1,13 @@
-"use client";
-
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import {
-  Clock,
-  Users,
   ChefHat,
+  Clock,
   Flame,
   Heart,
   MessageCircle,
   Share2,
+  Users,
 } from "lucide-react";
 import {
   getCurrentUserOptions,
@@ -75,11 +73,13 @@ function RouteComponent() {
           </div>
         </CardHeader>
         <CardContent>
-          <img
-            src={`http://localhost:8000/${recipe.image_url}`}
-            alt={recipe.name}
-            className="w-full h-auto rounded-lg mb-6"
-          />
+          <div className="flex justify-center items-center">
+            <img
+              src={`http://localhost:8000/${recipe.image_url}`}
+              alt={recipe.name}
+              className="rounded-lg mb-6"
+            />
+          </div>
           <h1 className="text-3xl font-bold mb-4">{recipe.name}</h1>
           <p className="text-gray-600 dark:text-gray-300 mb-4">
             {recipe.description}

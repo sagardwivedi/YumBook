@@ -1,17 +1,18 @@
-import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Heart, MessageCircle, Search, Sliders, X } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Heart, MessageCircle, Search, Sliders } from "lucide-react";
+import { useState } from "react";
 import { queryClient } from "~/App";
 import { getRecipesOptions } from "~/client/@tanstack/react-query.gen";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -24,7 +25,6 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Slider } from "~/components/ui/slider";
-import { Badge } from "~/components/ui/badge";
 
 export const Route = createFileRoute("/_layout/explorer")({
   component: RouteComponent,

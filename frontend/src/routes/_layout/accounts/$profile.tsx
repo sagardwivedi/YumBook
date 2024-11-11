@@ -1,4 +1,3 @@
-"use client";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
@@ -103,7 +102,7 @@ export default function ProfilePage() {
               <Link
                 key={post.id}
                 to="/p/$post"
-                params={{ post: post.id.toString() }}
+                params={{ post: post.id }}
                 className="group relative overflow-hidden rounded-lg"
               >
                 <AspectRatio ratio={1}>
@@ -112,20 +111,20 @@ export default function ProfilePage() {
                     alt={post.name}
                     className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
                   />
+                  <div className="absolute inset-0  bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300 flex items-center justify-center">
+                    <p className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center p-2">
+                      {post.name}
+                    </p>
+                  </div>
                 </AspectRatio>
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300 flex items-center justify-center">
-                  <p className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center p-2">
-                    {post.name}
-                  </p>
-                </div>
               </Link>
             ))}
           </div>
         </TabsContent>
         <TabsContent value="saved">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {[...Array(6)].map((_, index) => (
-              <Skeleton key={index} className="aspect-square rounded-lg" />
+            {[...Array(6)].map((i) => (
+              <Skeleton key={i} className="aspect-square rounded-lg" />
             ))}
           </div>
         </TabsContent>
