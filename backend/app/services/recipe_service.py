@@ -6,7 +6,7 @@ from fastapi import HTTPException, UploadFile, status
 from sqlmodel import Session, desc, select
 
 from app.config import settings
-from app.models.recipe import Recipe, RecipeCreate, RecipeUpdate
+from app.models.recipe import Recipe, RecipeCreate
 from app.models.user import User
 from app.utils.util import save_image, validate_image_file
 
@@ -61,37 +61,15 @@ class RecipeService:
     def create_recipe(
         self, recipe: RecipeCreate, image: UploadFile, user_id: UUID
     ) -> Recipe:
-        db_recipe = Recipe(
-            cooking_time=recipe.cooking_time,
-            cuisine=recipe.cuisine,
-            name=recipe.name,
-            description=recipe.description,
-            preparation_time=recipe.preparation_time,
-            servings=recipe.servings,
-            user_id=user_id,
-            dietary_restrictions=recipe.dietary_restrictions,
-            instructions=recipe.instructions,
-            tags=recipe.tags,
-            image_url=self.upload_recipe_image(image),
-            difficulty=recipe.difficulty,
+        db_recipe = Recipe.model_validate(
+            recipe,
+            update={
+                "user_id": user_id,
+                "image_url": self.upload_recipe_image(image),
+            },
         )
         self.db.add(db_recipe)
         self.db.commit()
-        return db_recipe
-
-    def update_recipe(
-        self, recipe_id: UUID, recipe_update: RecipeUpdate, user_id: UUID
-    ) -> Recipe:
-        db_recipe = self.get_recipe(recipe_id)
-        self._check_authorization(db_recipe, user_id)  # Reuse authorization check
-
-        # Only update the fields that are present in the `recipe_update`
-        update_data = recipe_update.model_dump(exclude_unset=True)
-        for key, value in update_data.items():
-            setattr(db_recipe, key, value)
-
-        self.db.commit()  # Commit once after all changes
-        self.db.refresh(db_recipe)
         return db_recipe
 
     def delete_recipe(self, recipe_id: UUID, user_id: UUID) -> dict:

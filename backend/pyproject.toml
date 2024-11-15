@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.14.0",
-    "fastapi[standard]>=0.115.4",
+    "fastapi[standard]>=0.115.5",
     "passlib[bcrypt]>=1.7.4",
     "psycopg[binary]>=3.2.3",
     "pydantic-settings>=2.6.1",
@@ -19,7 +19,7 @@ dependencies = [
 dev-dependencies = [
     "mypy>=1.13.0",
     "pre-commit>=4.0.1",
-    "ruff>=0.7.2",
+    "ruff>=0.7.3",
     "types-passlib>=1.7.7.20240819",
 ]
 

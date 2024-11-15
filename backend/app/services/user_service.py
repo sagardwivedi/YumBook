@@ -77,12 +77,11 @@ class UserService:
             )
 
         try:
-            db_user = User(
-                username=user.username,
-                email=user.email,
-                avatar_path=user.avatar_path,
-                full_name=user.full_name,
-                password_hash=self.authService.hash_password(user.password),
+            db_user = User.model_validate(
+                user,
+                update={
+                    "password_hash": self.authService.hash_password(user.password),
+                },
             )
 
             self.session.add(db_user)

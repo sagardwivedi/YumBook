@@ -3,7 +3,7 @@ from uuid import UUID, uuid4
 from pydantic import EmailStr
 from sqlmodel import Field, Relationship, SQLModel
 
-from app.models.recipe import Recipe, RecipePublic
+from app.models.recipe import Comment, Like, Recipe, RecipePublic
 
 
 class UserBase(SQLModel):
@@ -17,12 +17,8 @@ class UserBase(SQLModel):
     email: EmailStr = Field(
         unique=True, max_length=255, description="User's email address"
     )
-    avatar_path: str | None = Field(
-        default=None, description="Path to user's avatar image"
-    )
-    full_name: str | None = Field(
-        default=None, max_length=255, description="User's full name"
-    )
+    avatar_path: str = Field(default=None, description="Path to user's avatar image")
+    full_name: str = Field(default=None, max_length=255, description="User's full name")
 
 
 class UserCreate(UserBase):
@@ -39,6 +35,8 @@ class User(UserBase, table=True):
     password_hash: str
 
     recipe: list[Recipe] = Relationship(back_populates="user", cascade_delete=True)
+    comments: list[Comment] = Relationship(back_populates="user")
+    likes: list[Like] = Relationship(back_populates="user")
 
 
 class UserPublic(UserBase):
@@ -46,7 +44,7 @@ class UserPublic(UserBase):
 
 
 class UserForRecipe(SQLModel):
-    avatar_path: str | None
+    avatar_path: str
     username: str
 
 
