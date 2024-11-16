@@ -9,5 +9,4 @@ export default defineConfig({
     lint: "biome",
   },
   plugins: ["@tanstack/react-query", "@hey-api/services", "@hey-api/types"],
-  experimentalParser: true,
 });

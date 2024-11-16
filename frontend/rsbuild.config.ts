@@ -3,8 +3,6 @@ import { pluginBabel } from "@rsbuild/plugin-babel";
 import { pluginReact } from "@rsbuild/plugin-react";
 import { TanStackRouterRspack } from "@tanstack/router-plugin/rspack";
 
-const isDev = process.env.NODE_ENV === "development";
-
 export default defineConfig({
   plugins: [
     pluginReact(),
@@ -18,10 +16,6 @@ export default defineConfig({
   tools: {
     rspack: {
       plugins: [TanStackRouterRspack({ disableManifestGeneration: true })],
-      mode: isDev ? "development" : "production",
-      experiments: {
-        incremental: isDev,
-      },
     },
   },
 });

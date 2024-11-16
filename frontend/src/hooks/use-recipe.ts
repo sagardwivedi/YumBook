@@ -1,11 +1,14 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
+
 import {
   createRecipeMutation,
   getRecipesOptions,
+  likeRecipeMutation,
+  unlikeRecipeMutation,
 } from "~/client/@tanstack/react-query.gen";
 import { getErrorMessage } from "~/lib/utils";
 import { useToast } from "./use-toast";
-import { useNavigate } from "@tanstack/react-router";
 
 const useRecipe = () => {
   const { toast } = useToast();
@@ -25,14 +28,36 @@ const useRecipe = () => {
       toast({
         title: "Error",
         description: errorMessage,
+        variant: "destructive",
       });
     },
   });
 
-  const getRecipes = useQuery({
-    ...getRecipesOptions(),
+  const likeMutate = useMutation({
+    ...likeRecipeMutation(),
+    onError: (error) => {
+      const errorMessage = getErrorMessage(error);
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    },
   });
-  return { mutate, getRecipes };
+
+  const unlikeMutate = useMutation({
+    ...unlikeRecipeMutation(),
+    onError: (error) => {
+      const errorMessage = getErrorMessage(error);
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    },
+  });
+
+  return { mutate, likeMutate, unlikeMutate };
 };
 
 export default useRecipe;

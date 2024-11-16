@@ -1,4 +1,3 @@
-
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { Bookmark, Grid, Share2, Settings } from "lucide-react";

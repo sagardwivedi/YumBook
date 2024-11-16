@@ -16,10 +16,10 @@ import type {
   LoginUserResponse,
   LogoutUserError,
   LogoutUserResponse,
-  ForgotPasswordData,
+  ForgotPasswordData2,
   ForgotPasswordError,
   ForgotPasswordResponse,
-  ResetPasswordData,
+  ResetPasswordData2,
   ResetPasswordError,
   ResetPasswordResponse,
   GetCurrentUserError,
@@ -30,37 +30,48 @@ import type {
   GetUserByUsernameData,
   GetUserByUsernameError,
   GetUserByUsernameResponse,
-  DeleteProfileImageError,
-  DeleteProfileImageResponse,
-  UploadProfileImageData,
-  UploadProfileImageError,
-  UploadProfileImageResponse,
   UpdateProfileImageData,
   UpdateProfileImageError,
   UpdateProfileImageResponse,
+  UploadProfileImageData,
+  UploadProfileImageError,
+  UploadProfileImageResponse,
+  DeleteProfileImageError,
+  DeleteProfileImageResponse,
   GetRecipesData,
   GetRecipesError,
   GetRecipesResponse,
-  CreateRecipeData,
-  CreateRecipeError,
-  CreateRecipeResponse,
   GetRecipeData,
   GetRecipeError,
   GetRecipeResponse,
+  CreateRecipeData,
+  CreateRecipeError,
+  CreateRecipeResponse,
   DeleteRecipeData,
   DeleteRecipeError,
   DeleteRecipeResponse,
-  UpdateRecipeData,
-  UpdateRecipeError,
-  UpdateRecipeResponse,
   SearchRecipesData,
   SearchRecipesError,
   SearchRecipesResponse,
+  GetTrendingRecipesError,
   GetTrendingRecipesResponse,
   GetSimilarRecipesData,
   GetSimilarRecipesError,
   GetSimilarRecipesResponse,
+  GetUserRecipesError,
   GetUserRecipesResponse,
+  LikeRecipeData,
+  LikeRecipeError,
+  LikeRecipeResponse,
+  UnlikeRecipeData,
+  UnlikeRecipeError,
+  UnlikeRecipeResponse,
+  CreateCommentData,
+  CreateCommentError,
+  CreateCommentResponse,
+  GetCommentsData,
+  GetCommentsError,
+  GetCommentsResponse,
 } from "./types.gen";
 
 export const client = createClient(createConfig());
@@ -88,10 +99,6 @@ export const registerUser = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
     url: "/api/v1/register",
   });
 };
@@ -151,7 +158,7 @@ export const logoutUser = <ThrowOnError extends boolean = false>(
  * Handle a forgot password request by generating and returning a reset token.
  */
 export const forgotPassword = <ThrowOnError extends boolean = false>(
-  options: Options<ForgotPasswordData, ThrowOnError>,
+  options: Options<ForgotPasswordData2, ThrowOnError>,
 ) => {
   return (options?.client ?? client).post<
     ForgotPasswordResponse,
@@ -159,6 +166,11 @@ export const forgotPassword = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
+    ...urlSearchParamsBodySerializer,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...options?.headers,
+    },
     url: "/api/v1/forgot-password",
   });
 };
@@ -168,7 +180,7 @@ export const forgotPassword = <ThrowOnError extends boolean = false>(
  * Reset the user's password using a valid reset token.
  */
 export const resetPassword = <ThrowOnError extends boolean = false>(
-  options: Options<ResetPasswordData, ThrowOnError>,
+  options: Options<ResetPasswordData2, ThrowOnError>,
 ) => {
   return (options?.client ?? client).post<
     ResetPasswordResponse,
@@ -176,6 +188,11 @@ export const resetPassword = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
+    ...urlSearchParamsBodySerializer,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...options?.headers,
+    },
     url: "/api/v1/reset-password",
   });
 };
@@ -227,10 +244,6 @@ export const updateCurrentUser = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
     url: "/api/v1/users/me",
   });
 };
@@ -263,28 +276,34 @@ export const getUserByUsername = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Delete Profile Image
- * Delete the current user's profile image.
+ * Update Profile Image
+ * Update the current user's existing profile image.
  *
  * Args:
+ * file: The new image file
  * current_user: The currently authenticated user
  * session: Database session dependency
  *
  * Returns:
- * SuccessResponse: Success message
+ * SuccessResponseWithData: Response with the path to the updated image
  *
  * Raises:
- * HTTPException: If deletion fails
+ * HTTPException: If update fails
  */
-export const deleteProfileImage = <ThrowOnError extends boolean = false>(
-  options?: Options<unknown, ThrowOnError>,
+export const updateProfileImage = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateProfileImageData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).delete<
-    DeleteProfileImageResponse,
-    DeleteProfileImageError,
+  return (options?.client ?? client).put<
+    UpdateProfileImageResponse,
+    UpdateProfileImageError,
     ThrowOnError
   >({
     ...options,
+    ...formDataBodySerializer,
+    headers: {
+      "Content-Type": null,
+      ...options?.headers,
+    },
     url: "/api/v1/users/profile-image",
   });
 };
@@ -323,34 +342,28 @@ export const uploadProfileImage = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Update Profile Image
- * Update the current user's existing profile image.
+ * Delete Profile Image
+ * Delete the current user's profile image.
  *
  * Args:
- * file: The new image file
  * current_user: The currently authenticated user
  * session: Database session dependency
  *
  * Returns:
- * SuccessResponseWithData: Response with the path to the updated image
+ * SuccessResponse: Success message
  *
  * Raises:
- * HTTPException: If update fails
+ * HTTPException: If deletion fails
  */
-export const updateProfileImage = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateProfileImageData, ThrowOnError>,
+export const deleteProfileImage = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).put<
-    UpdateProfileImageResponse,
-    UpdateProfileImageError,
+  return (options?.client ?? client).delete<
+    DeleteProfileImageResponse,
+    DeleteProfileImageError,
     ThrowOnError
   >({
     ...options,
-    ...formDataBodySerializer,
-    headers: {
-      "Content-Type": null,
-      ...options?.headers,
-    },
     url: "/api/v1/users/profile-image",
   });
 };
@@ -372,27 +385,6 @@ export const getRecipes = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Create Recipe
- */
-export const createRecipe = <ThrowOnError extends boolean = false>(
-  options: Options<CreateRecipeData, ThrowOnError>,
-) => {
-  return (options?.client ?? client).post<
-    CreateRecipeResponse,
-    CreateRecipeError,
-    ThrowOnError
-  >({
-    ...options,
-    ...formDataBodySerializer,
-    headers: {
-      "Content-Type": null,
-      ...options?.headers,
-    },
-    url: "/api/v1/recipe/",
-  });
-};
-
-/**
  * Get Recipe
  */
 export const getRecipe = <ThrowOnError extends boolean = false>(
@@ -409,6 +401,27 @@ export const getRecipe = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Create Recipe
+ */
+export const createRecipe = <ThrowOnError extends boolean = false>(
+  options: Options<CreateRecipeData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    CreateRecipeResponse,
+    CreateRecipeError,
+    ThrowOnError
+  >({
+    ...options,
+    ...formDataBodySerializer,
+    headers: {
+      "Content-Type": null,
+      ...options?.headers,
+    },
+    url: "/api/v1/recipe/create",
+  });
+};
+
+/**
  * Delete Recipe
  */
 export const deleteRecipe = <ThrowOnError extends boolean = false>(
@@ -420,27 +433,7 @@ export const deleteRecipe = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: "/api/v1/recipe/{recipe_id}",
-  });
-};
-
-/**
- * Update Recipe
- */
-export const updateRecipe = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateRecipeData, ThrowOnError>,
-) => {
-  return (options?.client ?? client).put<
-    UpdateRecipeResponse,
-    UpdateRecipeError,
-    ThrowOnError
-  >({
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
-    url: "/api/v1/recipe/{recipe_id}",
+    url: "/api/v1/recipe/delete/{recipe_id}",
   });
 };
 
@@ -468,7 +461,7 @@ export const getTrendingRecipes = <ThrowOnError extends boolean = false>(
 ) => {
   return (options?.client ?? client).get<
     GetTrendingRecipesResponse,
-    unknown,
+    GetTrendingRecipesError,
     ThrowOnError
   >({
     ...options,
@@ -500,10 +493,74 @@ export const getUserRecipes = <ThrowOnError extends boolean = false>(
 ) => {
   return (options?.client ?? client).get<
     GetUserRecipesResponse,
-    unknown,
+    GetUserRecipesError,
     ThrowOnError
   >({
     ...options,
-    url: "/api/v1/recipe/user/recipes",
+    url: "/api/v1/recipe/user",
+  });
+};
+
+/**
+ * Like Recipe
+ */
+export const likeRecipe = <ThrowOnError extends boolean = false>(
+  options: Options<LikeRecipeData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    LikeRecipeResponse,
+    LikeRecipeError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/recipe/like/{recipe_id}",
+  });
+};
+
+/**
+ * Unlike Recipe
+ */
+export const unlikeRecipe = <ThrowOnError extends boolean = false>(
+  options: Options<UnlikeRecipeData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).delete<
+    UnlikeRecipeResponse,
+    UnlikeRecipeError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/recipe/like/{recipe_id}",
+  });
+};
+
+/**
+ * Create Comment
+ */
+export const createComment = <ThrowOnError extends boolean = false>(
+  options: Options<CreateCommentData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    CreateCommentResponse,
+    CreateCommentError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/recipe/{recipe_id}/comment",
+  });
+};
+
+/**
+ * Get Comments
+ */
+export const getComments = <ThrowOnError extends boolean = false>(
+  options: Options<GetCommentsData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetCommentsResponse,
+    GetCommentsError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/recipe/{recipe_id}/comments",
   });
 };

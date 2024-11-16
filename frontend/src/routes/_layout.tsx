@@ -76,7 +76,7 @@ function DesktopNavItem({ icon: Icon, text, to }: NavItemProps) {
   if (isDesktop) {
     return (
       <NavigationLink href={to} className="justify-start">
-        <Icon className="size-8 mr-4" />
+        <Icon className="w-8 h-8 mr-4" />
         <span>{text}</span>
       </NavigationLink>
     );

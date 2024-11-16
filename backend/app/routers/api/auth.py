@@ -2,8 +2,9 @@ from datetime import timedelta
 from typing import Annotated, Any
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, Form, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import BaseModel, EmailStr
 
 from app.config import settings
 from app.models import UserCreate
@@ -120,6 +121,10 @@ def logout_user(response: Response) -> Any:
     return SuccessResponse(detail="Logout successful")
 
 
+class ForgotPasswordData(BaseModel):
+    email: EmailStr
+
+
 @router.post(
     "/forgot-password",
     response_model=SuccessResponseWithData,
@@ -129,14 +134,16 @@ def logout_user(response: Response) -> Any:
         500: {"model": ErrorResponse},
     },
 )
-def forgot_password(email: str, session: SessionDep) -> Any:
+def forgot_password(
+    data: Annotated[ForgotPasswordData, Form()], session: SessionDep
+) -> Any:
     """
     Handle a forgot password request by generating and returning a reset token.
     """
     service = UserService(session)
     auth_service = AuthService()
 
-    user = service.get_user_by_email(email)
+    user = service.get_user_by_email(data.email)
 
     if not user:
         raise HTTPException(
@@ -152,6 +159,11 @@ def forgot_password(email: str, session: SessionDep) -> Any:
     )
 
 
+class ResetPasswordData(BaseModel):
+    token: str
+    new_password: str
+
+
 @router.post(
     "/reset-password",
     response_model=SuccessResponse,
@@ -161,14 +173,16 @@ def forgot_password(email: str, session: SessionDep) -> Any:
         500: {"model": ErrorResponse},
     },
 )
-def reset_password(token: str, new_password: str, session: SessionDep) -> Any:
+def reset_password(
+    data: Annotated[ResetPasswordData, Form()], session: SessionDep
+) -> Any:
     """
     Reset the user's password using a valid reset token.
     """
     auth_service = AuthService()
     user_service = UserService(session)
 
-    user_id = auth_service.verify_access_token(token)
+    user_id = auth_service.verify_access_token(data.token)
     if not user_id:
         raise HTTPException(
             status.HTTP_400_BAD_REQUEST,
@@ -183,5 +197,5 @@ def reset_password(token: str, new_password: str, session: SessionDep) -> Any:
             "User not found or invalid token",
         )
 
-    user_service.update_password(user, new_password)
+    user_service.update_password(user, data.new_password)
     return SuccessResponse(detail="Password has been successfully updated.")

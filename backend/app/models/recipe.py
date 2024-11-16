@@ -91,11 +91,16 @@ class RecipeCreate(SQLModel):
     difficulty: str
 
 
+class LikePublic(SQLModel):
+    user_id: UUID
+
+
 # Public model for the Recipe, containing only the necessary fields
 class RecipePublic(RecipeBase):
     id: UUID
     created_at: datetime
     image_url: str
+    likes: list[LikePublic]
 
 
 # Model for trending recipes, containing only the necessary fields

@@ -26,8 +26,19 @@ export type ErrorResponse = {
   detail: string;
 };
 
+export type ForgotPasswordData = {
+  email: string;
+};
+
 export type HTTPValidationError = {
   detail?: Array<ValidationError>;
+};
+
+export type Like = {
+  id?: string;
+  created_at?: string;
+  recipe_id: string;
+  user_id: string;
 };
 
 export type RecipeCreate = {
@@ -54,9 +65,11 @@ export type RecipePublic = {
   cuisine: string;
   dietary_restrictions?: Array<string>;
   tags?: Array<string>;
+  total_liked?: number;
   id: string;
   created_at: string;
   image_url: string;
+  likes: Array<Like>;
 };
 
 export type RecipeTrending = {
@@ -66,22 +79,14 @@ export type RecipeTrending = {
   username: string;
 };
 
-export type RecipeUpdate = {
-  name?: string | null;
-  description?: string | null;
-  instructions?: string | null;
-  cooking_time?: number | null;
-  preparation_time?: number | null;
-  servings?: number | null;
-  cuisine?: string | null;
-  dietary_restrictions?: string | null;
-  image_url?: string | null;
-  tags?: Array<string>;
-};
-
 export type RecipeWithUser = {
   recipe: RecipePublic;
   user: UserForRecipe;
+};
+
+export type ResetPasswordData = {
+  token: string;
+  new_password: string;
 };
 
 export type SuccessResponse = {
@@ -90,7 +95,9 @@ export type SuccessResponse = {
 
 export type SuccessResponseWithData = {
   detail: string;
-  data: {};
+  data: {
+    [key: string]: unknown;
+  };
 };
 
 export type UserCreate = {
@@ -105,11 +112,11 @@ export type UserCreate = {
   /**
    * Path to user's avatar image
    */
-  avatar_path?: string | null;
+  avatar_path?: string;
   /**
    * User's full name
    */
-  full_name?: string | null;
+  full_name?: string;
   /**
    * User's password
    */
@@ -117,7 +124,8 @@ export type UserCreate = {
 };
 
 export type UserForRecipe = {
-  avatar_path: string | null;
+  id: string;
+  avatar_path: string;
   username: string;
 };
 
@@ -133,11 +141,11 @@ export type UserPublic = {
   /**
    * Path to user's avatar image
    */
-  avatar_path?: string | null;
+  avatar_path?: string;
   /**
    * User's full name
    */
-  full_name?: string | null;
+  full_name?: string;
   id: string;
 };
 
@@ -147,11 +155,11 @@ export type UserUpdate = {
   /**
    * Path to user's avatar image
    */
-  avatar_path?: string | null;
+  avatar_path?: string;
   /**
    * User's full name
    */
-  full_name?: string | null;
+  full_name?: string;
 };
 
 export type ValidationError = {
@@ -164,167 +172,139 @@ export type RegisterUserData = {
   body: UserCreate;
 };
 
-export type RegisterUserError = ErrorResponse | HTTPValidationError;
-
 export type RegisterUserResponse = SuccessResponse;
+
+export type RegisterUserError = ErrorResponse | HTTPValidationError;
 
 export type LoginUserData = {
   body: Body_auth_login_user;
 };
 
-export type LoginUserError = ErrorResponse | HTTPValidationError;
-
 export type LoginUserResponse = SuccessResponse;
 
-export type LogoutUserError = ErrorResponse;
+export type LoginUserError = ErrorResponse | HTTPValidationError;
 
 export type LogoutUserResponse = SuccessResponse;
 
-export type ForgotPasswordData = {
-  body?: never;
-  path?: never;
-  query: {
-    email: string;
-  };
-};
+export type LogoutUserError = ErrorResponse;
 
-export type ForgotPasswordError = ErrorResponse | HTTPValidationError;
+export type ForgotPasswordData2 = {
+  body: ForgotPasswordData;
+};
 
 export type ForgotPasswordResponse = SuccessResponseWithData;
 
-export type ResetPasswordData = {
-  body?: never;
-  path?: never;
-  query: {
-    token: string;
-    new_password: string;
-  };
-};
+export type ForgotPasswordError = ErrorResponse | HTTPValidationError;
 
-export type ResetPasswordError = ErrorResponse | HTTPValidationError;
+export type ResetPasswordData2 = {
+  body: ResetPasswordData;
+};
 
 export type ResetPasswordResponse = SuccessResponse;
 
-export type GetCurrentUserError = ErrorResponse;
+export type ResetPasswordError = ErrorResponse | HTTPValidationError;
 
 export type GetCurrentUserResponse = UserPublic;
+
+export type GetCurrentUserError = ErrorResponse;
 
 export type UpdateCurrentUserData = {
   body: UserUpdate;
 };
 
-export type UpdateCurrentUserError = ErrorResponse | HTTPValidationError;
-
 export type UpdateCurrentUserResponse = UserPublic;
 
+export type UpdateCurrentUserError = ErrorResponse | HTTPValidationError;
+
 export type GetUserByUsernameData = {
-  body?: never;
   path: {
     username: string;
   };
-  query?: never;
 };
-
-export type GetUserByUsernameError = ErrorResponse | HTTPValidationError;
 
 export type GetUserByUsernameResponse = UserPublic;
 
-export type DeleteProfileImageError = ErrorResponse;
-
-export type DeleteProfileImageResponse = SuccessResponse;
-
-export type UploadProfileImageData = {
-  body: Body_users_upload_profile_image;
-};
-
-export type UploadProfileImageError = ErrorResponse | HTTPValidationError;
-
-export type UploadProfileImageResponse = SuccessResponseWithData;
+export type GetUserByUsernameError = ErrorResponse | HTTPValidationError;
 
 export type UpdateProfileImageData = {
   body: Body_users_update_profile_image;
 };
 
-export type UpdateProfileImageError = ErrorResponse | HTTPValidationError;
-
 export type UpdateProfileImageResponse = SuccessResponseWithData;
 
+export type UpdateProfileImageError = ErrorResponse | HTTPValidationError;
+
+export type UploadProfileImageData = {
+  body: Body_users_upload_profile_image;
+};
+
+export type UploadProfileImageResponse = SuccessResponseWithData;
+
+export type UploadProfileImageError = ErrorResponse | HTTPValidationError;
+
+export type DeleteProfileImageResponse = SuccessResponse;
+
+export type DeleteProfileImageError = ErrorResponse;
+
 export type GetRecipesData = {
-  body?: never;
-  path?: never;
   query?: {
-    skip?: number;
     limit?: number;
+    skip?: number;
   };
 };
 
+export type GetRecipesResponse = Array<RecipeWithUser>;
+
 export type GetRecipesError = HTTPValidationError;
 
-export type GetRecipesResponse = Array<RecipeWithUser>;
+export type GetRecipeData = {
+  path: {
+    recipe_id: string;
+  };
+};
+
+export type GetRecipeResponse = RecipePublic;
+
+export type GetRecipeError = HTTPValidationError;
 
 export type CreateRecipeData = {
   body: Body_recipe_create_recipe;
 };
 
-export type CreateRecipeError = HTTPValidationError;
-
 export type CreateRecipeResponse = RecipePublic;
 
-export type GetRecipeData = {
-  body?: never;
-  path: {
-    recipe_id: string;
-  };
-  query?: never;
-};
-
-export type GetRecipeError = HTTPValidationError;
-
-export type GetRecipeResponse = RecipePublic;
+export type CreateRecipeError = HTTPValidationError;
 
 export type DeleteRecipeData = {
-  body?: never;
   path: {
     recipe_id: string;
   };
-  query?: never;
+};
+
+export type DeleteRecipeResponse = {
+  [key: string]: unknown;
 };
 
 export type DeleteRecipeError = HTTPValidationError;
 
-export type DeleteRecipeResponse = {};
-
-export type UpdateRecipeData = {
-  body: RecipeUpdate;
-  path: {
-    recipe_id: string;
-  };
-  query?: never;
-};
-
-export type UpdateRecipeError = HTTPValidationError;
-
-export type UpdateRecipeResponse = RecipePublic;
-
 export type SearchRecipesData = {
-  body?: never;
-  path?: never;
   query: {
-    query: string;
     cuisine?: string | null;
     max_cooking_time?: number | null;
+    query: string;
     tags?: Array<string>;
   };
 };
 
-export type SearchRecipesError = HTTPValidationError;
-
 export type SearchRecipesResponse = Array<RecipePublic>;
+
+export type SearchRecipesError = HTTPValidationError;
 
 export type GetTrendingRecipesResponse = Array<RecipeTrending>;
 
+export type GetTrendingRecipesError = unknown;
+
 export type GetSimilarRecipesData = {
-  body?: never;
   path: {
     recipe_id: string;
   };
@@ -333,8 +313,53 @@ export type GetSimilarRecipesData = {
   };
 };
 
-export type GetSimilarRecipesError = HTTPValidationError;
-
 export type GetSimilarRecipesResponse = Array<RecipePublic>;
 
+export type GetSimilarRecipesError = HTTPValidationError;
+
 export type GetUserRecipesResponse = Array<RecipePublic>;
+
+export type GetUserRecipesError = unknown;
+
+export type LikeRecipeData = {
+  path: {
+    recipe_id: string;
+  };
+};
+
+export type LikeRecipeResponse = SuccessResponse;
+
+export type LikeRecipeError = ErrorResponse | HTTPValidationError;
+
+export type UnlikeRecipeData = {
+  path: {
+    recipe_id: string;
+  };
+};
+
+export type UnlikeRecipeResponse = SuccessResponse;
+
+export type UnlikeRecipeError = ErrorResponse | HTTPValidationError;
+
+export type CreateCommentData = {
+  path: {
+    recipe_id: string;
+  };
+  query: {
+    comment: string;
+  };
+};
+
+export type CreateCommentResponse = unknown;
+
+export type CreateCommentError = HTTPValidationError;
+
+export type GetCommentsData = {
+  path: {
+    recipe_id: string;
+  };
+};
+
+export type GetCommentsResponse = unknown;
+
+export type GetCommentsError = HTTPValidationError;

@@ -153,7 +153,7 @@ def like_recipe(recipe_id: UUID, user: CurrentUser, session: SessionDep):
 )
 def unlike_recipe(recipe_id: UUID, user: CurrentUser, session: SessionDep):
     # Check if the recipe exists
-    recipe = session.get(Recipe, recipe_id)
+    recipe = session.get(Recipe, recipe_id, with_for_update=True)
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")
 
@@ -166,10 +166,13 @@ def unlike_recipe(recipe_id: UUID, user: CurrentUser, session: SessionDep):
 
     # Delete the like
     session.delete(like)
-    session.commit()
+    # Safely decrement the total_liked count
+    if recipe.total_liked > 0:
+        recipe.total_liked -= 1
+    else:
+        recipe.total_liked = 0
 
-    # Decrement the total_liked count
-    recipe.total_liked -= 1
+    # Commit the transaction
     session.commit()
 
     return SuccessResponse(detail="Recipe unliked")

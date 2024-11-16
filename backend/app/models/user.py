@@ -44,6 +44,7 @@ class UserPublic(UserBase):
 
 
 class UserForRecipe(SQLModel):
+    id: UUID
     avatar_path: str
     username: str
 

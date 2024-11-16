@@ -8,7 +8,7 @@ import {
   getRecipesOptions,
   getTrendingRecipesOptions,
 } from "~/client/@tanstack/react-query.gen";
-import { Post } from "~/components/RecipeCard";
+import { Post } from "~/components/home/Post";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";

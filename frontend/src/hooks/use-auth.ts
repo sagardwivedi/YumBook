@@ -1,18 +1,24 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 
+import { getCurrentUser } from "~/client";
 import {
+  forgotPasswordMutation,
   loginUserMutation,
   logoutUserMutation,
   registerUserMutation,
+  resetPasswordMutation,
 } from "~/client/@tanstack/react-query.gen";
 import { getErrorMessage } from "~/lib/utils";
 import { useToast } from "./use-toast";
-import { getCurrentUser } from "~/client";
 
 export const isAuthenticated = async () => {
-  const { data } = await getCurrentUser();
-  return !!data;
+  try {
+    const { data } = await getCurrentUser();
+    return !!data;
+  } catch (error) {
+    console.log("Error:", error);
+  }
 };
 
 const useAuth = () => {
@@ -41,6 +47,7 @@ const useAuth = () => {
       toast({ title: "Error", description: errorMessage });
     },
   });
+
   const logoutMutation = useMutation({
     ...logoutUserMutation(),
     onSuccess: () => {
@@ -52,7 +59,41 @@ const useAuth = () => {
     },
   });
 
-  return { loginMutation, registerMutation, logoutMutation };
+  const fpasswordMutation = useMutation({
+    ...forgotPasswordMutation(),
+    onSuccess: (data) => {
+      navigate({
+        to: "/auth/reset-password",
+        search: { reset_token: data.data.reset_token as string },
+      });
+    },
+    onError: (error) => {
+      const errorMessage = getErrorMessage(error);
+      toast({ title: "Error", description: errorMessage });
+    },
+  });
+
+  const rpasswordMutation = useMutation({
+    ...resetPasswordMutation(),
+    onSuccess: (data) => {
+      toast({ title: "Success", description: data.detail });
+      navigate({
+        to: "/",
+      });
+    },
+    onError: (error) => {
+      const errorMessage = getErrorMessage(error);
+      toast({ title: "Error", description: errorMessage });
+    },
+  });
+
+  return {
+    loginMutation,
+    registerMutation,
+    logoutMutation,
+    fpasswordMutation,
+    rpasswordMutation,
+  };
 };
 
 export default useAuth;

@@ -37,7 +37,7 @@ function SignupPage() {
   });
 
   const handleSignup: SubmitHandler<UserCreate> = (data) => {
-    registerMutation.mutate({ body: data });
+    registerMutation.mutateAsync({ body: data });
   };
 
   return (
