@@ -178,7 +178,7 @@ export default function Layout() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 md:ml-64 mb-16 md:pb-0 md:pt-0">
+        <main className="flex-1 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-950 dark:to-black-950 md:ml-64 mb-16 md:pb-0 md:mb-0 md:pt-0">
           <Outlet />
         </main>
 

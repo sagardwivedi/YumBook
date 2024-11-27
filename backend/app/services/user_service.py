@@ -81,6 +81,7 @@ class UserService:
                 user,
                 update={
                     "password_hash": self.authService.hash_password(user.password),
+                    "avatar_path": None,
                 },
             )
 

@@ -17,12 +17,21 @@ class UserBase(SQLModel):
     email: EmailStr = Field(
         unique=True, max_length=255, description="User's email address"
     )
-    avatar_path: str = Field(default=None, description="Path to user's avatar image")
+    avatar_path: str | None = Field(
+        default=None, description="Path to user's avatar image"
+    )
     full_name: str = Field(default=None, max_length=255, description="User's full name")
 
 
-class UserCreate(UserBase):
+class UserCreate(SQLModel):
     password: str = Field(min_length=8, max_length=40, description="User's password")
+    username: str = Field(
+        min_length=3,
+        max_length=255,
+        description="Unique username",
+    )
+    email: EmailStr = Field(max_length=255, description="User's email address")
+    full_name: str = Field(default=None, max_length=255, description="User's full name")
 
 
 class UserUpdate(UserBase):
@@ -45,7 +54,7 @@ class UserPublic(UserBase):
 
 class UserForRecipe(SQLModel):
     id: UUID
-    avatar_path: str
+    avatar_path: str | None
     username: str
 
 

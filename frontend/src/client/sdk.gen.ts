@@ -3,7 +3,7 @@
 import {
   createClient,
   createConfig,
-  type Options,
+  type OptionsLegacyParser,
   urlSearchParamsBodySerializer,
   formDataBodySerializer,
 } from "@hey-api/client-fetch";
@@ -91,7 +91,7 @@ export const client = createClient(createConfig());
  * HTTPException: If user registration fails.
  */
 export const registerUser = <ThrowOnError extends boolean = false>(
-  options: Options<RegisterUserData, ThrowOnError>,
+  options: OptionsLegacyParser<RegisterUserData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).post<
     RegisterUserResponse,
@@ -119,7 +119,7 @@ export const registerUser = <ThrowOnError extends boolean = false>(
  * HTTPException: If authentication fails or if the user ID is missing.
  */
 export const loginUser = <ThrowOnError extends boolean = false>(
-  options: Options<LoginUserData, ThrowOnError>,
+  options: OptionsLegacyParser<LoginUserData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).post<
     LoginUserResponse,
@@ -141,7 +141,7 @@ export const loginUser = <ThrowOnError extends boolean = false>(
  * Logout a user by clearing the access token cookie.
  */
 export const logoutUser = <ThrowOnError extends boolean = false>(
-  options?: Options<unknown, ThrowOnError>,
+  options?: OptionsLegacyParser<unknown, ThrowOnError>,
 ) => {
   return (options?.client ?? client).post<
     LogoutUserResponse,
@@ -158,7 +158,7 @@ export const logoutUser = <ThrowOnError extends boolean = false>(
  * Handle a forgot password request by generating and returning a reset token.
  */
 export const forgotPassword = <ThrowOnError extends boolean = false>(
-  options: Options<ForgotPasswordData2, ThrowOnError>,
+  options: OptionsLegacyParser<ForgotPasswordData2, ThrowOnError>,
 ) => {
   return (options?.client ?? client).post<
     ForgotPasswordResponse,
@@ -180,7 +180,7 @@ export const forgotPassword = <ThrowOnError extends boolean = false>(
  * Reset the user's password using a valid reset token.
  */
 export const resetPassword = <ThrowOnError extends boolean = false>(
-  options: Options<ResetPasswordData2, ThrowOnError>,
+  options: OptionsLegacyParser<ResetPasswordData2, ThrowOnError>,
 ) => {
   return (options?.client ?? client).post<
     ResetPasswordResponse,
@@ -208,7 +208,7 @@ export const resetPassword = <ThrowOnError extends boolean = false>(
  * UserPublic: The user's public profile
  */
 export const getCurrentUser = <ThrowOnError extends boolean = false>(
-  options?: Options<unknown, ThrowOnError>,
+  options?: OptionsLegacyParser<unknown, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
     GetCurrentUserResponse,
@@ -236,7 +236,7 @@ export const getCurrentUser = <ThrowOnError extends boolean = false>(
  * HTTPException: If update fails
  */
 export const updateCurrentUser = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateCurrentUserData, ThrowOnError>,
+  options: OptionsLegacyParser<UpdateCurrentUserData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).patch<
     UpdateCurrentUserResponse,
@@ -263,7 +263,7 @@ export const updateCurrentUser = <ThrowOnError extends boolean = false>(
  * HTTPException: If user is not found
  */
 export const getUserByUsername = <ThrowOnError extends boolean = false>(
-  options: Options<GetUserByUsernameData, ThrowOnError>,
+  options: OptionsLegacyParser<GetUserByUsernameData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
     GetUserByUsernameResponse,
@@ -291,7 +291,7 @@ export const getUserByUsername = <ThrowOnError extends boolean = false>(
  * HTTPException: If update fails
  */
 export const updateProfileImage = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateProfileImageData, ThrowOnError>,
+  options: OptionsLegacyParser<UpdateProfileImageData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).put<
     UpdateProfileImageResponse,
@@ -324,7 +324,7 @@ export const updateProfileImage = <ThrowOnError extends boolean = false>(
  * HTTPException: If upload fails
  */
 export const uploadProfileImage = <ThrowOnError extends boolean = false>(
-  options: Options<UploadProfileImageData, ThrowOnError>,
+  options: OptionsLegacyParser<UploadProfileImageData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).post<
     UploadProfileImageResponse,
@@ -356,7 +356,7 @@ export const uploadProfileImage = <ThrowOnError extends boolean = false>(
  * HTTPException: If deletion fails
  */
 export const deleteProfileImage = <ThrowOnError extends boolean = false>(
-  options?: Options<unknown, ThrowOnError>,
+  options?: OptionsLegacyParser<unknown, ThrowOnError>,
 ) => {
   return (options?.client ?? client).delete<
     DeleteProfileImageResponse,
@@ -372,7 +372,7 @@ export const deleteProfileImage = <ThrowOnError extends boolean = false>(
  * Get Recipes
  */
 export const getRecipes = <ThrowOnError extends boolean = false>(
-  options?: Options<GetRecipesData, ThrowOnError>,
+  options?: OptionsLegacyParser<GetRecipesData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
     GetRecipesResponse,
@@ -388,7 +388,7 @@ export const getRecipes = <ThrowOnError extends boolean = false>(
  * Get Recipe
  */
 export const getRecipe = <ThrowOnError extends boolean = false>(
-  options: Options<GetRecipeData, ThrowOnError>,
+  options: OptionsLegacyParser<GetRecipeData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
     GetRecipeResponse,
@@ -404,7 +404,7 @@ export const getRecipe = <ThrowOnError extends boolean = false>(
  * Create Recipe
  */
 export const createRecipe = <ThrowOnError extends boolean = false>(
-  options: Options<CreateRecipeData, ThrowOnError>,
+  options: OptionsLegacyParser<CreateRecipeData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).post<
     CreateRecipeResponse,
@@ -425,7 +425,7 @@ export const createRecipe = <ThrowOnError extends boolean = false>(
  * Delete Recipe
  */
 export const deleteRecipe = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteRecipeData, ThrowOnError>,
+  options: OptionsLegacyParser<DeleteRecipeData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).delete<
     DeleteRecipeResponse,
@@ -441,7 +441,7 @@ export const deleteRecipe = <ThrowOnError extends boolean = false>(
  * Search Recipes
  */
 export const searchRecipes = <ThrowOnError extends boolean = false>(
-  options: Options<SearchRecipesData, ThrowOnError>,
+  options: OptionsLegacyParser<SearchRecipesData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
     SearchRecipesResponse,
@@ -457,7 +457,7 @@ export const searchRecipes = <ThrowOnError extends boolean = false>(
  * Get Trending Recipes
  */
 export const getTrendingRecipes = <ThrowOnError extends boolean = false>(
-  options?: Options<unknown, ThrowOnError>,
+  options?: OptionsLegacyParser<unknown, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
     GetTrendingRecipesResponse,
@@ -473,7 +473,7 @@ export const getTrendingRecipes = <ThrowOnError extends boolean = false>(
  * Get Similar Recipes
  */
 export const getSimilarRecipes = <ThrowOnError extends boolean = false>(
-  options: Options<GetSimilarRecipesData, ThrowOnError>,
+  options: OptionsLegacyParser<GetSimilarRecipesData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
     GetSimilarRecipesResponse,
@@ -489,7 +489,7 @@ export const getSimilarRecipes = <ThrowOnError extends boolean = false>(
  * Get User Recipes
  */
 export const getUserRecipes = <ThrowOnError extends boolean = false>(
-  options?: Options<unknown, ThrowOnError>,
+  options?: OptionsLegacyParser<unknown, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
     GetUserRecipesResponse,
@@ -505,7 +505,7 @@ export const getUserRecipes = <ThrowOnError extends boolean = false>(
  * Like Recipe
  */
 export const likeRecipe = <ThrowOnError extends boolean = false>(
-  options: Options<LikeRecipeData, ThrowOnError>,
+  options: OptionsLegacyParser<LikeRecipeData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).post<
     LikeRecipeResponse,
@@ -521,7 +521,7 @@ export const likeRecipe = <ThrowOnError extends boolean = false>(
  * Unlike Recipe
  */
 export const unlikeRecipe = <ThrowOnError extends boolean = false>(
-  options: Options<UnlikeRecipeData, ThrowOnError>,
+  options: OptionsLegacyParser<UnlikeRecipeData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).delete<
     UnlikeRecipeResponse,
@@ -537,7 +537,7 @@ export const unlikeRecipe = <ThrowOnError extends boolean = false>(
  * Create Comment
  */
 export const createComment = <ThrowOnError extends boolean = false>(
-  options: Options<CreateCommentData, ThrowOnError>,
+  options: OptionsLegacyParser<CreateCommentData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).post<
     CreateCommentResponse,
@@ -553,7 +553,7 @@ export const createComment = <ThrowOnError extends boolean = false>(
  * Get Comments
  */
 export const getComments = <ThrowOnError extends boolean = false>(
-  options: Options<GetCommentsData, ThrowOnError>,
+  options: OptionsLegacyParser<GetCommentsData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
     GetCommentsResponse,

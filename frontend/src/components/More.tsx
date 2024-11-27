@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { LogOut, MoreHorizontal, Settings, Sun } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { LogOut, MoreHorizontal, Settings } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -13,6 +13,8 @@ import { Switch } from "./ui/switch";
 
 export function MoreComponent() {
   const { theme, toggleTheme } = useThemeStore();
+  const navigate = useNavigate();
+  const { logout } = useUserStore();
 
   return (
     <Popover>
@@ -36,6 +38,10 @@ export function MoreComponent() {
           <Separator />
           <Button
             variant="ghost"
+            onClick={() => {
+              logout();
+              navigate({ to: "/" });
+            }}
             className="w-full justify-start text-red-600 dark:text-red-400"
           >
             <LogOut className="size-5 mr-2" />

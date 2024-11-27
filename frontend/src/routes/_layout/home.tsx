@@ -28,7 +28,7 @@ function Home() {
   );
 
   return (
-    <div className="dark:bg-gray-900 min-h-screen flex flex-col">
+    <div className=" flex flex-col">
       <MobileHeader />
       <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 max-w-7xl mx-auto w-full">
         <main className="flex-1 space-y-6">
@@ -111,7 +111,7 @@ function DesktopRightSidebarItem(recipe: RecipeTrending) {
         <AvatarFallback>{recipe.name[0]}</AvatarFallback>
       </Avatar>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+        <p className="text-sm font-medium text-ellipsis text-gray-900 dark:text-white">
           {recipe.name}
         </p>
         <p className="text-xs text-gray-500 dark:text-gray-400 truncate">

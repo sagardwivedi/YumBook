@@ -35,6 +35,7 @@ import {
   DrawerTrigger,
 } from "../ui/drawer";
 import { Recipe } from "./ShowRecipe";
+import { ScrollArea } from "../ui/scroll-area";
 
 // Types
 interface IconButtonProps {
@@ -110,7 +111,7 @@ const ContentItem: FC<{ text: string; onClick?: () => void }> = ({
 }) => (
   <Button
     variant="ghost"
-    className="w-full justify-start px-4 py-2 hover:bg-secondary/50"
+    className="w-full  px-4 py-2 hover:bg-secondary/50"
     onClick={onClick}
   >
     {text}
@@ -153,7 +154,7 @@ export const Post = ({ user, recipe }: RecipeWithUser) => {
 
   return (
     <Card className="max-w-lg mx-auto border-none overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 px-0 pb-2">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <UserInfo user={user} time={postTiming} id={recipe.id} />
         <UIComponent.Container>
           <UIComponent.Trigger asChild>
@@ -168,7 +169,7 @@ export const Post = ({ user, recipe }: RecipeWithUser) => {
                 Choose an action for this post
               </UIComponent.Description>
             </UIComponent.Header>
-            <div className="grid gap-4 py-4">
+            <div className="grid  gap-4 py-4">
               <ContentItem text="Report" />
               <ContentItem text="Unfollow" />
               <ContentItem text="Add to favorites" />
@@ -206,7 +207,7 @@ export const Post = ({ user, recipe }: RecipeWithUser) => {
         <Recipe recipe={recipe} />
       </CardContent>
 
-      <CardFooter className="flex flex-col items-start px-0 pl-2  pt-4">
+      <CardFooter className="flex flex-col items-start pl-2  pt-4">
         <div className="flex w-full justify-between items-center">
           <div className="flex gap-4 items-center">
             <IconButton
@@ -235,8 +236,36 @@ export const Post = ({ user, recipe }: RecipeWithUser) => {
             onClick={() => setIsSaved(!isSaved)}
           />
         </div>
-        <div>{totalLikes} likes</div>
+        <ShowLikesModalOrVaul likeNumber={totalLikes} recipes={recipe} />
       </CardFooter>
     </Card>
   );
 };
+
+function ShowLikesModalOrVaul({
+  likeNumber,
+  recipes,
+}: {
+  likeNumber: number;
+  recipes: RecipeWithUser["recipe"];
+}) {
+  const UIComponet = useResponsiveUI();
+
+  return (
+    <UIComponet.Container>
+      <UIComponet.Trigger>{likeNumber} likes</UIComponet.Trigger>
+      <UIComponet.Content className="h-32">
+        <UIComponet.Header>
+          <UIComponet.Title>Likes</UIComponet.Title>
+        </UIComponet.Header>
+        <ScrollArea className="h-[80vh] pr-4">
+          <div>
+            {recipes.likes.map((like) => (
+              <div key={like.user_id}>{like.user_id}</div>
+            ))}
+          </div>
+        </ScrollArea>
+      </UIComponet.Content>
+    </UIComponet.Container>
+  );
+}

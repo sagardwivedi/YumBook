@@ -30,7 +30,16 @@ export function calculateTimeForPosting(created_at: string): string {
   }
 
   const now = new Date();
-  const elapsedMilliseconds = now.getTime() - createdAtDate.getTime();
+  let elapsedMilliseconds = now.getTime() - createdAtDate.getTime();
+
+  // Handle case where the time difference is negative but very small (e.g., just created post)
+  if (elapsedMilliseconds < 0 && elapsedMilliseconds > -1000) {
+    elapsedMilliseconds = 0; // Treat as 0 seconds if the difference is very small (less than 1 second)
+  }
+
+  if (elapsedMilliseconds < 0) {
+    throw new Error("The provided date is in the future");
+  }
 
   // Convert time differences in decreasing order of relevance
   const seconds = Math.floor(elapsedMilliseconds / 1000);

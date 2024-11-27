@@ -34,10 +34,7 @@ export type HTTPValidationError = {
   detail?: Array<ValidationError>;
 };
 
-export type Like = {
-  id?: string;
-  created_at?: string;
-  recipe_id: string;
+export type LikePublic = {
   user_id: string;
 };
 
@@ -69,7 +66,7 @@ export type RecipePublic = {
   id: string;
   created_at: string;
   image_url: string;
-  likes: Array<Like>;
+  likes: Array<LikePublic>;
 };
 
 export type RecipeTrending = {
@@ -102,6 +99,10 @@ export type SuccessResponseWithData = {
 
 export type UserCreate = {
   /**
+   * User's password
+   */
+  password: string;
+  /**
    * Unique username
    */
   username: string;
@@ -110,17 +111,9 @@ export type UserCreate = {
    */
   email: string;
   /**
-   * Path to user's avatar image
-   */
-  avatar_path?: string;
-  /**
    * User's full name
    */
   full_name?: string;
-  /**
-   * User's password
-   */
-  password: string;
 };
 
 export type UserForRecipe = {
@@ -141,7 +134,7 @@ export type UserPublic = {
   /**
    * Path to user's avatar image
    */
-  avatar_path?: string;
+  avatar_path?: string | null;
   /**
    * User's full name
    */
@@ -155,7 +148,7 @@ export type UserUpdate = {
   /**
    * Path to user's avatar image
    */
-  avatar_path?: string;
+  avatar_path?: string | null;
   /**
    * User's full name
    */

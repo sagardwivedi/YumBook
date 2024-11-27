@@ -8,5 +8,5 @@ export default defineConfig({
     format: "biome",
     lint: "biome",
   },
-  plugins: ["@tanstack/react-query", "@hey-api/services", "@hey-api/types"],
+  plugins: ["@tanstack/react-query", "@hey-api/sdk", "@hey-api/typescript"],
 });

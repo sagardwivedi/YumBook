@@ -38,13 +38,13 @@ function RouteComponent() {
     resolver: zodResolver(CreateSchema),
     defaultValues: {
       cuisine: "",
-      instructions: [],
+      instructions: [""],
       servings: 1,
       name: "",
       cooking_time: 1,
-      dietary_restrictions: [],
+      dietary_restrictions: [""],
       preparation_time: 1,
-      tags: [],
+      tags: [""],
       description: "",
       difficulty: "",
       image: undefined,
@@ -82,7 +82,7 @@ function RouteComponent() {
     try {
       console.log("Form submitted with data:", JSON.stringify(data));
       const { image, ...recipeData } = data;
-      mutate.mutate({
+      mutate.mutateAsync({
         body: { image: image, recipe: JSON.stringify(recipeData) },
       });
     } catch (error) {
@@ -482,7 +482,11 @@ function RouteComponent() {
         </Card>
 
         <div className="flex justify-end gap-4">
-          <Button disabled={form.formState.isSubmitting} type="submit">
+          <Button
+            disabled={form.formState.isSubmitting}
+            type="submit"
+            className="w-full"
+          >
             {form.formState.isSubmitting ? (
               <LoaderCircle className="size-5 animate-spin" />
             ) : (

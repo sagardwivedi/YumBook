@@ -27,12 +27,12 @@ export const CreateSchema = z.object({
     .string({ required_error: "Cuisine is required" })
     .min(1, { message: "Cuisine cannot be empty" }),
 
-  instructions: z
-    .array(z.string().min(1, { message: "Instruction step cannot be empty" }), {
+  instructions: z.array(
+    z.string().min(1, { message: "Instruction step cannot be empty" }),
+    {
       required_error: "Instructions are required",
-    })
-    .nonempty({ message: "There must be at least one instruction" }),
-
+    },
+  ),
   servings: z
     .number({ required_error: "Servings are required" })
     .int({ message: "Servings must be an integer" })
@@ -46,25 +46,19 @@ export const CreateSchema = z.object({
     .number({ required_error: "Cooking time is required" })
     .positive({ message: "Cooking time must be a positive number" }),
 
-  dietary_restrictions: z
-    .array(
-      z.string().min(1, { message: "dietary_restrictions cannot be empty" }),
-      {
-        required_error: "dietary_restrictions are required",
-      },
-    )
-    .nonempty({ message: "There must be at least one dietary_restrictions" }),
-
+  dietary_restrictions: z.array(
+    z.string().min(1, { message: "dietary_restrictions cannot be empty" }),
+    {
+      required_error: "dietary_restrictions are required",
+    },
+  ),
   preparation_time: z
     .number({ required_error: "Preparation time is required" })
     .positive({ message: "Preparation time must be a positive number" }),
 
-  tags: z
-    .array(z.string().min(1, { message: "Tag cannot be empty" }), {
-      required_error: "Tags are required",
-    })
-    .nonempty({ message: "There must be at least one tag" }),
-
+  tags: z.array(z.string().min(1, { message: "Tag cannot be empty" }), {
+    required_error: "Tags are required",
+  }),
   description: z
     .string({ required_error: "Description is required" })
     .min(1, { message: "Description cannot be empty" }),
