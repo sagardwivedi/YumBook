@@ -1,0 +1,41 @@
+[
+  {
+    "id": "1",
+    "name": "Spaghetti Bolognese",
+    "description": "A classic Italian pasta dish with rich meat sauce.",
+    "instructions": "Cook the pasta. In a separate pan, cook the meat with onions and tomatoes. Combine and serve.",
+    "cooking_time": 30,
+    "preparation_time": 15,
+    "servings": 2,
+    "cuisine": "Italian",
+    "dietary_restrictions": null,
+    "image_url": "https://via.placeholder.com/400?text=Spaghetti+Bolognese",
+    "tags": ["pasta", "main course"]
+  },
+  {
+    "id": "2",
+    "name": "Caesar Salad",
+    "description": "Crispy romaine lettuce with Caesar dressing, croutons, and parmesan.",
+    "instructions": "Toss the lettuce with dressing, add croutons and cheese.",
+    "cooking_time": 10,
+    "preparation_time": 5,
+    "servings": 2,
+    "cuisine": "American",
+    "dietary_restrictions": "vegetarian",
+    "image_url": "https://via.placeholder.com/400?text=Caesar+Salad",
+    "tags": ["salad", "side dish"]
+  },
+  {
+    "id": "3",
+    "name": "Chicken Tikka Masala",
+    "description": "Spicy chicken in a creamy tomato sauce served with rice.",
+    "instructions": "Marinate chicken. Cook in sauce until done. Serve with rice.",
+    "cooking_time": 40,
+    "preparation_time": 20,
+    "servings": 4,
+    "cuisine": "Indian",
+    "dietary_restrictions": null,
+    "image_url": "https://via.placeholder.com/400?text=Chicken+Tikka+Masala",
+    "tags": ["chicken", "main course"]
+  }
+]
