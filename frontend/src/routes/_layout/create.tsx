@@ -1,8 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute } from "@tanstack/react-router";
+import { LoaderCircle, Plus, Trash2, X } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { type SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import type { z } from "zod";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import { Card } from "~/components/ui/card";
 import {
   Form,
   FormControl,
@@ -20,11 +24,8 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
-import { CreateSchema } from "~/lib/definitions";
-import { LoaderCircle, LoaderCircleIcon, Plus, Trash2, X } from "lucide-react";
-import { Badge } from "~/components/ui/badge";
-import { Card } from "~/components/ui/card";
 import useRecipe from "~/hooks/use-recipe";
+import { CreateSchema } from "~/lib/definitions";
 
 export const Route = createFileRoute("/_layout/create")({
   component: RouteComponent,
@@ -110,50 +111,62 @@ function RouteComponent() {
           <FormField
             control={form.control}
             name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="dark:text-white">Recipe Image</FormLabel>
-                <FormControl>
-                  <div className="flex flex-col items-center justify-center w-full">
-                    {field.value ? (
-                      <div className="relative w-full max-w-md aspect-video">
-                        <img
-                          src={URL.createObjectURL(field.value)}
-                          alt="Recipe preview"
-                          className="w-full h-full object-cover rounded-lg"
-                        />
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="icon"
-                          className="absolute top-2 right-2"
-                          onClick={() => field.onChange(undefined)}
-                        >
-                          <X className="size-4" />
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="w-full">
-                        <Input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            if (e.target.files?.[0]) {
-                              field.onChange(e.target.files[0]);
-                            }
-                          }}
-                          className="cursor-pointer dark:text-white dark:bg-gray-600 dark:border-gray-500"
-                        />
-                        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                          Recommended: 16:9 ratio, max 5MB
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            render={({ field }) => {
+              const imageRef = useRef<HTMLImageElement>(null);
+
+              useEffect(() => {
+                if (field.value && imageRef.current) {
+                  imageRef.current.src = URL.createObjectURL(field.value);
+                }
+              }, [field.value]);
+
+              return (
+                <FormItem>
+                  <FormLabel className="dark:text-white">
+                    Recipe Image
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex flex-col items-center justify-center w-full">
+                      {field.value ? (
+                        <div className="relative w-full max-w-md aspect-video">
+                          <img
+                            ref={imageRef}
+                            alt="Recipe preview"
+                            className="w-full h-full object-cover rounded-lg"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2"
+                            onClick={() => field.onChange(undefined)}
+                          >
+                            <X className="size-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="w-full">
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              if (e.target.files?.[0]) {
+                                field.onChange(e.target.files[0]);
+                              }
+                            }}
+                            className="cursor-pointer dark:text-white dark:bg-gray-600 dark:border-gray-500"
+                          />
+                          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                            Recommended: 16:9 ratio, max 5MB
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
         </Card>
 

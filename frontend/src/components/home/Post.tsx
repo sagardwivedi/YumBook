@@ -9,11 +9,9 @@ import {
 } from "lucide-react";
 import { type FC, useCallback, useMemo, useState } from "react";
 import type {
-  GetLikersData,
+  Comment,
   GetLikersResponse,
-  LikePublic,
   RecipeWithUser,
-  UserForRecipe,
 } from "~/client";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import useRecipe from "~/hooks/use-recipe";
@@ -26,6 +24,7 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
 import { Recipe } from "./ShowRecipe";
+import { Input } from "../ui/input";
 
 // Types
 interface IconButtonProps {
@@ -112,8 +111,12 @@ const ShowLikesModalOrVaul: FC<{
           <div>
             {likers ? (
               likers.map((like) => (
-                <div key={like.id} className="p-2 border-b">
+                <div key={like.id} className="p-2 flex flex-row gap-3 items-center border-b">
                   {/* show the avatar image here */}
+                  <Avatar>
+                    <AvatarImage src={`http://localhost:8000/${like.avatar_path}`} />
+                    <AvatarFallback>{like.username[0].toUpperCase()}</AvatarFallback>
+                  </Avatar>
                   {like.username}
                 </div>
               ))
@@ -130,12 +133,70 @@ const ShowLikesModalOrVaul: FC<{
   );
 };
 
+const ShowCommentsModalOrVaul = ({ comments, handleAddComment }: { comments?: Comment[], handleAddComment: (comment: string) => void }) => {
+  const UIComponent = useResponsiveUI();
+  const [newComment, setNewComment] = useState("");
+  const nav = useNavigate()
+
+  return (
+    <UIComponent.Container>
+      <UIComponent.Trigger className="text-sm text-gray-600 mt-2">
+        {/* Show only two avatar images */}
+        View all {comments?.length} comments
+      </UIComponent.Trigger>
+      <UIComponent.Content className="h-96">
+        <UIComponent.Header>
+          <UIComponent.Title>Comments</UIComponent.Title>
+        </UIComponent.Header>
+        <ScrollArea className="h-[80vh] pr-4">
+          <div>
+            {comments ? (
+              comments.map((comment) => (
+                <div key={comment.id} className="p-2 flex flex-row gap-3 items-center border-b">
+
+                  {comment.content}
+                </div>
+              ))
+            ) : (
+              <Skeleton className="w-full h-full" />
+            )}
+          </div>
+        </ScrollArea>
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+          <div className="flex items-center gap-2">
+            <Input
+              type="text"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Add a comment..."
+              className="flex-grow border rounded px-4 py-2 focus:outline-none focus:ring"
+            />
+            <Button
+              onClick={() => {
+                setNewComment("")
+                location.reload()
+                handleAddComment(newComment)
+              }}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+              Post
+            </Button>
+          </div>
+        </div>
+        <UIComponent.Close asChild>
+          <Button className="w-full mt-4">Close</Button>
+        </UIComponent.Close>
+      </UIComponent.Content>
+    </UIComponent.Container>
+  );
+}
+
 // Main Post Component
 export const Post: FC<PostProps> = ({ user, recipe }) => {
   const UIComponent = useResponsiveUI();
   const navigate = useNavigate();
   const { sharePost } = useSharePost(recipe.id);
-  const { likeMutate, unlikeMutate, commentMutate, likersQuery } = useRecipe({
+  const { likeMutate, unlikeMutate, likersQuery, getComments, commentMutate } = useRecipe({
     recipe_id: recipe.id,
   });
 
@@ -166,6 +227,14 @@ export const Post: FC<PostProps> = ({ user, recipe }) => {
       console.error("Failed to update like status:", error);
     }
   }, [isLiked, likeMutate, unlikeMutate, recipe.id]);
+
+  const handleAddComment = useCallback((content: string) => {
+    try {
+      commentMutate.mutateAsync({ path: { recipe_id: recipe.id }, body: { comment: content } })
+    } catch (error) {
+      console.error("Failed to update like status:", error);
+    }
+  }, [commentMutate, recipe.id])
 
   return (
     <Card className="max-w-lg mx-auto border-none overflow-hidden">
@@ -235,10 +304,6 @@ export const Post: FC<PostProps> = ({ user, recipe }) => {
               onClick={handleLike}
             />
             <IconButton
-              icon={MessageCircle}
-              color="text-gray-500 hover:text-blue-500"
-            />
-            <IconButton
               icon={SendIcon}
               onClick={sharePost}
               color="text-gray-500 hover:text-green-500"
@@ -258,6 +323,8 @@ export const Post: FC<PostProps> = ({ user, recipe }) => {
           likeNumber={totalLikes}
           likers={likersQuery?.data}
         />
+
+        <ShowCommentsModalOrVaul comments={getComments.data} handleAddComment={handleAddComment} />
       </CardFooter>
     </Card>
   );

@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Heart, MessageCircle, Search, Sliders } from "lucide-react";
 import { useState } from "react";
 import { queryClient } from "~/App";
@@ -181,8 +181,9 @@ function RouteComponent() {
       <main className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredRecipes.map(({ recipe }) => (
+            <Link key={recipe.id} to="/p/$post" params={{post:recipe.id}}>
             <div
-              key={recipe.id}
+              
               className="relative group overflow-hidden rounded-lg shadow-lg"
             >
               <img
@@ -205,7 +206,7 @@ function RouteComponent() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div></Link>
           ))}
         </div>
       </main>

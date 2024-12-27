@@ -149,7 +149,7 @@ export default function Layout() {
             <DesktopNavItem
               icon={MessageCircle}
               text="Messages"
-              to="/messages"
+              to="/message"
             />
             <DesktopNavItem icon={Bell} text="Notifications" to="/activity" />
             <DesktopNavItem icon={PlusSquare} text="Create" to="/create" />

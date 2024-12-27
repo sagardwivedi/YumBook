@@ -3,6 +3,8 @@ import { useNavigate } from "@tanstack/react-router";
 
 import {
   createRecipeMutation,
+  getCommentsOptions,
+  getCommentsQueryKey,
   getLikersOptions,
   likeRecipeMutation,
   unlikeRecipeMutation,
@@ -10,6 +12,7 @@ import {
 import { getErrorMessage } from "~/lib/utils";
 import { createCommentMutation } from "../client/@tanstack/react-query.gen";
 import { useToast } from "./use-toast";
+import { queryClient } from "~/App";
 
 const useRecipe = ({ recipe_id }: { recipe_id?: string }) => {
   const { toast } = useToast();
@@ -60,6 +63,13 @@ const useRecipe = ({ recipe_id }: { recipe_id?: string }) => {
 
   const commentMutate = useMutation({
     ...createCommentMutation(),
+    onSuccess: () => {
+      // Invalidate getComments query to fetch updated comments
+      toast({
+        title: "Success",
+        description: "Comment added successfully.",
+      });
+    },
     onError: (error) => {
       const errorMessage = getErrorMessage(error);
       toast({
@@ -70,11 +80,22 @@ const useRecipe = ({ recipe_id }: { recipe_id?: string }) => {
     },
   });
 
+  const getComments = useQuery({
+    ...getCommentsOptions({ path: { recipe_id: recipe_id || "" } }),
+  });
+
   const likersQuery = useQuery({
     ...getLikersOptions({ path: { recipe_id: recipe_id || "" } }),
   });
 
-  return { mutate, likeMutate, unlikeMutate, commentMutate, likersQuery };
+  return {
+    mutate,
+    likeMutate,
+    unlikeMutate,
+    commentMutate,
+    likersQuery,
+    getComments,
+  };
 };
 
 export default useRecipe;
