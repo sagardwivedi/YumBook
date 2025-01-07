@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
 
-from app.config import settings
-from app.routers import api_router
+from app.api.main import api_router
+from app.core.config import settings
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:
@@ -13,23 +13,9 @@ def custom_generate_unique_id(route: APIRoute) -> str:
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    version="1.0.0",
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     generate_unique_id_function=custom_generate_unique_id,
 )
-
-# Mounting the "images/profile" route to serve profile images
-app.mount(
-    f"/{settings.PROFILE_DIR}",
-    StaticFiles(directory=settings.PROFILE_DIR),
-    name="profile",
-)
-
-# Mounting the "images/recipe" route to serve recipe images
-app.mount(
-    f"/{settings.POST_DIR}", StaticFiles(directory=settings.POST_DIR), name="post"
-)
-
 
 # Set all CORS enabled origins
 if settings.all_cors_origins:
@@ -40,5 +26,8 @@ if settings.all_cors_origins:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+app.mount("/static/profile", StaticFiles(directory="static/profile"), name="profile")
+app.mount("/static/post", StaticFiles(directory="static/post"), name="post")
 
 app.include_router(api_router, prefix=settings.API_V1_STR)

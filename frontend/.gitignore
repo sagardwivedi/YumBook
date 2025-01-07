@@ -6,7 +6,6 @@
 # Dist
 node_modules
 dist/
-openapi.json
 
 # IDE
 .vscode/*
