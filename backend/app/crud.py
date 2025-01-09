@@ -1,4 +1,5 @@
-from sqlmodel import Session, select
+from sqlalchemy import or_
+from sqlmodel import Session, func, select
 
 from app.core.security import get_password_hash, verify_password
 from app.models import User, UserRegister
@@ -14,14 +15,21 @@ def create_user(*, session: Session, user_create: UserRegister) -> User:
     return db_obj
 
 
-def get_user_by_email(*, session: Session, email: str) -> User | None:
-    statement = select(User).where(User.email == email)
+def get_user_by_email(*, session: Session, email: str, username: str) -> User | None:
+    statement = select(User).where(
+        or_(
+            func.lower(User.email) == func.lower(email),
+            func.lower(User.username) == func.lower(username),
+        )
+    )
+
     session_user = session.exec(statement).first()
     return session_user
 
 
 def authenticate(*, session: Session, email: str, password: str) -> User | None:
     db_user = get_user_by_email(session=session, email=email)
+    print("DB USER", db_user)
     if not db_user:
         return None
     if not verify_password(password, db_user.hashed_password):
