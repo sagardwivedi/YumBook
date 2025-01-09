@@ -15,9 +15,14 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as AuthSignupImport } from './routes/auth/signup'
+import { Route as AuthRecoverPasswordImport } from './routes/auth/recover-password'
 import { Route as AuthLoginImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordImport } from './routes/auth/forgot-password'
+import { Route as LayoutSavedImport } from './routes/_layout/saved'
 import { Route as LayoutHomeImport } from './routes/_layout/home'
+import { Route as LayoutExplorerImport } from './routes/_layout/explorer'
+import { Route as LayoutProfileImport } from './routes/_layout/$profile'
+import { Route as LayoutPPostIdImport } from './routes/_layout/p/$postId'
 
 // Create Virtual Routes
 
@@ -42,6 +47,12 @@ const AuthSignupRoute = AuthSignupImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthRecoverPasswordRoute = AuthRecoverPasswordImport.update({
+  id: '/auth/recover-password',
+  path: '/auth/recover-password',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AuthLoginRoute = AuthLoginImport.update({
   id: '/auth/login',
   path: '/auth/login',
@@ -54,9 +65,33 @@ const AuthForgotPasswordRoute = AuthForgotPasswordImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const LayoutSavedRoute = LayoutSavedImport.update({
+  id: '/saved',
+  path: '/saved',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
 const LayoutHomeRoute = LayoutHomeImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutExplorerRoute = LayoutExplorerImport.update({
+  id: '/explorer',
+  path: '/explorer',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutProfileRoute = LayoutProfileImport.update({
+  id: '/$profile',
+  path: '/$profile',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutPPostIdRoute = LayoutPPostIdImport.update({
+  id: '/p/$postId',
+  path: '/p/$postId',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -78,11 +113,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutImport
       parentRoute: typeof rootRoute
     }
+    '/_layout/$profile': {
+      id: '/_layout/$profile'
+      path: '/$profile'
+      fullPath: '/$profile'
+      preLoaderRoute: typeof LayoutProfileImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/explorer': {
+      id: '/_layout/explorer'
+      path: '/explorer'
+      fullPath: '/explorer'
+      preLoaderRoute: typeof LayoutExplorerImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/home': {
       id: '/_layout/home'
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof LayoutHomeImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/saved': {
+      id: '/_layout/saved'
+      path: '/saved'
+      fullPath: '/saved'
+      preLoaderRoute: typeof LayoutSavedImport
       parentRoute: typeof LayoutImport
     }
     '/auth/forgot-password': {
@@ -99,6 +155,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginImport
       parentRoute: typeof rootRoute
     }
+    '/auth/recover-password': {
+      id: '/auth/recover-password'
+      path: '/auth/recover-password'
+      fullPath: '/auth/recover-password'
+      preLoaderRoute: typeof AuthRecoverPasswordImport
+      parentRoute: typeof rootRoute
+    }
     '/auth/signup': {
       id: '/auth/signup'
       path: '/auth/signup'
@@ -106,17 +169,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignupImport
       parentRoute: typeof rootRoute
     }
+    '/_layout/p/$postId': {
+      id: '/_layout/p/$postId'
+      path: '/p/$postId'
+      fullPath: '/p/$postId'
+      preLoaderRoute: typeof LayoutPPostIdImport
+      parentRoute: typeof LayoutImport
+    }
   }
 }
 
 // Create and export the route tree
 
 interface LayoutRouteChildren {
+  LayoutProfileRoute: typeof LayoutProfileRoute
+  LayoutExplorerRoute: typeof LayoutExplorerRoute
   LayoutHomeRoute: typeof LayoutHomeRoute
+  LayoutSavedRoute: typeof LayoutSavedRoute
+  LayoutPPostIdRoute: typeof LayoutPPostIdRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutProfileRoute: LayoutProfileRoute,
+  LayoutExplorerRoute: LayoutExplorerRoute,
   LayoutHomeRoute: LayoutHomeRoute,
+  LayoutSavedRoute: LayoutSavedRoute,
+  LayoutPPostIdRoute: LayoutPPostIdRoute,
 }
 
 const LayoutRouteWithChildren =
@@ -125,29 +203,44 @@ const LayoutRouteWithChildren =
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '': typeof LayoutRouteWithChildren
+  '/$profile': typeof LayoutProfileRoute
+  '/explorer': typeof LayoutExplorerRoute
   '/home': typeof LayoutHomeRoute
+  '/saved': typeof LayoutSavedRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/recover-password': typeof AuthRecoverPasswordRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/p/$postId': typeof LayoutPPostIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '': typeof LayoutRouteWithChildren
+  '/$profile': typeof LayoutProfileRoute
+  '/explorer': typeof LayoutExplorerRoute
   '/home': typeof LayoutHomeRoute
+  '/saved': typeof LayoutSavedRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/recover-password': typeof AuthRecoverPasswordRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/p/$postId': typeof LayoutPPostIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/_layout': typeof LayoutRouteWithChildren
+  '/_layout/$profile': typeof LayoutProfileRoute
+  '/_layout/explorer': typeof LayoutExplorerRoute
   '/_layout/home': typeof LayoutHomeRoute
+  '/_layout/saved': typeof LayoutSavedRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/recover-password': typeof AuthRecoverPasswordRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/_layout/p/$postId': typeof LayoutPPostIdRoute
 }
 
 export interface FileRouteTypes {
@@ -155,26 +248,41 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | ''
+    | '/$profile'
+    | '/explorer'
     | '/home'
+    | '/saved'
     | '/auth/forgot-password'
     | '/auth/login'
+    | '/auth/recover-password'
     | '/auth/signup'
+    | '/p/$postId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | ''
+    | '/$profile'
+    | '/explorer'
     | '/home'
+    | '/saved'
     | '/auth/forgot-password'
     | '/auth/login'
+    | '/auth/recover-password'
     | '/auth/signup'
+    | '/p/$postId'
   id:
     | '__root__'
     | '/'
     | '/_layout'
+    | '/_layout/$profile'
+    | '/_layout/explorer'
     | '/_layout/home'
+    | '/_layout/saved'
     | '/auth/forgot-password'
     | '/auth/login'
+    | '/auth/recover-password'
     | '/auth/signup'
+    | '/_layout/p/$postId'
   fileRoutesById: FileRoutesById
 }
 
@@ -183,6 +291,7 @@ export interface RootRouteChildren {
   LayoutRoute: typeof LayoutRouteWithChildren
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
+  AuthRecoverPasswordRoute: typeof AuthRecoverPasswordRoute
   AuthSignupRoute: typeof AuthSignupRoute
 }
 
@@ -191,6 +300,7 @@ const rootRouteChildren: RootRouteChildren = {
   LayoutRoute: LayoutRouteWithChildren,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
+  AuthRecoverPasswordRoute: AuthRecoverPasswordRoute,
   AuthSignupRoute: AuthSignupRoute,
 }
 
@@ -208,6 +318,7 @@ export const routeTree = rootRoute
         "/_layout",
         "/auth/forgot-password",
         "/auth/login",
+        "/auth/recover-password",
         "/auth/signup"
       ]
     },
@@ -217,11 +328,27 @@ export const routeTree = rootRoute
     "/_layout": {
       "filePath": "_layout.tsx",
       "children": [
-        "/_layout/home"
+        "/_layout/$profile",
+        "/_layout/explorer",
+        "/_layout/home",
+        "/_layout/saved",
+        "/_layout/p/$postId"
       ]
+    },
+    "/_layout/$profile": {
+      "filePath": "_layout/$profile.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/explorer": {
+      "filePath": "_layout/explorer.tsx",
+      "parent": "/_layout"
     },
     "/_layout/home": {
       "filePath": "_layout/home.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/saved": {
+      "filePath": "_layout/saved.tsx",
       "parent": "/_layout"
     },
     "/auth/forgot-password": {
@@ -230,8 +357,15 @@ export const routeTree = rootRoute
     "/auth/login": {
       "filePath": "auth/login.tsx"
     },
+    "/auth/recover-password": {
+      "filePath": "auth/recover-password.tsx"
+    },
     "/auth/signup": {
       "filePath": "auth/signup.tsx"
+    },
+    "/_layout/p/$postId": {
+      "filePath": "_layout/p/$postId.tsx",
+      "parent": "/_layout"
     }
   }
 }

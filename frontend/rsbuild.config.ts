@@ -1,7 +1,8 @@
-import { defineConfig } from "@rsbuild/core"
-import { pluginBabel } from "@rsbuild/plugin-babel"
-import { pluginReact } from "@rsbuild/plugin-react"
-import { TanStackRouterRspack } from "@tanstack/router-plugin/rspack"
+import { defineConfig } from "@rsbuild/core";
+import { pluginBabel } from "@rsbuild/plugin-babel";
+import { pluginReact } from "@rsbuild/plugin-react";
+import { RsdoctorRspackPlugin } from "@rsdoctor/rspack-plugin";
+import { TanStackRouterRspack } from "@tanstack/router-plugin/rspack";
 
 export default defineConfig({
   plugins: [
@@ -9,13 +10,16 @@ export default defineConfig({
     pluginBabel({
       include: /\.(?:jsx|tsx)$/,
       babelLoaderOptions(opts) {
-        opts.plugins?.unshift("babel-plugin-react-compiler")
+        opts.plugins?.unshift("babel-plugin-react-compiler");
       },
     }),
   ],
   tools: {
-    rspack: {
-      plugins: [TanStackRouterRspack()],
+    rspack(config, { appendPlugins }) {
+      if (process.env.RSDOCTOR === "true") {
+        appendPlugins(new RsdoctorRspackPlugin());
+      }
+      appendPlugins(TanStackRouterRspack());
     },
   },
-})
+});

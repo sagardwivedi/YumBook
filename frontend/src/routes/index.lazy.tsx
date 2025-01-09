@@ -22,7 +22,7 @@ function RouteComponent() {
             <Link to="/" className="flex items-center space-x-2">
               <ChefHat className="w-8 h-8 text-orange-500" />
               <span className="text-2xl font-bold text-orange-600">
-                RecipeSocial
+                YumBook
               </span>
             </Link>
             <div className="space-x-4">
@@ -81,7 +81,7 @@ function RouteComponent() {
         <section className="bg-white py-16">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold mb-8 text-center text-orange-800">
-              Why Choose RecipeSocial?
+              Why Choose YumBook?
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               <FeatureCard
@@ -127,7 +127,7 @@ function RouteComponent() {
               <StepCard
                 number={4}
                 title="Grow Your Following"
-                description="Build your audience and become a RecipeSocial star chef!"
+                description="Build your audience and become a YumBook star chef!"
               />
             </div>
           </div>
@@ -142,7 +142,7 @@ function RouteComponent() {
               <TestimonialCard
                 name="Sarah K."
                 avatar="/placeholder.svg?height=100&width=100"
-                quote="RecipeSocial has transformed my cooking experience. I've discovered so many amazing recipes!"
+                quote="YumBook has transformed my cooking experience. I've discovered so many amazing recipes!"
               />
               <TestimonialCard
                 name="Mike R."
@@ -180,23 +180,23 @@ function RouteComponent() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-bold mb-2">RecipeSocial</h3>
+              <h3 className="font-bold mb-2">YumBook</h3>
               <p>Connecting food lovers worldwide</p>
             </div>
             <div>
               <h3 className="font-bold mb-2">Quick Links</h3>
               <ul>
                 <li>
-                  <Link href="#">About Us</Link>
+                  <Link to=".">About Us</Link>
                 </li>
                 <li>
-                  <Link href="#">Features</Link>
+                  <Link to=".">Features</Link>
                 </li>
                 <li>
-                  <Link href="#">Pricing</Link>
+                  <Link to=".">Pricing</Link>
                 </li>
                 <li>
-                  <Link href="#">Contact</Link>
+                  <Link to=".">Contact</Link>
                 </li>
               </ul>
             </div>
@@ -204,20 +204,20 @@ function RouteComponent() {
               <h3 className="font-bold mb-2">Legal</h3>
               <ul>
                 <li>
-                  <Link href="#">Terms of Service</Link>
+                  <Link to=".">Terms of Service</Link>
                 </li>
                 <li>
-                  <Link href="#">Privacy Policy</Link>
+                  <Link to=".">Privacy Policy</Link>
                 </li>
                 <li>
-                  <Link href="#">Cookie Policy</Link>
+                  <Link to=".">Cookie Policy</Link>
                 </li>
               </ul>
             </div>
             <div>
               <h3 className="font-bold mb-2">Connect</h3>
               <div className="flex space-x-4">
-                <Link href="#" className="text-orange-100 hover:text-white">
+                <Link to="." className="text-orange-100 hover:text-white">
                   <span className="sr-only">Facebook</span>
                   <svg
                     className="h-6 w-6"
@@ -232,7 +232,7 @@ function RouteComponent() {
                     />
                   </svg>
                 </Link>
-                <Link href="#" className="text-orange-100 hover:text-white">
+                <Link to="." className="text-orange-100 hover:text-white">
                   <span className="sr-only">Instagram</span>
                   <svg
                     className="h-6 w-6"
@@ -247,7 +247,7 @@ function RouteComponent() {
                     />
                   </svg>
                 </Link>
-                <Link href="#" className="text-orange-100 hover:text-white">
+                <Link to="." className="text-orange-100 hover:text-white">
                   <span className="sr-only">Twitter</span>
                   <svg
                     className="h-6 w-6"
@@ -262,7 +262,10 @@ function RouteComponent() {
             </div>
           </div>
           <div className="mt-8 text-center">
-            <p>&copy; 2023 RecipeSocial. All rights reserved.</p>
+            <p>
+              &copy; {new Date().getFullYear()} YumBook. All rights
+              reserved.
+            </p>
           </div>
         </div>
       </footer>
